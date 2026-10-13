@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f4f0e7">
-<title>Học Từ Vựng HSK 1-6 Chuẩn Giáo Trình</title>
+<title>Học Từ Vựng HSK 1-6 Trọn Bộ</title>
 <style>
 :root{--bg:#f4f0e7;--card:#fffdf7;--ink:#252525;--muted:#77746d;--red:#c94737;--line:#e3dccd;--blue:#427eae}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -45,7 +45,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>HSK 1-6 Chuẩn Giáo Trình ✨</h1><div class="sub">Hệ thống Flashcard tự động tải dữ liệu chuẩn</div></div>
+    <div><h1>HSK 1-6 Flashcard ✨</h1><div class="sub">Ôn tập từ vựng chuẩn chỉnh</div></div>
   </div>
   <button class="btn" id="resetBtn" title="Đặt lại bộ lọc">↻ Làm mới</button>
 </header>
@@ -77,7 +77,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
   <div class="tag" id="tag">HSK · TỪ VỰNG</div>
   <div class="hanzi" id="hanzi">Đang tải...</div>
   <div class="pinyin" id="pinyin">loading...</div>
-  <div class="meaning" id="meaning">Đang lấy toàn bộ danh sách từ vựng chuẩn HSK 1-6 từ hệ thống...</div>
+  <div class="meaning" id="meaning">Đang nạp dữ liệu từ file nội bộ...</div>
   <div class="example" id="example">
     <div class="example-cn" id="exampleCn">...</div>
     <div class="example-py" id="examplePy">...</div>
@@ -112,7 +112,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
 </div>
 
 <script>
-const STORAGE_KEY = "hsk_vocab_v10";
+const STORAGE_KEY = "hsk_vocab_v11";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -177,7 +177,7 @@ function render() {
   $("counter").textContent = `Từ ${current + 1} / ${view.length}`;
   let percent = words.length ? Math.round(known.size / words.length * 100) : 0;
   $("percent").textContent = `${percent}% đã thuộc`;
-  $("fill").style.width = ((current + 1) / view.length * 100) + "%";
+  $("fill"].style.width = ((current + 1) / view.length * 100) + "%";
 
   $("totalStat").textContent = view.length;
   $("knownStat").textContent = known.size;
@@ -222,49 +222,20 @@ $("exportBtn").onclick = () => {
   a.click();
 };
 
-// Tự động kéo toàn bộ danh sách chuẩn HSK từ nguồn API/GitHub công khai uy tín
-async function loadFullHSKData() {
+// Fetch tóm gọn file hsk_data.json nằm ngay trong chính repo của mày
+async function loadLocalData() {
   try {
-    // Sử dụng bộ dữ liệu chuẩn HSK từ API open-source
-    let res = await fetch('https://raw.githubusercontent.com/glangbe/hsk-vocab-data/main/hsk_all.json').catch(() => null);
-    if (!res || !res.ok) {
-      // Nguồn dự phòng chính thống chứa đầy đủ HSK 1-6 chuẩn
-      res = await fetch('https://cdn.jsdelivr.net/gh/lukemorales/hsk-data@main/data/hsk-complete.json').catch(() => null);
-    }
-    
-    if (res && res.ok) {
-      let data = await res.json();
-      // Chuẩn hóa format dữ liệu đầu ra phù hợp với app
-      words = (Array.isArray(data) ? data : (data.words || [])).map((item, idx) => ({
-        id: item.id || `hsk_${idx}`,
-        h: item.hanzi || item.h || item.word,
-        p: item.pinyin || item.p,
-        m: item.meaning || item.m || item.definitions?.join(", "),
-        c: item.level ? `HSK ${item.level}` : (item.c || "HSK 1"),
-        ec: item.exampleCn || item.ec || "",
-        ep: item.examplePy || item.ep || "",
-        ev: item.exampleVi || item.ev || ""
-      }));
-      render();
-      return;
-    }
-    throw new Error();
-  } catch (err) {
-    // Fallback thông minh: Tự bốc dữ liệu cốt lõi đầy đủ các cấp độ nếu mất kết nối mạng
-    words = [
-      {id:"h1_1", h:"爱", p:"ài", m:"yêu, thích", c:"HSK 1", ec:"我爱吃中国菜。", ep:"Wǒ ài chī Zhōngguó cài.", ev:"Tôi thích ăn món Trung Quốc."},
-      {id:"h2_1", h:"准备", p:"zhǔnbèi", m:"chuẩn bị", c:"HSK 2", ec:"你准备好了吗？", ep:"Nǐ zhǔnbèi hǎo le ma?", ev:"Bạn đã chuẩn bị xong chưa?"},
-      {id:"h3_1", h:"安排", p:"ānpái", m:"sắp xếp, bố trí", c:"HSK 3", ec:"我来安排明天的工作。", ep:"Wǒ lái ānpái míngtiān de gōngzuò.", ev:"Để tôi sắp xếp công việc ngày mai."},
-      {id:"h4_1", h:"负责", p:"fùzé", m:"phụ trách", c:"HSK 4", ec:"他负责这个项目。", ep:"Tā fùzé zhège xiàngmù.", "ev":"Anh ấy phụ trách dự án này."},
-      {id:"h5_1", h:"效率", p:"xiàolǜ", m:"hiệu suất", c:"HSK 5", ec:"我们要提高工作效率。", ep:"Wǒmen yào tígāo gōngzuò xiàolǜ.", ev:"Chúng ta cần nâng cao hiệu suất làm việc."},
-      {id:"h6_1", h:"精益求精", p:"jīng yì qiú jīng", m:"không ngừng hoàn thiện", c:"HSK 6", ec:"我们在工作中要精益求精。", ep:"Wǒmen zài gōngzuò zhōng yào jīng yì qiú jīng.", ev:"Trong công việc chúng ta phải luôn hoàn thiện không ngừng."}
-    ];
+    let res = await fetch('hsk_data.json');
+    if (!res.ok) throw new Error();
+    let data = await res.json();
+    words = data.words || [];
     render();
-    alert("⚠️ Không thể kết nối tới cơ sở dữ liệu từ vựng trực tuyến. Đã tải tạm bộ dữ liệu mẫu ngoại tuyến.");
+  } catch (err) {
+    alert("❌ Lỗi: Không thể đọc file hsk_data.json nội bộ. Hãy kiểm tra lại file JSON trên GitHub!");
   }
 }
 
-loadFullHSKData();
+loadLocalData();
 </script>
 </body>
 </html>
