@@ -78,7 +78,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
   <div class="tag" id="tag">HSK · TỪ VỰNG</div>
   <div class="hanzi" id="hanzi">Đang tải...</div>
   <div class="pinyin" id="pinyin">loading...</div>
-  <div class="meaning" id="meaning">Đang nạp dữ liệu từ file nội bộ...</div>
+  <div class="meaning" id="meaning">Đang nạp dữ liệu từ hsk_data.js...</div>
   <div class="example" id="example">
     <div class="example-cn" id="exampleCn">...</div>
     <div class="example-py" id="examplePy">...</div>
@@ -113,7 +113,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
 </div>
 
 <script>
-const STORAGE_KEY = "hsk_vocab_v11";
+const STORAGE_KEY = "hsk_vocab_v20";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -178,7 +178,7 @@ function render() {
   $("counter").textContent = `Từ ${current + 1} / ${view.length}`;
   let percent = words.length ? Math.round(known.size / words.length * 100) : 0;
   $("percent").textContent = `${percent}% đã thuộc`;
-  $("fill"].style.width = ((current + 1) / view.length * 100) + "%";
+  $("fill").style.width = ((current + 1) / view.length * 100) + "%";
 
   $("totalStat").textContent = view.length;
   $("knownStat").textContent = known.size;
@@ -223,19 +223,16 @@ $("exportBtn").onclick = () => {
   a.click();
 };
 
-// Fetch tóm gọn file hsk_data.json nằm ngay trong chính repo của mày
-// Lấy dữ liệu trực tiếp từ biến toàn cục của file hsk_data.js
+// Đọc thẳng biến HSK_DATABASE được load từ file hsk_data.js
 function loadLocalData() {
   try {
     let data = typeof HSK_DATABASE !== 'undefined' ? HSK_DATABASE : { words: [] };
     words = data.words || [];
     render();
   } catch (err) {
-    alert("⚠️ Lỗi: Không thể tải dữ liệu từ vựng!");
+    alert("⚠️ Lỗi: Không thể nạp dữ liệu từ hsk_data.js!");
   }
 }
-
-loadLocalData();
 
 loadLocalData();
 </script>
