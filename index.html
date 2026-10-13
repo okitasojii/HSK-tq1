@@ -3,31 +3,41 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f4f0e7">
 <title>Học Từ Vựng HSK 1-6</title>
 <style>
 :root{--bg:#f4f0e7;--card:#fffdf7;--ink:#252525;--muted:#77746d;--red:#c94737;--line:#e3dccd;--blue:#427eae}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
 button,input,select{font:inherit}button{cursor:pointer}
 .app{max-width:780px;margin:auto;min-height:100vh;padding:18px 16px 28px}
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
 .brand{display:flex;align-items:center;gap:11px}
 .logo{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--red);color:white;font-size:23px;font-weight:800}
-h1{font-size:21px;margin:0}.sub{font-size:12px;color:var(--muted)}
-.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
-.toolbar label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
-select,input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
-.flashcard{background:var(--card);border:1px solid #e2dac8;border-radius:22px;padding:26px 20px;text-align:center;box-shadow:0 5px 18px #55442b0c;min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:14px}
-.tag{font-size:11px;text-transform:uppercase;color:var(--muted);background:#f1ece1;padding:5px 9px;border-radius:20px;margin-bottom:12px}
-.hanzi{font-size:55px;font-weight:700;margin:0 0 10px}
-.pinyin{font-size:22px;color:var(--red);margin:0 0 6px}
-.meaning{font-size:18px;margin:0 0 16px}
-.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
-.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 14px;color:var(--ink)}
+h1{font-size:21px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:2px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 13px;color:var(--ink)}
 .btn.primary{background:var(--red);border-color:var(--red);color:white}
-.nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-.nav .btn{font-size:16px;padding:14px}
-.extra{margin-top:18px;background:#faf7f0;border:1px solid var(--line);border-radius:16px;padding:14px}
-.extra summary{cursor:pointer;font-weight:650}
+.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.toolbar label{font-size:12px;color:var(--muted);display:block;margin:0 0 5px 3px}
+select,input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);outline-color:var(--blue)}
+.progress{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;margin:14px 3px 9px}
+.track{height:5px;background:#e3dccd;border-radius:10px;overflow:hidden;margin-bottom:15px}.fill{height:100%;width:0;background:var(--red);transition:width .2s}
+.flashcard{background:var(--card);border:1px solid #e2dac8;border-radius:22px;padding:26px 20px 20px;text-align:center;box-shadow:0 5px 18px #55442b0c;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f1ece1;padding:5px 9px;border-radius:20px;margin-bottom:16px}
+.hanzi{font-size:clamp(42px,9vw,66px);font-weight:650;line-height:1.18;letter-spacing:.03em;margin:0 0 13px}
+.pinyin{font-size:24px;color:var(--red);margin:0 0 8px}.meaning{font-size:20px;margin:0 0 22px}
+.example{border-top:1px solid var(--line);padding-top:17px;width:100%;max-width:520px}
+.example-cn{font-size:clamp(20px,4.5vw,27px);line-height:1.5;margin-bottom:5px}.example-py{color:var(--red);font-size:15px;margin-bottom:6px}.example-vi{font-size:15px;color:#5c5851}
+.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:17px}
+.smallbtn{border:1px solid #d8e0e4;color:var(--blue);background:transparent;border-radius:24px;padding:9px 13px;font-size:14px}
+.smallbtn.unknown{color:#6c6559;border-color:var(--line)}.smallbtn.unknown.marked{background:#fff0d8;color:#8b5c10;border-color:#e9c98e}
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.nav .btn{font-size:17px;padding:15px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}
+.stat{background:#eee8dc;border-radius:12px;padding:10px;text-align:center}.stat strong{display:block;font-size:19px}.stat span{font-size:11px;color:var(--muted)}
+.extra{margin-top:17px;border:1px solid var(--line);border-radius:16px;background:#faf7f0;padding:14px}
+.extra summary{cursor:pointer;font-weight:650}.extra p{font-size:13px;color:var(--muted);line-height:1.6}
+footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
+.off{display:none!important}
+@media(min-width:650px){.app{max-width:820px}}
 </style>
 </head>
 <body>
@@ -35,37 +45,47 @@ select,input{width:100%;padding:11px 12px;border:1px solid var(--line);border-ra
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>Học Từ Vựng HSK 1-6</h1><div class="sub">Bản tối ưu trực tiếp</div></div>
+    <div><h1>Học Từ Vựng HSK 1-6 ✨</h1><div class="sub">Hệ thống Flashcard siêu mượt</div></div>
   </div>
-  <button class="btn" id="resetBtn">↻ Đặt lại</button>
+  <button class="btn" id="resetBtn" title="Đặt lại bộ lọc">↻ Làm mới</button>
 </header>
 
 <div class="toolbar">
   <div>
     <label for="category">Cấp độ HSK</label>
     <select id="category">
-      <option value="all">Tất cả HSK 1-6</option>
+      <option value="all">Tất cả (HSK 1 - 6)</option>
       <option value="HSK 1">HSK 1</option>
       <option value="HSK 2">HSK 2</option>
       <option value="HSK 3">HSK 3</option>
       <option value="HSK 4">HSK 4</option>
       <option value="HSK 5">HSK 5</option>
       <option value="HSK 6">HSK 6</option>
+      <option value="marked">Từ chưa thuộc ⭐</option>
     </select>
   </div>
   <div>
-    <label for="search">Tìm kiếm</label>
+    <label for="search">Tìm từ / nghĩa</label>
     <input id="search" placeholder="Nhập từ cần tìm...">
   </div>
 </div>
 
+<div class="progress"><span id="counter">Từ 0 / 0</span><span id="percent">0% đã thuộc</span></div>
+<div class="track"><div class="fill" id="fill"></div></div>
+
 <section class="flashcard">
-  <div class="tag" id="tag">HSK 1</div>
-  <div class="hanzi" id="hanzi">爱</div>
-  <div class="pinyin" id="pinyin">ài</div>
-  <div class="meaning" id="meaning">yêu, thích</div>
+  <div class="tag" id="tag">HSK · TỪ VỰNG</div>
+  <div class="hanzi" id="hanzi">准备</div>
+  <div class="pinyin" id="pinyin">zhǔnbèi</div>
+  <div class="meaning" id="meaning">Hãy nạp file JSON từ vựng bên dưới</div>
+  <div class="example" id="example">
+    <div class="example-cn" id="exampleCn">请导入 JSON 数据文件</div>
+    <div class="example-py" id="examplePy">Qǐng dǎorù JSON shùjù wénjiàn</div>
+    <div class="example-vi" id="exampleVi">Vui lòng nạp file dữ liệu JSON</div>
+  </div>
   <div class="actions">
-    <button class="btn" id="speakBtn">🔊 Phát âm</button>
+    <button class="smallbtn" id="speakBtn">🔊 Nghe phát âm</button>
+    <button class="smallbtn unknown" id="unknownBtn">⭐ Chưa thuộc</button>
   </div>
 </section>
 
@@ -74,82 +94,127 @@ select,input{width:100%;padding:11px 12px;border:1px solid var(--line);border-ra
   <button class="btn primary" id="nextBtn">Từ tiếp ▶</button>
 </div>
 
-<details class="extra" style="margin-top:20px;">
-  <summary>📥 Nhập / Xuất dữ liệu JSON</summary>
-  <div style="margin-top:10px; display:flex; gap:8px;">
-    <button class="btn" id="exportBtn">Xuất JSON</button>
-    <label class="btn primary" for="importFile" style="cursor:pointer;">Nạp JSON</label>
-    <input type="file" id="importFile" accept=".json" style="display:none">
+<div class="stats">
+  <div class="stat"><strong id="totalStat">0</strong><span>Từ trong bộ lọc</span></div>
+  <div class="stat"><strong id="knownStat">0</strong><span>Đã thuộc</span></div>
+  <div class="stat"><strong id="unknownStat">0</strong><span>Chưa thuộc</span></div>
+</div>
+
+<details class="extra" open style="margin-top:16px;">
+  <summary>📥 Quản lý dữ liệu JSON</summary>
+  <p>Nạp file JSON chứa danh sách từ vựng HSK 1-6 của mày vào đây. Dữ liệu sẽ được lưu an toàn trên trình duyệt.</p>
+  <div class="actions" style="justify-content:flex-start; margin-top:10px;">
+    <button class="btn" id="exportBtn">💾 Xuất JSON</button>
+    <label class="btn primary" for="importFile" style="cursor:pointer; display:inline-block;">📥 Nạp file JSON</label>
+    <input class="off" type="file" id="importFile" accept=".json,application/json">
   </div>
 </details>
+
+<footer>Tiến độ được lưu tự động trên thiết bị này.</footer>
 </div>
 
 <script>
-const defaultWords = [
-  {h:"爱", p:"ài", m:"yêu, thích", c:"HSK 1"},
-  {h:"爸爸", p:"bàba", m:"bố", c:"HSK 1"},
-  {h:"准备", p:"zhǔnbèi", m:"chuẩn bị", c:"HSK 2"},
-  {h:"安排", p:"ānpái", m:"sắp xếp", c:"HSK 3"},
-  {h:"负责", p:"fùzé", m:"phụ trách", c:"HSK 4"},
-  {h:"效率", p:"xiàolǜ", m:"hiệu suất", c:"HSK 5"},
-  {h:"精益求精", p:"jīng yì qiú jīng", m:"không ngừng hoàn thiện", c:"HSK 6"}
-];
+const STORAGE_KEY = "hsk_vocab_v4";
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
-let words = defaultWords;
-let currentIndex = 0;
+let words = Array.isArray(saved.words) ? saved.words : [
+  {id:"w1", h:"爱", p:"ài", m:"yêu, thích", c:"HSK 1", ec:"我爱吃中国菜。", ep:"Wǒ ài chī Zhōngguó cài.", ev:"Tôi thích ăn món Trung Quốc."}
+];
+let marks = new Set(saved.marks || []);
+let known = new Set(saved.known || []);
+let current = 0;
+let view = [];
 
 const $ = id => document.getElementById(id);
 
-function renderCard() {
-  let filtered = words.filter(w => {
-    let cat = $("category").value;
-    let q = $("search").value.toLowerCase();
-    let matchCat = (cat === "all" || w.c === cat);
-    let matchSearch = !q || w.h.toLowerCase().includes(q) || w.m.toLowerCase().includes(q);
+function persist() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      words,
+      marks: [...marks],
+      known: [...known]
+    }));
+  } catch(e) {}
+}
+
+function getFilteredWords() {
+  let cat = $("category").value;
+  let q = $("search").value.trim().toLowerCase();
+  return words.filter(w => {
+    let matchCat = (cat === "all") || (cat === "marked" && marks.has(w.id || w.h)) || (w.c === cat);
+    let matchSearch = !q || [w.h, w.p, w.m, w.ec, w.ev, w.c].join(" ").toLowerCase().includes(q);
     return matchCat && matchSearch;
   });
+}
 
-  if (filtered.length === 0) {
-    $("tag").textContent = "Trống";
+function render() {
+  view = getFilteredWords();
+  if (!view.length) {
+    $("tag").textContent = "TRỐNG";
     $("hanzi").textContent = "Không có từ";
     $("pinyin").textContent = "";
-    $("meaning").textContent = "Thử đổi bộ lọc xem sao";
+    $("meaning").textContent = "Hãy nạp file JSON từ vựng vào ứng dụng.";
+    $("exampleCn").textContent = "";
+    $("examplePy").textContent = "";
+    $("exampleVi").textContent = "";
+    $("counter").textContent = "0 / 0";
+    $("fill").style.width = "0%";
+    $("unknownBtn").disabled = true;
     return;
   }
 
-  if (currentIndex >= filtered.length) currentIndex = 0;
-  if (currentIndex < 0) currentIndex = filtered.length - 1;
+  $("unknownBtn").disabled = false;
+  if (current >= view.length) current = 0;
+  if (current < 0) current = view.length - 1;
 
-  let currentWord = filtered[currentIndex];
-  $("tag").textContent = currentWord.c;
-  $("hanzi").textContent = currentWord.h;
-  $("pinyin").textContent = currentWord.p;
-  $("meaning").textContent = currentWord.m;
-  
-  window._currentFiltered = filtered;
+  let w = view[current];
+  let k = w.id || w.h;
+
+  $("tag").textContent = (w.c || "HSK") + " · TỪ VỰNG";
+  $("hanzi").textContent = w.h;
+  $("pinyin").textContent = w.p;
+  $("meaning").textContent = w.m;
+  $("exampleCn").textContent = w.ec || "";
+  $("examplePy").textContent = w.ep || "";
+  $("exampleVi").textContent = w.ev || "";
+
+  $("counter").textContent = `Từ ${current + 1} / ${view.length}`;
+  let percent = words.length ? Math.round(known.size / words.length * 100) : 0;
+  $("percent").textContent = `${percent}% đã thuộc`;
+  $("fill").style.width = ((current + 1) / view.length * 100) + "%";
+
+  $("totalStat").textContent = view.length;
+  $("knownStat").textContent = known.size;
+  $("unknownStat").textContent = marks.size;
+
+  $("unknownBtn").classList.toggle("marked", marks.has(k));
+  $("unknownBtn").textContent = marks.has(k) ? "⭐ Đã đánh dấu chưa thuộc" : "⭐ Chưa thuộc";
+
+  persist();
 }
 
-$("nextBtn").onclick = () => {
-  let filtered = window._currentFiltered || words;
-  currentIndex = (currentIndex + 1) % filtered.length;
-  renderCard();
+$("prevBtn").onclick = () => { current--; render(); };
+$("nextBtn").onclick = () => { current++; render(); };
+
+$("unknownBtn").onclick = () => {
+  let w = view[current];
+  if (!w) return;
+  let k = w.id || w.h;
+  if (marks.has(k)) marks.delete(k);
+  else marks.add(k);
+  persist();
+  render();
 };
 
-$("prevBtn").onclick = () => {
-  let filtered = window._currentFiltered || words;
-  currentIndex = (currentIndex - 1 + filtered.length) % filtered.length;
-  renderCard();
-};
-
-$("category").onchange = () => { currentIndex = 0; renderCard(); };
-$("search").oninput = () => { currentIndex = 0; renderCard(); };
-$("resetBtn").onclick = () => { $("category").value = "all"; $("search").value = ""; currentIndex = 0; renderCard(); };
+$("category").onchange = () => { current = 0; render(); };
+$("search").oninput = () => { current = 0; render(); };
+$("resetBtn").onclick = () => { $("category").value = "all"; $("search").value = ""; current = 0; render(); };
 
 $("speakBtn").onclick = () => {
-  let filtered = window._currentFiltered || words;
-  let w = filtered[currentIndex];
+  let w = view[current];
   if (!w) return;
-  if (!("speechSynthesis" in window)) { alert("Trình duyệt không hỗ trợ đọc."); return; }
+  if (!("speechSynthesis" in window)) { alert("Trình duyệt không hỗ trợ phát âm."); return; }
   speechSynthesis.cancel();
   let u = new SpeechSynthesisUtterance(w.h);
   u.lang = "zh-CN";
@@ -157,10 +222,10 @@ $("speakBtn").onclick = () => {
 };
 
 $("exportBtn").onclick = () => {
-  let blob = new Blob([JSON.stringify({words}, null, 2)], {type: "application/json"});
+  let blob = new Blob([JSON.stringify({words, marks: [...marks], known: [...known]}, null, 2)], {type: "application/json"});
   let a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "hsk_data.json";
+  a.download = "hsk_vocab_backup.json";
   a.click();
 };
 
@@ -169,19 +234,24 @@ $("importFile").onchange = async e => {
   if (!f) return;
   try {
     let data = JSON.parse(await f.text());
-    if (Array.isArray(data.words)) {
-      words = data.words;
-      currentIndex = 0;
-      renderCard();
-      alert("Nạp file JSON thành công!");
-    }
+    if (!Array.isArray(data.words)) throw Error("Invalid format");
+    words = data.words.map((item, idx) => ({
+      ...item,
+      id: item.id || ("item_" + idx + "_" + Math.random().toString(36).substr(2, 4))
+    }));
+    marks = new Set(data.marks || []);
+    known = new Set(data.known || []);
+    persist();
+    current = 0;
+    render();
+    alert(`🎉 Nạp thành công ${words.length} từ vựng!`);
   } catch (err) {
-    alert("Lỗi đọc file JSON!");
+    alert("❌ File JSON không đúng định dạng!");
   }
   e.target.value = "";
 };
 
-renderCard();
+render();
 </script>
 </body>
 </html>
