@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f4f0e7">
 <title>Học Từ Vựng HSK 1-6 Trọn Bộ</title>
+<script src="hsk_data.js"></script>
 <style>
 :root{--bg:#f4f0e7;--card:#fffdf7;--ink:#252525;--muted:#77746d;--red:#c94737;--line:#e3dccd;--blue:#427eae}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -223,17 +224,18 @@ $("exportBtn").onclick = () => {
 };
 
 // Fetch tóm gọn file hsk_data.json nằm ngay trong chính repo của mày
-async function loadLocalData() {
+// Lấy dữ liệu trực tiếp từ biến toàn cục của file hsk_data.js
+function loadLocalData() {
   try {
-    let res = await fetch('hsk_data.json');
-    if (!res.ok) throw new Error();
-    let data = await res.json();
+    let data = typeof HSK_DATABASE !== 'undefined' ? HSK_DATABASE : { words: [] };
     words = data.words || [];
     render();
   } catch (err) {
-    alert("❌ Lỗi: Không thể đọc file hsk_data.json nội bộ. Hãy kiểm tra lại file JSON trên GitHub!");
+    alert("⚠️ Lỗi: Không thể tải dữ liệu từ vựng!");
   }
 }
+
+loadLocalData();
 
 loadLocalData();
 </script>
