@@ -39,7 +39,8 @@ select,input{width:100%;padding:12px;border:1px solid var(--line);border-radius:
 
 .card-box{background:var(--card);border:1px solid #e2dac8;border-radius:20px;padding:22px 16px 18px;text-align:center;box-shadow:0 5px 18px #55442b0c;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f1ece1;padding:4px 8px;border-radius:20px;margin-bottom:14px}
-.hanzi{font-size:clamp(44px,11vw,64px);font-weight:650;line-height:1.15;margin:0 0 8px;cursor:pointer}
+.hanzi{font-size:clamp(44px,11vw,64px);font-weight:650;line-height:1.15;margin:0 0 8px;cursor:pointer;color:var(--red);transition:.2s}
+.hanzi:hover{opacity:0.8}
 .pinyin{font-size:21px;color:var(--red);margin:0 0 6px}.meaning{font-size:17px;margin:0 0 16px}
 .example{border-top:1px solid var(--line);padding-top:14px;width:100%;max-width:520px}
 .example-cn{font-size:clamp(18px,4vw,24px);line-height:1.45;margin-bottom:4px}.example-py{color:var(--red);font-size:13px;margin-bottom:4px}.example-vi{font-size:13px;color:#5c5851}
@@ -55,7 +56,7 @@ select,input{width:100%;padding:12px;border:1px solid var(--line);border-radius:
 
 /* Modal Tra nét chữ */
 .modal{display:none;position:fixed;z-index:1000;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center}
-.modal-content{background:var(--card);padding:20px;border-radius:20px;width:90%;max-width:340px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
+.modal-content{background:var(--card);padding:20px;border-radius:20px;width:92%;max-width:360px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
 .close-modal{float:right;font-size:22px;font-weight:bold;cursor:pointer;color:var(--muted)}
 
 .nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.nav .btn{font-size:16px;padding:16px}
@@ -108,4 +109,547 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
     </select>
   </div>
   <div>
-    <label for="search">Tìm từ /
+    <label for="search">Tìm từ / nghĩa</label>
+    <input id="search" placeholder="Nhập từ cần tìm...">
+  </div>
+</div>
+
+<div id="flashcardView">
+  <div class="progress"><span id="counter">Từ 0 / 0</span><span id="percent">0% đã thuộc</span></div>
+  <div class="track"><div class="fill" id="fill"></div></div>
+
+  <section class="card-box">
+    <div class="tag" id="tag">HSK · TỪ VỰNG</div>
+    <div class="hanzi" id="hanzi" title="Bấm vào chữ để xem cách viết & thứ tự nét">Đang tải...</div>
+    <div class="sub" style="font-size:12px;color:var(--blue);margin-bottom:6px;">💡 Bấm vào chữ Hán để xem thứ tự nét viết</div>
+    <div class="pinyin" id="pinyin">loading...</div>
+    <div class="meaning" id="meaning">Đang nạp dữ liệu...</div>
+    <div class="example" id="example">
+      <div class="example-cn" id="exampleCn">...</div>
+      <div class="example-py" id="examplePy">...</div>
+      <div class="example-vi" id="exampleVi">...</div>
+    </div>
+    
+    <!-- Ghi chú cá nhân -->
+    <div class="note-box">
+      <label for="vocabNote">📝 Ghi chú cá nhân (Mẹo nhớ):</label>
+      <input type="text" id="vocabNote" class="note-input" placeholder="Nhập ghi chú hoặc cách nhớ từ này...">
+    </div>
+
+    <div class="actions">
+      <button class="smallbtn" id="speakBtn">🔊 Nghe phát âm</button>
+      <button class="smallbtn unknown" id="unknownBtn">⭐ Chưa thuộc</button>
+    </div>
+  </section>
+
+  <div class="nav">
+    <button class="btn" id="prevBtn">◀ Từ trước</button>
+    <button class="btn primary" id="nextBtn">Từ tiếp ▶</button>
+  </div>
+</div>
+
+<!-- Modal hiển thị nét chữ chuẩn không lỗi -->
+<div id="strokeModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeModal">&times;</span>
+    <h3 style="margin-top:0;font-size:16px;color:var(--red);">Thứ tự nét viết chữ Hán</h3>
+    <div id="strokeContainer" style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;min-height:120px;align-items:center;padding:10px 0;"></div>
+    <div class="sub" style="margin-top:10px;">Bấm vào khung chữ để tra cứu chi tiết</div>
+  </div>
+</div>
+
+<div id="quizView" style="display:none;">
+  <section class="card-box" style="min-height:350px;">
+    <div class="tag">TRẮC NGHIỆM ĐOÁN TỪ</div>
+    <div class="hanzi" id="quizHanzi" style="font-size:46px;">?</div>
+    <div class="pinyin" id="quizPinyin" style="font-size:16px;">Nghĩa của từ này là gì?</div>
+    <div class="quiz-options" id="quizOptions"></div>
+    <button class="btn primary" id="nextQuizBtn" style="margin-top:16px;display:none;padding:12px 20px;font-size:15px;">Câu tiếp theo ▶</button>
+  </section>
+</div>
+
+<div id="puzzleView" style="display:none;">
+  <section class="card-box" style="min-height:350px;">
+    <div class="tag">SẮP XẾP CÂU / GHÉP TỪ</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Bấm chọn các chữ bên dưới để xếp lại câu ví dụ đúng:</div>
+    <div class="meaning" id="puzzleMeaning" style="font-weight:bold;color:var(--red);font-size:18px;">...</div>
+    <div class="puzzle-words" id="puzzleChips"></div>
+    <div style="margin:14px 0;font-size:22px;min-height:40px;border-bottom:2px dashed var(--line);padding-bottom:6px;display:flex;justify-content:center;gap:6px;align-items:center;" id="puzzleAns"></div>
+    <div id="puzzleResultMsg" style="font-weight:bold;margin:4px 0;min-height:22px;font-size:16px;"></div>
+    <div class="actions">
+      <button class="btn" id="resetPuzzleBtn" style="padding:10px 16px;font-size:15px;">Làm lại</button>
+      <button class="btn primary" id="checkPuzzleBtn" style="padding:10px 16px;font-size:15px;">Kiểm tra</button>
+      <button class="btn primary" id="nextPuzzleBtn" style="display:none;padding:10px 16px;font-size:15px;">Câu tiếp ▶</button>
+    </div>
+  </section>
+</div>
+
+<div id="fixView" style="display:none;">
+  <section class="card-box" style="min-height:350px;">
+    <div class="tag">TÌM VÀ SỬA CÂU SAI NGỮ PHÁP</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Câu tiếng Trung dưới đây bị đảo lộn trật tự, hãy chọn đáp án đúng:</div>
+    <div class="hanzi" id="fixWrongSentence" style="font-size:24px;color:var(--red);margin-bottom:10px;line-height:1.35;">...</div>
+    <div class="meaning" id="fixHint" style="font-size:15px;color:var(--muted);margin-bottom:12px;font-style:italic;">...</div>
+    <div class="quiz-options" id="fixOptions"></div>
+    <button class="btn primary" id="nextFixBtn" style="margin-top:16px;display:none;padding:12px 20px;font-size:15px;">Câu tiếp theo ▶</button>
+  </section>
+</div>
+
+<div id="synonymView" style="display:none;">
+  <section class="card-box" style="min-height:350px;">
+    <div class="tag">TỪ ĐỒNG NGHĨA & ÔN TẬP TỪ VỰNG</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Chọn từ có nghĩa phù hợp với từ gốc:</div>
+    <div class="hanzi" id="synQuestion" style="font-size:24px;margin-bottom:10px;line-height:1.35;">...</div>
+    <div class="meaning" id="synMeaning" style="font-size:15px;color:var(--muted);margin-bottom:12px;">...</div>
+    <div class="quiz-options" id="synOptions"></div>
+    <button class="btn primary" id="nextSynBtn" style="margin-top:16px;display:none;padding:12px 20px;font-size:15px;">Câu tiếp theo ▶</button>
+  </section>
+</div>
+
+<div class="stats" id="statsBar">
+  <div class="stat"><strong id="totalStat">0</strong><span>Tổng số từ</span></div>
+  <div class="stat"><strong id="knownStat">0</strong><span>Đã thuộc</span></div>
+  <div class="stat"><strong id="unknownStat">0</strong><span>Chưa thuộc</span></div>
+</div>
+
+<footer>Tiến độ và ghi chú được lưu tự động trên thiết bị này.</footer>
+</div>
+
+<script>
+let words = [
+  ...(typeof HSK1_DATA !== 'undefined' ? HSK1_DATA : []),
+  ...(typeof HSK2_DATA !== 'undefined' ? HSK2_DATA : []),
+  ...(typeof HSK3_DATA !== 'undefined' ? HSK3_DATA : []),
+  ...(typeof HSK4_DATA !== 'undefined' ? HSK4_DATA : []),
+  ...(typeof HSK5_DATA !== 'undefined' ? HSK5_DATA : []),
+  ...(typeof HSK6_DATA !== 'undefined' ? HSK6_DATA : [])
+];
+
+let audioCtx = null;
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+document.addEventListener('click', initAudio, { once: true });
+document.addEventListener('touchstart', initAudio, { once: true });
+
+function playSound(type) {
+  initAudio();
+  if (!audioCtx) return;
+  let now = audioCtx.currentTime;
+  if (type === 'correct') {
+    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now + i * 0.08);
+      gain.gain.setValueAtTime(0.3, now + i * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.3);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(now + i * 0.08); osc.stop(now + i * 0.08 + 0.3);
+    });
+  } else {
+    [180, 120].forEach((freq, i) => {
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq, now + i * 0.1);
+      gain.gain.setValueAtTime(0.35, now + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(now + i * 0.1); osc.stop(now + i * 0.1 + 0.25);
+    });
+  }
+}
+
+const STORAGE_KEY = "hsk_vocab_v42";
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
+
+let marks = new Set(saved.marks || []);
+let known = new Set(saved.known || []);
+let notes = saved.notes || {};
+let current = 0;
+let view = [];
+let currentMode = 'flashcard';
+
+const $ = id => document.getElementById(id);
+
+function persist() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ marks: [...marks], known: [...known], notes }));
+  } catch(e) {}
+}
+
+function getFilteredWords() {
+  let cat = $("category").value;
+  let q = $("search").value.trim().toLowerCase();
+  return words.filter(w => {
+    let k = w.id || w.h;
+    let matchCat = (cat === "all") || (cat === "marked" && marks.has(k)) || (w.c === cat);
+    let matchSearch = !q || [w.h, w.p, w.m, w.ec, w.ev, w.c].join(" ").toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  });
+}
+
+document.querySelectorAll('.mode-tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentMode = tab.dataset.mode;
+    
+    $("flashcardView").style.display = currentMode === 'flashcard' ? 'block' : 'none';
+    $("quizView").style.display = currentMode === 'quiz' ? 'block' : 'none';
+    $("puzzleView").style.display = currentMode === 'puzzle' ? 'block' : 'none';
+    $("fixView").style.display = currentMode === 'fix' ? 'block' : 'none';
+    $("synonymView").style.display = currentMode === 'synonym' ? 'block' : 'none';
+
+    $("filterToolbar").style.display = currentMode === 'flashcard' ? 'grid' : 'none';
+    $("statsBar").style.display = currentMode === 'flashcard' ? 'grid' : 'none';
+
+    if (currentMode === 'flashcard') render();
+    if (currentMode === 'quiz') initQuiz();
+    if (currentMode === 'puzzle') initPuzzle();
+    if (currentMode === 'fix') initFixGrammar();
+    if (currentMode === 'synonym') initSynonym();
+  };
+});
+
+function render() {
+  view = getFilteredWords();
+  if (!view.length) {
+    $("tag").textContent = "TRỐNG";
+    $("hanzi").textContent = "Không có từ";
+    $("pinyin").textContent = "";
+    $("meaning").textContent = "Không tìm thấy từ phù hợp.";
+    $("exampleCn").textContent = "";
+    $("examplePy").textContent = "";
+    $("exampleVi").textContent = "";
+    $("counter").textContent = "0 / 0";
+    $("fill").style.width = "0%";
+    $("unknownBtn").disabled = true;
+    $("vocabNote").value = "";
+    return;
+  }
+
+  $("unknownBtn").disabled = false;
+  if (current >= view.length) current = 0;
+  if (current < 0) current = view.length - 1;
+
+  let w = view[current];
+  let k = w.id || w.h;
+
+  $("tag").textContent = (w.c || "HSK") + " · TỪ VỰNG";
+  $("hanzi").textContent = w.h;
+  $("pinyin").textContent = w.p;
+  $("meaning").textContent = w.m;
+  $("exampleCn").textContent = w.ec || "";
+  $("examplePy").textContent = w.ep || "";
+  $("exampleVi").textContent = w.ev || "";
+
+  $("vocabNote").value = notes[k] || "";
+
+  $("counter").textContent = `Từ ${current + 1} / ${view.length}`;
+  let percent = words.length ? Math.round(known.size / words.length * 100) : 0;
+  $("percent").textContent = `${percent}% đã thuộc`;
+  $("fill").style.width = ((current + 1) / view.length * 100) + "%";
+
+  $("totalStat").textContent = view.length;
+  $("knownStat").textContent = known.size;
+  $("unknownStat").textContent = marks.size;
+
+  $("unknownBtn").classList.toggle("marked", marks.has(k));
+  $("unknownBtn").textContent = marks.has(k) ? "⭐ Đã đánh dấu chưa thuộc" : "⭐ Chưa thuộc";
+}
+
+$("vocabNote").oninput = (e) => {
+  let w = view[current];
+  if (!w) return;
+  let k = w.id || w.h;
+  notes[k] = e.target.value;
+  persist();
+};
+
+// Mở Modal xem nét chữ cực kỳ ổn định
+$("hanzi").onclick = () => {
+  let w = view[current];
+  if (!w) return;
+  openStrokeModal(w.h);
+};
+
+function openStrokeModal(hanziStr) {
+  let container = $("strokeContainer");
+  container.innerHTML = "";
+  $("strokeModal").style.display = "flex";
+  
+  let chars = hanziStr.split('').filter(c => /[\u4e00-\u9fa5]/.test(c));
+  if (!chars.length) {
+    container.innerHTML = "<div style='color:var(--muted);padding:20px;'>Không có ký tự chữ Hán để hiển thị nét.</div>";
+    return;
+  }
+
+  chars.forEach((char) => {
+    let card = document.createElement('div');
+    card.style.cssText = "background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;box-shadow:0 2px 6px #0001;cursor:pointer;width:100px;";
+    card.innerHTML = `
+      <div style="font-size:48px;font-weight:bold;color:var(--ink);line-height:1;margin-bottom:8px;">${char}</div>
+      <a href="https://www.strokeorder.com/chinese/${encodeURIComponent(char)}" target="_blank" style="display:inline-block;font-size:11px;background:var(--blue);color:#fff;text-decoration:none;padding:4px 8px;border-radius:8px;">Xem nét chữ ↗</a>
+    `;
+    card.onclick = (e) => {
+      if(e.target.tagName !== 'A') {
+        window.open(`https://www.strokeorder.com/chinese/${encodeURIComponent(char)}`, '_blank');
+      }
+    };
+    container.appendChild(card);
+  });
+}
+
+$("closeModal").onclick = () => { $("strokeModal").style.display = "none"; };
+window.onclick = (e) => { if (e.target == $("strokeModal")) $("strokeModal").style.display = "none"; };
+
+function getActivePool() {
+  let cat = $("category").value;
+  if (cat === "all") return words;
+  if (cat === "marked") {
+    let markedWords = words.filter(w => marks.has(w.id || w.h));
+    return markedWords.length ? markedWords : words;
+  }
+  let filtered = words.filter(w => w.c === cat);
+  return filtered.length ? filtered : words;
+}
+
+// 1. TRẮC NGHIỆM ĐOÁN TỪ
+function initQuiz() {
+  let pool = getActivePool();
+  if (!pool.length) return;
+  let correctWord = pool[Math.floor(Math.random() * pool.length)];
+  $("quizHanzi").textContent = correctWord.h;
+  $("quizPinyin").textContent = correctWord.p;
+
+  let options = [correctWord];
+  while (options.length < 4 && options.length < pool.length) {
+    let randW = pool[Math.floor(Math.random() * pool.length)];
+    if (!options.includes(randW)) options.push(randW);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  let html = "";
+  options.forEach(opt => {
+    let isCorrect = (opt.m === correctWord.m);
+    html += `<div class="quiz-btn" onclick="checkQuiz(this, ${isCorrect})">${opt.m}</div>`;
+  });
+  $("quizOptions").innerHTML = html;
+  $("nextQuizBtn").style.display = "none";
+}
+
+window.checkQuiz = function(el, isCorrect) {
+  let btns = document.querySelectorAll('#quizView .quiz-btn');
+  btns.forEach(b => b.style.pointerEvents = 'none');
+  if (isCorrect) { el.classList.add('correct'); playSound('correct'); }
+  else { el.classList.add('wrong'); playSound('wrong'); }
+  $("nextQuizBtn").style.display = "block";
+};
+$("nextQuizBtn").onclick = initQuiz;
+
+// 2. GHÉP CÂU
+let currentPuzzleTarget = "";
+let shuffledTokens = [];
+let selectedTokens = [];
+
+function initPuzzle() {
+  let pool = getActivePool();
+  let validWords = pool.filter(w => w.ec && w.ec.length >= 2);
+  if (!validWords.length) validWords = words.filter(w => w.ec && w.ec.length >= 2);
+  if (!validWords.length) {
+    $("puzzleMeaning").textContent = "Chưa đủ câu ví dụ để sắp xếp!";
+    $("puzzleChips").innerHTML = "";
+    return;
+  }
+  let w = validWords[Math.floor(Math.random() * validWords.length)];
+  let cleanSentence = (w.ec || "").replace(/[。，！？]/g, "").trim();
+  if (!cleanSentence) cleanSentence = w.h;
+
+  currentPuzzleTarget = cleanSentence;
+  $("puzzleMeaning").textContent = "Nghĩa: " + (w.ev || w.m);
+  $("puzzleResultMsg").innerHTML = "";
+  $("checkPuzzleBtn").style.display = "inline-block";
+  $("nextPuzzleBtn").style.display = "none";
+
+  let baseTokens = cleanSentence.split('').map((char, idx) => ({ uid: 'tok-' + idx + '-' + Math.random().toString(36).substring(2, 7), char }));
+  shuffledTokens = [...baseTokens].sort(() => Math.random() - 0.5);
+  selectedTokens = [];
+  renderPuzzleBoard();
+}
+
+function renderPuzzleBoard() {
+  let chipsHtml = "";
+  shuffledTokens.forEach(t => {
+    let isSelected = selectedTokens.some(s => s.uid === t.uid);
+    let cls = isSelected ? "p-chip selected" : "p-chip";
+    chipsHtml += `<span class="${cls}" onclick="clickToken('${t.uid}', '${t.char}')">${t.char}</span>`;
+  });
+  $("puzzleChips").innerHTML = chipsHtml;
+
+  let ansHtml = "";
+  if (selectedTokens.length === 0) {
+    ansHtml = `<span style="color:var(--muted);font-size:15px;">Bấm chọn các chữ bên trên...</span>`;
+  } else {
+    selectedTokens.forEach((s, sIdx) => {
+      ansHtml += `<span class="p-chip" style="background:var(--blue);color:white;cursor:pointer;" onclick="removeToken(${sIdx})">${s.char}</span>`;
+    });
+  }
+  $("puzzleAns").innerHTML = ansHtml;
+}
+
+window.clickToken = function(uid, char) {
+  if (selectedTokens.some(s => s.uid === uid)) return;
+  selectedTokens.push({ uid, char });
+  renderPuzzleBoard();
+};
+
+window.removeToken = function(index) {
+  selectedTokens.splice(index, 1);
+  $("puzzleResultMsg").innerHTML = "";
+  renderPuzzleBoard();
+};
+
+$("resetPuzzleBtn").onclick = () => {
+  selectedTokens = [];
+  $("puzzleResultMsg").innerHTML = "";
+  $("nextPuzzleBtn").style.display = "none";
+  $("checkPuzzleBtn").style.display = "inline-block";
+  shuffledTokens.sort(() => Math.random() - 0.5);
+  renderPuzzleBoard();
+};
+
+$("checkPuzzleBtn").onclick = () => {
+  if (selectedTokens.length === 0) { alert("Bạn chưa chọn chữ nào cả!"); return; }
+  let userAns = selectedTokens.map(s => s.char).join('');
+  let msgEl = $("puzzleResultMsg");
+  if (userAns === currentPuzzleTarget) {
+    msgEl.style.color = "var(--green)";
+    msgEl.innerHTML = "🎉 Chính xác tuyệt vời!";
+    playSound('correct');
+    $("checkPuzzleBtn").style.display = "none";
+    $("nextPuzzleBtn").style.display = "inline-block";
+  } else {
+    msgEl.style.color = "var(--red)";
+    msgEl.innerHTML = "❌ Chưa đúng rồi, thử lại nhé!";
+    playSound('wrong');
+  }
+};
+$("nextPuzzleBtn").onclick = initPuzzle;
+
+// 3. SỬA CÂU SAI
+function initFixGrammar() {
+  let pool = getActivePool();
+  let validWords = pool.filter(w => w.ec && w.ec.length >= 3);
+  if (!validWords.length) validWords = words.filter(w => w.ec && w.ec.length >= 3);
+  if (!validWords.length) {
+    $("fixWrongSentence").textContent = "❌ Chưa có đủ dữ liệu từ vựng.";
+    $("fixHint").textContent = "";
+    $("fixOptions").innerHTML = "";
+    return;
+  }
+
+  let w = validWords[Math.floor(Math.random() * validWords.length)];
+  let correctSentence = (w.ec || "").replace(/[。，！？]/g, "").trim();
+  let chars = correctSentence.split('');
+  if (chars.length >= 3) {
+    let temp = chars[0]; chars[0] = chars[1]; chars[1] = temp;
+  }
+  let wrongSentence = chars.join('') + " (Sai trật tự)";
+
+  $("fixWrongSentence").textContent = "❌ " + wrongSentence;
+  $("fixHint").textContent = "Gợi ý nghĩa: " + (w.ev || w.m) + " | Sắp xếp lại cho đúng cấu trúc.";
+
+  let options = [correctSentence];
+  while (options.length < 3 && validWords.length >= 3) {
+    let randW = validWords[Math.floor(Math.random() * validWords.length)];
+    let sent = (randW.ec || "").replace(/[。，！？]/g, "").trim();
+    if (sent && !options.includes(sent)) options.push(sent);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  let html = "";
+  options.forEach(opt => {
+    let isCorrect = (opt === correctSentence);
+    html += `<div class="quiz-btn" onclick="checkFix(this, ${isCorrect})">${opt}</div>`;
+  });
+  $("fixOptions").innerHTML = html;
+  $("nextFixBtn").style.display = "none";
+}
+
+window.checkFix = function(el, isCorrect) {
+  let btns = document.querySelectorAll('#fixView .quiz-btn');
+  btns.forEach(b => b.style.pointerEvents = 'none');
+  if (isCorrect) { el.classList.add('correct'); playSound('correct'); }
+  else { el.classList.add('wrong'); playSound('wrong'); }
+  $("nextFixBtn").style.display = "block";
+};
+$("nextFixBtn").onclick = initFixGrammar;
+
+// 4. TỪ ĐỒNG NGHĨA
+function initSynonym() {
+  let pool = getActivePool();
+  if (!pool.length) return;
+  let correctWord = pool[Math.floor(Math.random() * pool.length)];
+  $("synQuestion").textContent = "Từ nào có nghĩa là: " + correctWord.m + " ?";
+  $("synMeaning").textContent = "Cấp độ: " + (correctWord.c || "HSK");
+
+  let options = [correctWord];
+  while (options.length < 4 && options.length < pool.length) {
+    let randW = pool[Math.floor(Math.random() * pool.length)];
+    if (!options.includes(randW)) options.push(randW);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  let html = "";
+  options.forEach(opt => {
+    let isCorrect = (opt.h === correctWord.h);
+    html += `<div class="quiz-btn" onclick="checkSyn(this, ${isCorrect})">${opt.h} (${opt.p})</div>`;
+  });
+  $("synOptions").innerHTML = html;
+  $("nextSynBtn").style.display = "none";
+}
+
+window.checkSyn = function(el, isCorrect) {
+  let btns = document.querySelectorAll('#synonymView .quiz-btn');
+  btns.forEach(b => b.style.pointerEvents = 'none');
+  if (isCorrect) { el.classList.add('correct'); playSound('correct'); }
+  else { el.classList.add('wrong'); playSound('wrong'); }
+  $("nextSynBtn").style.display = "block";
+};
+$("nextSynBtn").onclick = initSynonym;
+
+$("prevBtn").onclick = () => { current--; render(); };
+$("nextBtn").onclick = () => { current++; render(); };
+
+$("unknownBtn").onclick = () => {
+  let w = view[current];
+  if (!w) return;
+  let k = w.id || w.h;
+  if (marks.has(k)) marks.delete(k);
+  else marks.add(k);
+  persist();
+  render();
+};
+
+$("category").onchange = () => { current = 0; render(); };
+$("search").oninput = () => { current = 0; render(); };
+$("resetBtn").onclick = () => { $("category").value = "all"; $("search").value = ""; current = 0; render(); };
+
+$("speakBtn").onclick = () => {
+  let w = view[current];
+  if (!w) return;
+  if (!("speechSynthesis" in window)) { alert("Trình duyệt không hỗ trợ phát âm."); return; }
+  speechSynthesis.cancel();
+  let u = new SpeechSynthesisUtterance(w.h);
+  u.lang = "zh-CN";
+  speechSynthesis.speak(u);
+};
+
+render();
+</script>
+</body>
+</html>
