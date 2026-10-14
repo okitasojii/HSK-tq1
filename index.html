@@ -17,7 +17,7 @@
 <style>
 :root{--bg:#f4f0e7;--card:#fffdf7;--ink:#252525;--muted:#77746d;--red:#c94737;--line:#e3dccd;--blue:#427eae;--green:#2e7d32}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
-button,input,select{font:inherit}button{cursor:pointer}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
 .app{max-width:820px;margin:auto;min-height:100vh;padding:16px 12px 40px}
 header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
 .brand{display:flex;align-items:center;gap:10px}
@@ -39,7 +39,7 @@ select,input{width:100%;padding:12px;border:1px solid var(--line);border-radius:
 
 .card-box{background:var(--card);border:1px solid #e2dac8;border-radius:20px;padding:22px 16px 18px;text-align:center;box-shadow:0 5px 18px #55442b0c;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f1ece1;padding:4px 8px;border-radius:20px;margin-bottom:14px}
-.hanzi{font-size:clamp(44px,11vw,64px);font-weight:650;line-height:1.15;margin:0 0 8px}
+.hanzi{font-size:clamp(44px,11vw,64px);font-weight:650;line-height:1.15;margin:0 0 8px;cursor:pointer}
 .pinyin{font-size:21px;color:var(--red);margin:0 0 6px}.meaning{font-size:17px;margin:0 0 16px}
 .example{border-top:1px solid var(--line);padding-top:14px;width:100%;max-width:520px}
 .example-cn{font-size:clamp(18px,4vw,24px);line-height:1.45;margin-bottom:4px}.example-py{color:var(--red);font-size:13px;margin-bottom:4px}.example-vi{font-size:13px;color:#5c5851}
@@ -47,6 +47,16 @@ select,input{width:100%;padding:12px;border:1px solid var(--line);border-radius:
 .actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
 .smallbtn{border:1px solid #d8e0e4;color:var(--blue);background:transparent;border-radius:24px;padding:10px 14px;font-size:14px}
 .smallbtn.unknown{color:#6c6559;border-color:var(--line)}.smallbtn.unknown.marked{background:#fff0d8;color:#8b5c10;border-color:#e9c98e}
+
+/* Khung Note cá nhân */
+.note-box{width:100%;max-width:520px;margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;text-align:left}
+.note-box label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}
+.note-input{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:13px;color:var(--ink);outline-color:var(--blue)}
+
+/* Modal Tra nét chữ */
+.modal{display:none;position:fixed;z-index:1000;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center}
+.modal-content{background:var(--card);padding:20px;border-radius:20px;width:90%;max-width:340px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
+.close-modal{float:right;font-size:22px;font-weight:bold;cursor:pointer;color:var(--muted)}
 
 .nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.nav .btn{font-size:16px;padding:16px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
@@ -70,7 +80,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Minigame (Auto-Sync Modular)</div></div>
+    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Stroke Order & Notes</div></div>
   </div>
   <button class="btn" id="resetBtn" title="Làm mới">↻ Làm mới</button>
 </header>
@@ -109,7 +119,8 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 
   <section class="card-box">
     <div class="tag" id="tag">HSK · TỪ VỰNG</div>
-    <div class="hanzi" id="hanzi">Đang tải...</div>
+    <div class="hanzi" id="hanzi" title="Bấm vào chữ để xem thứ tự nét viết">Đang tải...</div>
+    <div class="sub" style="font-size:12px;color:var(--blue);margin-bottom:6px;">💡 Bấm vào chữ Hán để xem nét viết</div>
     <div class="pinyin" id="pinyin">loading...</div>
     <div class="meaning" id="meaning">Đang nạp dữ liệu...</div>
     <div class="example" id="example">
@@ -117,6 +128,13 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
       <div class="example-py" id="examplePy">...</div>
       <div class="example-vi" id="exampleVi">...</div>
     </div>
+    
+    <!-- Ghi chú cá nhân -->
+    <div class="note-box">
+      <label for="vocabNote">📝 Ghi chú cá nhân (Mẹo nhớ):</label>
+      <input type="text" id="vocabNote" class="note-input" placeholder="Nhập ghi chú hoặc cách nhớ từ này...">
+    </div>
+
     <div class="actions">
       <button class="smallbtn" id="speakBtn">🔊 Nghe phát âm</button>
       <button class="smallbtn unknown" id="unknownBtn">⭐ Chưa thuộc</button>
@@ -126,6 +144,16 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
   <div class="nav">
     <button class="btn" id="prevBtn">◀ Từ trước</button>
     <button class="btn primary" id="nextBtn">Từ tiếp ▶</button>
+  </div>
+</div>
+
+<!-- Modal hiển thị nét chữ (Stroke Order) -->
+<div id="strokeModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeModal">&times;</span>
+    <h3 style="margin-top:0;font-size:16px;">Thứ tự nét viết</h3>
+    <div id="strokeContainer" style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;min-height:120px;align-items:center;"></div>
+    <div class="sub" style="margin-top:10px;">Dữ liệu nét viết chuẩn KanjiVG/Hanzi Writer</div>
   </div>
 </div>
 
@@ -183,11 +211,13 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
   <div class="stat"><strong id="unknownStat">0</strong><span>Chưa thuộc</span></div>
 </div>
 
-<footer>Tiến độ được lưu tự động trên thiết bị này.</footer>
+<footer>Tiến độ và ghi chú được lưu tự động trên thiết bị này.</footer>
 </div>
 
+<!-- Thư viện vẽ nét chữ Hanzi Writer từ CDN -->
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.0/dist/hanzi-writer.min.js"></script>
+
 <script>
-// Tự động gom dữ liệu an toàn từ các file hsk[1-6].js rời
 let words = [
   ...(typeof HSK1_DATA !== 'undefined' ? HSK1_DATA : []),
   ...(typeof HSK2_DATA !== 'undefined' ? HSK2_DATA : []),
@@ -234,12 +264,13 @@ function playSound(type) {
   }
 }
 
-const STORAGE_KEY = "hsk_vocab_v39";
+const STORAGE_KEY = "hsk_vocab_v40";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
 let marks = new Set(saved.marks || []);
 let known = new Set(saved.known || []);
+let notes = saved.notes || {}; // Lưu ghi chú theo ID/từ
 let current = 0;
 let view = [];
 let currentMode = 'flashcard';
@@ -248,7 +279,7 @@ const $ = id => document.getElementById(id);
 
 function persist() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ marks: [...marks], known: [...known] }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ marks: [...marks], known: [...known], notes }));
   } catch(e) {}
 }
 
@@ -256,7 +287,8 @@ function getFilteredWords() {
   let cat = $("category").value;
   let q = $("search").value.trim().toLowerCase();
   return words.filter(w => {
-    let matchCat = (cat === "all") || (cat === "marked" && marks.has(w.id || w.h)) || (w.c === cat);
+    let k = w.id || w.h;
+    let matchCat = (cat === "all") || (cat === "marked" && marks.has(k)) || (w.c === cat);
     let matchSearch = !q || [w.h, w.p, w.m, w.ec, w.ev, w.c].join(" ").toLowerCase().includes(q);
     return matchCat && matchSearch;
   });
@@ -291,13 +323,14 @@ function render() {
     $("tag").textContent = "TRỐNG";
     $("hanzi").textContent = "Không có từ";
     $("pinyin").textContent = "";
-    $("meaning").textContent = "Không tìm thấy từ phù hợp hoặc chưa tải file .js.";
+    $("meaning").textContent = "Không tìm thấy từ phù hợp.";
     $("exampleCn").textContent = "";
     $("examplePy").textContent = "";
     $("exampleVi").textContent = "";
     $("counter").textContent = "0 / 0";
     $("fill").style.width = "0%";
     $("unknownBtn").disabled = true;
+    $("vocabNote").value = "";
     return;
   }
 
@@ -316,6 +349,9 @@ function render() {
   $("examplePy").textContent = w.ep || "";
   $("exampleVi").textContent = w.ev || "";
 
+  // Nạp ghi chú cá nhân
+  $("vocabNote").value = notes[k] || "";
+
   $("counter").textContent = `Từ ${current + 1} / ${view.length}`;
   let percent = words.length ? Math.round(known.size / words.length * 100) : 0;
   $("percent").textContent = `${percent}% đã thuộc`;
@@ -328,6 +364,68 @@ function render() {
   $("unknownBtn").classList.toggle("marked", marks.has(k));
   $("unknownBtn").textContent = marks.has(k) ? "⭐ Đã đánh dấu chưa thuộc" : "⭐ Chưa thuộc";
 }
+
+// Lưu ghi chú khi người dùng gõ
+$("vocabNote").oninput = (e) => {
+  let w = view[current];
+  if (!w) return;
+  let k = w.id || w.h;
+  notes[k] = e.target.value;
+  persist();
+};
+
+// Xem thứ tự nét viết khi click vào chữ Hán
+$("hanzi").onclick = () => {
+  let w = view[current];
+  if (!w) return;
+  openStrokeModal(w.h);
+};
+
+function openStrokeModal(hanziStr) {
+  $("strokeContainer").innerHTML = "";
+  $("strokeModal").style.display = "flex";
+  
+  // Lọc lấy các ký tự tiếng Trung trong từ
+  let chars = hanziStr.split('').filter(c => /[\u4e00-\u9fa5]/.test(c));
+  if (!chars.length) {
+    $("strokeContainer").innerHTML = "Không có ký tự chữ Hán để vẽ nét.";
+    return;
+  }
+
+  chars.forEach((char, index) => {
+    let divId = 'char-target-' + index;
+    let wrapper = document.createElement('div');
+    wrapper.style.textAlign = "center";
+    wrapper.innerHTML = `<div id="${divId}" style="width:90px;height:90px;background:#fff;border:1px solid #ccc;border-radius:8px;margin:auto;"></div><div style="font-size:12px;margin-top:4px;color:var(--muted);">${char}</div>`;
+    $("strokeContainer").appendChild(wrapper);
+
+    // Dùng thư viện HanziWriter để render hoạt hình nét viết
+    setTimeout(() => {
+      try {
+        let writer = HanziWriter.create(divId, char, {
+          width: 90,
+          height: 90,
+          padding: 5,
+          showCharacter: true,
+          showOutline: true,
+          strokeAnimationSpeed: 1,
+          delayBetweenStrokes: 300,
+          strokeColor: '#252525',
+          radicalColor: '#c94737'
+        });
+        // Bấm vào khung để chạy lại animation nét chữ
+        document.getElementById(divId).onclick = () => writer.animateCharacter();
+        // Tự động chạy animation lần đầu
+        writer.animateCharacter();
+      } catch(err) {
+        document.getElementById(divId).innerHTML = "<span style='font-size:11px;color:red;'>Lỗi tải nét</span>";
+      }
+    }, 50);
+  });
+}
+
+$("closeModal").onclick = () => { $("strokeModal").style.display = "none"; };
+window.onclick = (e) => { if (e.target == $("strokeModal")) $("strokeModal").style.display = "none"; };
 
 function getActivePool() {
   let cat = $("category").value;
@@ -373,7 +471,7 @@ window.checkQuiz = function(el, isCorrect) {
 };
 $("nextQuizBtn").onclick = initQuiz;
 
-// 2. GHÉP CÂU (Tự động lấy câu ví dụ ec từ từ vựng)
+// 2. GHÉP CÂU
 let currentPuzzleTarget = "";
 let shuffledTokens = [];
 let selectedTokens = [];
@@ -462,7 +560,7 @@ $("checkPuzzleBtn").onclick = () => {
 };
 $("nextPuzzleBtn").onclick = initPuzzle;
 
-// 3. SỬA CÂU SAI (Tự động tạo câu hỏi từ ví dụ từ vựng)
+// 3. SỬA CÂU SAI
 function initFixGrammar() {
   let pool = getActivePool();
   let validWords = pool.filter(w => w.ec && w.ec.length >= 3);
@@ -477,7 +575,6 @@ function initFixGrammar() {
   let w = validWords[Math.floor(Math.random() * validWords.length)];
   let correctSentence = (w.ec || "").replace(/[。，！？]/g, "").trim();
   let chars = correctSentence.split('');
-  // Tạo câu sai bằng cách đảo ngẫu nhiên 2 ký tự đầu hoặc giữa
   if (chars.length >= 3) {
     let temp = chars[0]; chars[0] = chars[1]; chars[1] = temp;
   }
@@ -512,7 +609,7 @@ window.checkFix = function(el, isCorrect) {
 };
 $("nextFixBtn").onclick = initFixGrammar;
 
-// 4. TỪ ĐỒNG NGHĨA / ÔN TẬP TỪ VỰNG
+// 4. TỪ ĐỒNG NGHĨA
 function initSynonym() {
   let pool = getActivePool();
   if (!pool.length) return;
@@ -538,7 +635,7 @@ function initSynonym() {
 
 window.checkSyn = function(el, isCorrect) {
   let btns = document.querySelectorAll('#synonymView .quiz-btn');
-  btns.forEach(b => b.style.pointerEvents = 'none');
+  btns.forEach(b => b.style.pointerEvents, 'none');
   if (isCorrect) { el.classList.add('correct'); playSound('correct'); }
   else { el.classList.add('wrong'); playSound('wrong'); }
   $("nextSynBtn").style.display = "block";
