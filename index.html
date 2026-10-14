@@ -15,10 +15,10 @@
 <script src="hsk6.js"></script>
 
 <style>
-:root{--bg:#f4f0e7;--card:#fffdf7;--ink:#252525;--muted:#77746d;--red:#c94737;--line:#e3dccd;--blue:#427eae;--green:#2e7d32}
+:root{--bg:#f4f0e7;--card:#fffdf7;--ink:#252525;--muted:#77746d;--red:#c94737;--line:#e3dccd;--blue:#427eae;--green:#2e7d32;--gold:#b8860b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font:inherit}button{cursor:pointer}
-.app{max-width:820px;margin:auto;min-height:100vh;padding:16px 12px 40px}
+.app{max-width:860px;margin:auto;min-height:100vh;padding:16px 12px 40px}
 header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
 .brand{display:flex;align-items:center;gap:10px}
 .logo{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--red);color:white;font-size:21px;font-weight:800}
@@ -39,25 +39,30 @@ select,input{width:100%;padding:12px;border:1px solid var(--line);border-radius:
 
 .card-box{background:var(--card);border:1px solid #e2dac8;border-radius:20px;padding:22px 16px 18px;text-align:center;box-shadow:0 5px 18px #55442b0c;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f1ece1;padding:4px 8px;border-radius:20px;margin-bottom:14px}
-.hanzi{font-size:clamp(44px,11vw,64px);font-weight:650;line-height:1.15;margin:0 0 8px;cursor:pointer;color:var(--red);transition:.2s}
-.hanzi:hover{opacity:0.8}
-.pinyin{font-size:21px;color:var(--red);margin:0 0 6px}.meaning{font-size:17px;margin:0 0 16px}
-.example{border-top:1px solid var(--line);padding-top:14px;width:100%;max-width:520px}
-.example-cn{font-size:clamp(18px,4vw,24px);line-height:1.45;margin-bottom:4px}.example-py{color:var(--red);font-size:13px;margin-bottom:4px}.example-vi{font-size:13px;color:#5c5851}
 
-.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
-.smallbtn{border:1px solid #d8e0e4;color:var(--blue);background:transparent;border-radius:24px;padding:10px 14px;font-size:14px}
+/* Layout 2 cột: Chữ Hán / Thông tin bên trái - Khung nét viết bên cạnh */
+.card-content-layout{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;width:100%;margin-bottom:12px}
+.word-info-side{text-align:center;flex:1;min-width:200px}
+.stroke-side{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 2px 8px #00000005;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+.hanzi{font-size:clamp(44px,10vw,60px);font-weight:650;line-height:1.15;margin:0 0 4px}
+.pinyin{font-size:20px;color:var(--red);margin:0 0 4px}.meaning{font-size:16px;margin:0}
+
+/* Khung ví dụ & Khung điểm ngữ pháp cách dùng */
+.example{border-top:1px solid var(--line);padding-top:12px;width:100%;max-width:560px}
+.example-cn{font-size:clamp(16px,3.5vw,21px);line-height:1.45;margin-bottom:4px}.example-py{color:var(--red);font-size:12px;margin-bottom:4px}.example-vi{font-size:12px;color:#5c5851}
+
+.usage-box{background:#fff8e7;border:1px solid #f3e5ab;border-radius:12px;padding:10px 12px;margin-top:10px;width:100%;max-width:560px;text-align:left;font-size:13px;color:#6b4e00;line-height:1.45}
+.usage-box strong{color:var(--gold);display:inline-block;margin-bottom:2px}
+
+.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.smallbtn{border:1px solid #d8e0e4;color:var(--blue);background:transparent;border-radius:24px;padding:8px 14px;font-size:13px}
 .smallbtn.unknown{color:#6c6559;border-color:var(--line)}.smallbtn.unknown.marked{background:#fff0d8;color:#8b5c10;border-color:#e9c98e}
 
 /* Khung Note cá nhân */
-.note-box{width:100%;max-width:520px;margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;text-align:left}
-.note-box label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}
+.note-box{width:100%;max-width:560px;margin-top:10px;border-top:1px dashed var(--line);padding-top:10px;text-align:left}
+.note-box label{font-size:11px;color:var(--muted);display:block;margin-bottom:3px}
 .note-input{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:13px;color:var(--ink);outline-color:var(--blue)}
-
-/* Modal Tra nét chữ */
-.modal{display:none;position:fixed;z-index:1000;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center}
-.modal-content{background:var(--card);padding:20px;border-radius:20px;width:92%;max-width:360px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
-.close-modal{float:right;font-size:22px;font-weight:bold;cursor:pointer;color:var(--muted)}
 
 .nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.nav .btn{font-size:16px;padding:16px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
@@ -81,7 +86,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Stroke Order & Notes</div></div>
+    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Live Stroke Order & Grammar Rules</div></div>
   </div>
   <button class="btn" id="resetBtn" title="Làm mới">↻ Làm mới</button>
 </header>
@@ -109,7 +114,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
     </select>
   </div>
   <div>
-    <label for="search">Tìm từ / nghĩa</label>
+    <label for="search">Tìm từ / nghĩa / ngữ pháp</label>
     <input id="search" placeholder="Nhập từ cần tìm...">
   </div>
 </div>
@@ -120,14 +125,31 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 
   <section class="card-box">
     <div class="tag" id="tag">HSK · TỪ VỰNG</div>
-    <div class="hanzi" id="hanzi" title="Bấm vào chữ để xem cách viết & thứ tự nét">Đang tải...</div>
-    <div class="sub" style="font-size:12px;color:var(--blue);margin-bottom:6px;">💡 Bấm vào chữ Hán để xem thứ tự nét viết</div>
-    <div class="pinyin" id="pinyin">loading...</div>
-    <div class="meaning" id="meaning">Đang nạp dữ liệu...</div>
+    
+    <!-- Giao diện 2 cột: Trái là chữ và nghĩa, Phải là nét viết động -->
+    <div class="card-content-layout">
+      <div class="word-info-side">
+        <div class="hanzi" id="hanzi">...</div>
+        <div class="pinyin" id="pinyin">...</div>
+        <div class="meaning" id="meaning">...</div>
+      </div>
+      <div class="stroke-side">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;">Thứ tự nét</div>
+        <div id="inlineStrokeBox" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;min-height:90px;align-items:center;"></div>
+      </div>
+    </div>
+
+    <!-- Khung Ví dụ -->
     <div class="example" id="example">
       <div class="example-cn" id="exampleCn">...</div>
       <div class="example-py" id="examplePy">...</div>
       <div class="example-vi" id="exampleVi">...</div>
+    </div>
+
+    <!-- Khung Hướng dẫn cách dùng & Ngữ pháp mới -->
+    <div class="usage-box" id="usageBox">
+      <strong>💡 Cách dùng & Ngữ cảnh:</strong>
+      <div id="usageText">...</div>
     </div>
     
     <!-- Ghi chú cá nhân -->
@@ -145,16 +167,6 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
   <div class="nav">
     <button class="btn" id="prevBtn">◀ Từ trước</button>
     <button class="btn primary" id="nextBtn">Từ tiếp ▶</button>
-  </div>
-</div>
-
-<!-- Modal hiển thị nét chữ chuẩn không lỗi -->
-<div id="strokeModal" class="modal">
-  <div class="modal-content">
-    <span class="close-modal" id="closeModal">&times;</span>
-    <h3 style="margin-top:0;font-size:16px;color:var(--red);">Thứ tự nét viết chữ Hán</h3>
-    <div id="strokeContainer" style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;min-height:120px;align-items:center;padding:10px 0;"></div>
-    <div class="sub" style="margin-top:10px;">Bấm vào khung chữ để tra cứu chi tiết</div>
   </div>
 </div>
 
@@ -215,6 +227,9 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <footer>Tiến độ và ghi chú được lưu tự động trên thiết bị này.</footer>
 </div>
 
+<!-- Thư viện vẽ nét chữ Hanzi Writer từ CDN -->
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.0/dist/hanzi-writer.min.js"></script>
+
 <script>
 let words = [
   ...(typeof HSK1_DATA !== 'undefined' ? HSK1_DATA : []),
@@ -233,36 +248,7 @@ function initAudio() {
 document.addEventListener('click', initAudio, { once: true });
 document.addEventListener('touchstart', initAudio, { once: true });
 
-function playSound(type) {
-  initAudio();
-  if (!audioCtx) return;
-  let now = audioCtx.currentTime;
-  if (type === 'correct') {
-    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
-      let osc = audioCtx.createOscillator();
-      let gain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq, now + i * 0.08);
-      gain.gain.setValueAtTime(0.3, now + i * 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.3);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(now + i * 0.08); osc.stop(now + i * 0.08 + 0.3);
-    });
-  } else {
-    [180, 120].forEach((freq, i) => {
-      let osc = audioCtx.createOscillator();
-      let gain = audioCtx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(freq, now + i * 0.1);
-      gain.gain.setValueAtTime(0.35, now + i * 0.1);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(now + i * 0.1); osc.stop(now + i * 0.1 + 0.25);
-    });
-  }
-}
-
-const STORAGE_KEY = "hsk_vocab_v42";
+const STORAGE_KEY = "hsk_vocab_v44";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -287,7 +273,7 @@ function getFilteredWords() {
   return words.filter(w => {
     let k = w.id || w.h;
     let matchCat = (cat === "all") || (cat === "marked" && marks.has(k)) || (w.c === cat);
-    let matchSearch = !q || [w.h, w.p, w.m, w.ec, w.ev, w.c].join(" ").toLowerCase().includes(q);
+    let matchSearch = !q || [w.h, w.p, w.m, w.ec, w.ev, w.us, w.c].join(" ").toLowerCase().includes(q);
     return matchCat && matchSearch;
   });
 }
@@ -322,9 +308,11 @@ function render() {
     $("hanzi").textContent = "Không có từ";
     $("pinyin").textContent = "";
     $("meaning").textContent = "Không tìm thấy từ phù hợp.";
+    $("inlineStrokeBox").innerHTML = "";
     $("exampleCn").textContent = "";
     $("examplePy").textContent = "";
     $("exampleVi").textContent = "";
+    $("usageBox").style.display = "none";
     $("counter").textContent = "0 / 0";
     $("fill").style.width = "0%";
     $("unknownBtn").disabled = true;
@@ -347,6 +335,14 @@ function render() {
   $("examplePy").textContent = w.ep || "";
   $("exampleVi").textContent = w.ev || "";
 
+  // Hiển thị Cách dùng / Cấu trúc ngữ pháp nếu từ có dữ liệu
+  if (w.us || w.usage) {
+    $("usageText").textContent = w.us || w.usage;
+    $("usageBox").style.display = "block";
+  } else {
+    $("usageBox").style.display = "none";
+  }
+
   $("vocabNote").value = notes[k] || "";
 
   $("counter").textContent = `Từ ${current + 1} / ${view.length}`;
@@ -360,6 +356,51 @@ function render() {
 
   $("unknownBtn").classList.toggle("marked", marks.has(k));
   $("unknownBtn").textContent = marks.has(k) ? "⭐ Đã đánh dấu chưa thuộc" : "⭐ Chưa thuộc";
+
+  renderInlineStrokes(w.h);
+}
+
+function renderInlineStrokes(hanziStr) {
+  let box = $("inlineStrokeBox");
+  box.innerHTML = "";
+  let chars = hanziStr.split('').filter(c => /[\u4e00-\u9fa5]/.test(c));
+  
+  if (!chars.length) {
+    box.innerHTML = "<span style='font-size:12px;color:var(--muted);padding:10px;'>Không có chữ Hán</span>";
+    return;
+  }
+
+  chars.forEach((char, idx) => {
+    let targetId = 'inline-char-' + current + '-' + idx;
+    let wrap = document.createElement('div');
+    wrap.style.textAlign = "center";
+    wrap.innerHTML = `<div id="${targetId}" style="width:75px;height:75px;background:#fff;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Bấm để xem lại nét"></div>`;
+    box.appendChild(wrap);
+
+    setTimeout(() => {
+      if (typeof HanziWriter !== 'undefined') {
+        try {
+          let writer = HanziWriter.create(targetId, char, {
+            width: 75,
+            height: 75,
+            padding: 4,
+            showCharacter: true,
+            showOutline: true,
+            strokeAnimationSpeed: 1.2,
+            delayBetweenStrokes: 200,
+            strokeColor: '#252525',
+            radicalColor: '#c94737'
+          });
+          writer.animateCharacter();
+          document.getElementById(targetId).onclick = () => writer.animateCharacter();
+        } catch(e) {
+          document.getElementById(targetId).innerHTML = `<span style="font-size:32px;color:var(--red);">${char}</span>`;
+        }
+      } else {
+        document.getElementById(targetId).innerHTML = `<span style="font-size:32px;color:var(--red);">${char}</span>`;
+      }
+    }, 50);
+  });
 }
 
 $("vocabNote").oninput = (e) => {
@@ -369,43 +410,6 @@ $("vocabNote").oninput = (e) => {
   notes[k] = e.target.value;
   persist();
 };
-
-// Mở Modal xem nét chữ cực kỳ ổn định
-$("hanzi").onclick = () => {
-  let w = view[current];
-  if (!w) return;
-  openStrokeModal(w.h);
-};
-
-function openStrokeModal(hanziStr) {
-  let container = $("strokeContainer");
-  container.innerHTML = "";
-  $("strokeModal").style.display = "flex";
-  
-  let chars = hanziStr.split('').filter(c => /[\u4e00-\u9fa5]/.test(c));
-  if (!chars.length) {
-    container.innerHTML = "<div style='color:var(--muted);padding:20px;'>Không có ký tự chữ Hán để hiển thị nét.</div>";
-    return;
-  }
-
-  chars.forEach((char) => {
-    let card = document.createElement('div');
-    card.style.cssText = "background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;box-shadow:0 2px 6px #0001;cursor:pointer;width:100px;";
-    card.innerHTML = `
-      <div style="font-size:48px;font-weight:bold;color:var(--ink);line-height:1;margin-bottom:8px;">${char}</div>
-      <a href="https://www.strokeorder.com/chinese/${encodeURIComponent(char)}" target="_blank" style="display:inline-block;font-size:11px;background:var(--blue);color:#fff;text-decoration:none;padding:4px 8px;border-radius:8px;">Xem nét chữ ↗</a>
-    `;
-    card.onclick = (e) => {
-      if(e.target.tagName !== 'A') {
-        window.open(`https://www.strokeorder.com/chinese/${encodeURIComponent(char)}`, '_blank');
-      }
-    };
-    container.appendChild(card);
-  });
-}
-
-$("closeModal").onclick = () => { $("strokeModal").style.display = "none"; };
-window.onclick = (e) => { if (e.target == $("strokeModal")) $("strokeModal").style.display = "none"; };
 
 function getActivePool() {
   let cat = $("category").value;
@@ -445,8 +449,7 @@ function initQuiz() {
 window.checkQuiz = function(el, isCorrect) {
   let btns = document.querySelectorAll('#quizView .quiz-btn');
   btns.forEach(b => b.style.pointerEvents = 'none');
-  if (isCorrect) { el.classList.add('correct'); playSound('correct'); }
-  else { el.classList.add('wrong'); playSound('wrong'); }
+  if (isCorrect) { el.classList.add('correct'); } else { el.classList.add('wrong'); }
   $("nextQuizBtn").style.display = "block";
 };
 $("nextQuizBtn").onclick = initQuiz;
@@ -529,13 +532,11 @@ $("checkPuzzleBtn").onclick = () => {
   if (userAns === currentPuzzleTarget) {
     msgEl.style.color = "var(--green)";
     msgEl.innerHTML = "🎉 Chính xác tuyệt vời!";
-    playSound('correct');
     $("checkPuzzleBtn").style.display = "none";
     $("nextPuzzleBtn").style.display = "inline-block";
   } else {
     msgEl.style.color = "var(--red)";
     msgEl.innerHTML = "❌ Chưa đúng rồi, thử lại nhé!";
-    playSound('wrong');
   }
 };
 $("nextPuzzleBtn").onclick = initPuzzle;
@@ -583,8 +584,7 @@ function initFixGrammar() {
 window.checkFix = function(el, isCorrect) {
   let btns = document.querySelectorAll('#fixView .quiz-btn');
   btns.forEach(b => b.style.pointerEvents = 'none');
-  if (isCorrect) { el.classList.add('correct'); playSound('correct'); }
-  else { el.classList.add('wrong'); playSound('wrong'); }
+  if (isCorrect) { el.classList.add('correct'); } else { el.classList.add('wrong'); }
   $("nextFixBtn").style.display = "block";
 };
 $("nextFixBtn").onclick = initFixGrammar;
@@ -616,8 +616,7 @@ function initSynonym() {
 window.checkSyn = function(el, isCorrect) {
   let btns = document.querySelectorAll('#synonymView .quiz-btn');
   btns.forEach(b => b.style.pointerEvents = 'none');
-  if (isCorrect) { el.classList.add('correct'); playSound('correct'); }
-  else { el.classList.add('wrong'); playSound('wrong'); }
+  if (isCorrect) { el.classList.add('correct'); } else { el.classList.add('wrong'); }
   $("nextSynBtn").style.display = "block";
 };
 $("nextSynBtn").onclick = initSynonym;
