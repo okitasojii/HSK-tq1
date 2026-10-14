@@ -188,7 +188,6 @@ const HSK2_DATA = [
   { "id": "h2_003", "h": "帮助", "p": "bāngzhù", "m": "giúp đỡ", "c": "HSK 2", "ec": "谢谢你的帮助。", "ep": "Xièxie nǐ de bāngzhù.", "ev": "Cảm ơn sự giúp đỡ của bạn." }
 ];
 
-// Tự động kích hoạt AudioContext ngay khi người dùng chạm vào màn hình hoặc bấm nút bất kỳ
 let audioCtx = null;
 function initAudio() {
   if (!audioCtx) {
@@ -199,39 +198,51 @@ function initAudio() {
   }
 }
 
-// Bắt sự kiện chạm/click đầu tiên trên toàn trang để mở khóa âm thanh
 document.addEventListener('click', initAudio, { once: true });
 document.addEventListener('touchstart', initAudio, { once: true });
 
+// Âm thanh sinh động, to rõ, phong cách game thùng
 function playSound(type) {
   initAudio();
   if (!audioCtx) return;
-  let osc = audioCtx.createOscillator();
-  let gain = audioCtx.createGain();
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  
   let now = audioCtx.currentTime;
+
   if (type === 'correct') {
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(587.33, now);
-    osc.frequency.setValueAtTime(880, now + 0.1);
-    gain.gain.setValueAtTime(0.15, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-    osc.start(now);
-    osc.stop(now + 0.4);
+    // Hợp âm chiến thắng rộn ràng (3 nốt nhạc nối tiếp nhau tưng bừng)
+    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now + i * 0.08);
+      
+      gain.gain.setValueAtTime(0.3, now + i * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.3);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + i * 0.08);
+      osc.stop(now + i * 0.08 + 0.3);
+    });
   } else {
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(150, now);
-    osc.frequency.setValueAtTime(100, now + 0.1);
-    gain.gain.setValueAtTime(0.15, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-    osc.start(now);
-    osc.stop(now + 0.25);
+    // Âm thanh báo lỗi trầm, giật cục mạnh mẽ
+    [180, 120].forEach((freq, i) => {
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(freq, now + i * 0.1);
+      
+      gain.gain.setValueAtTime(0.35, now + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.25);
+    });
   }
 }
 
-const STORAGE_KEY = "hsk_vocab_v36";
+const STORAGE_KEY = "hsk_vocab_v37";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
