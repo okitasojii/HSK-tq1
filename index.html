@@ -2,52 +2,60 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#f4f0e7">
-<title>Học Từ Vựng HSK 1-6 Pro & Luyện Thi</title>
+<title>HSK Master Pro ✨</title>
 <style>
 :root{--bg:#f4f0e7;--card:#fffdf7;--ink:#252525;--muted:#77746d;--red:#c94737;--line:#e3dccd;--blue:#427eae;--green:#2e7d32}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
 button,input,select{font:inherit}button{cursor:pointer}
-.app{max-width:820px;margin:auto;min-height:100vh;padding:18px 16px 28px}
-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
-.brand{display:flex;align-items:center;gap:11px}
-.logo{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--red);color:white;font-size:23px;font-weight:800}
-h1{font-size:21px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:2px}
-.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 13px;color:var(--ink)}
+.app{max-width:820px;margin:auto;min-height:100vh;padding:16px 12px 40px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--red);color:white;font-size:21px;font-weight:800}
+h1{font-size:19px;margin:0}.sub{font-size:11px;color:var(--muted);margin-top:2px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 14px;color:var(--ink)}
 .btn.primary{background:var(--red);border-color:var(--red);color:white}
-.mode-tabs{display:flex;gap:4px;margin-bottom:14px;background:#eadecd;padding:4px;border-radius:14px;overflow-x:auto}
-.mode-tab{flex:1;border:none;background:transparent;padding:9px 11px;border-radius:10px;font-weight:600;color:var(--muted);text-align:center;white-space:nowrap;font-size:13px}
-.mode-tab.active{background:var(--card);color:var(--red);box-shadow:0 2px 8px #0000000a}
-.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
-.toolbar label{font-size:12px;color:var(--muted);display:block;margin:0 0 5px 3px}
-select,input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);outline-color:var(--blue)}
-.progress{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;margin:14px 3px 9px}
-.track{height:5px;background:#e3dccd;border-radius:10px;overflow:hidden;margin-bottom:15px}.fill{height:100%;width:0;background:var(--red);transition:width .2s}
-.card-box{background:var(--card);border:1px solid #e2dac8;border-radius:22px;padding:26px 20px 20px;text-align:center;box-shadow:0 5px 18px #55442b0c;min-height:310px;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f1ece1;padding:5px 9px;border-radius:20px;margin-bottom:16px}
-.hanzi{font-size:clamp(40px,9vw,64px);font-weight:650;line-height:1.18;letter-spacing:.03em;margin:0 0 10px}
-.pinyin{font-size:22px;color:var(--red);margin:0 0 6px}.meaning{font-size:18px;margin:0 0 18px}
-.example{border-top:1px solid var(--line);padding-top:15px;width:100%;max-width:540px}
-.example-cn{font-size:clamp(19px,4vw,25px);line-height:1.5;margin-bottom:4px}.example-py{color:var(--red);font-size:14px;margin-bottom:4px}.example-vi{font-size:14px;color:#5c5851}
-.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:17px}
-.smallbtn{border:1px solid #d8e0e4;color:var(--blue);background:transparent;border-radius:24px;padding:9px 13px;font-size:14px}
-.smallbtn.unknown{color:#6c6559;border-color:var(--line)}.smallbtn.unknown.marked{background:#fff0d8;color:#8b5c10;border-color:#e9c98e}
-.nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.nav .btn{font-size:17px;padding:15px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}
-.stat{background:#eee8dc;border-radius:12px;padding:10px;text-align:center}.stat strong{display:block;font-size:19px}.stat span{font-size:11px;color:var(--muted)}
 
-.quiz-options{display:grid;grid-template-columns:1fr;gap:12px;width:100%;max-width:560px;margin-top:14px}
-.quiz-btn{background:var(--card);border:1px solid var(--line);padding:16px 18px;border-radius:14px;font-size:19px;text-align:center;cursor:pointer;transition:.2s;font-weight:500}
+/* Tối ưu thanh tab dính trên di động không lo tràn */
+.mode-tabs{display:flex;gap:4px;margin-bottom:12px;background:#eadecd;padding:4px;border-radius:14px;overflow-x:auto;scrollbar-width:none}
+.mode-tabs::-webkit-scrollbar{display:none}
+.mode-tab{flex:0 0 auto;border:none;background:transparent;padding:10px 14px;border-radius:10px;font-weight:600;color:var(--muted);text-align:center;font-size:13px}
+.mode-tab.active{background:var(--card);color:var(--red);box-shadow:0 2px 8px #0000000a}
+
+.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.toolbar label{font-size:11px;color:var(--muted);display:block;margin:0 0 4px 2px}
+select,input{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);outline-color:var(--blue);font-size:14px}
+.progress{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px;margin:12px 2px 8px}
+.track{height:6px;background:#e3dccd;border-radius:10px;overflow:hidden;margin-bottom:14px}.fill{height:100%;width:0;background:var(--red);transition:width .2s}
+
+.card-box{background:var(--card);border:1px solid #e2dac8;border-radius:20px;padding:22px 16px 18px;text-align:center;box-shadow:0 5px 18px #55442b0c;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f1ece1;padding:4px 8px;border-radius:20px;margin-bottom:14px}
+.hanzi{font-size:clamp(44px,11vw,64px);font-weight:650;line-height:1.15;margin:0 0 8px}
+.pinyin{font-size:21px;color:var(--red);margin:0 0 6px}.meaning{font-size:17px;margin:0 0 16px}
+.example{border-top:1px solid var(--line);padding-top:14px;width:100%;max-width:520px}
+.example-cn{font-size:clamp(18px,4vw,24px);line-height:1.45;margin-bottom:4px}.example-py{color:var(--red);font-size:13px;margin-bottom:4px}.example-vi{font-size:13px;color:#5c5851}
+
+.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+.smallbtn{border:1px solid #d8e0e4;color:var(--blue);background:transparent;border-radius:24px;padding:10px 14px;font-size:14px}
+.smallbtn.unknown{color:#6c6559;border-color:var(--line)}.smallbtn.unknown.marked{background:#fff0d8;color:#8b5c10;border-color:#e9c98e}
+
+/* Nút điều hướng to, chống bấm trượt trên di động */
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.nav .btn{font-size:16px;padding:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
+.stat{background:#eee8dc;border-radius:12px;padding:10px 6px;text-align:center}.stat strong{display:block;font-size:18px}.stat span{font-size:10px;color:var(--muted)}
+
+.quiz-options{display:grid;grid-template-columns:1fr;gap:10px;width:100%;max-width:540px;margin-top:12px}
+.quiz-btn{background:var(--card);border:1px solid var(--line);padding:15px;border-radius:14px;font-size:17px;text-align:center;cursor:pointer;transition:.2s;font-weight:500}
 .quiz-btn:hover{background:#f1ece1;border-color:var(--blue)}
 .quiz-btn.correct{background:#e8f5e9!important;border-color:var(--green)!important;color:var(--green);font-weight:bold}
 .quiz-btn.wrong{background:#ffebee!important;border-color:var(--red)!important;color:var(--red);font-weight:bold}
 
-.puzzle-words{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0}
-.p-chip{background:#e5dfd3;border:1px solid var(--line);padding:10px 16px;border-radius:12px;cursor:pointer;font-size:22px;font-weight:600}
+.puzzle-words{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
+.p-chip{background:#e5dfd3;border:1px solid var(--line);padding:10px 14px;border-radius:12px;cursor:pointer;font-size:20px;font-weight:600}
 .p-chip.selected{background:#ccc;color:#888;border-color:#bbb;pointer-events:none}
 
-footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
+footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 </style>
 </head>
 <body>
@@ -55,7 +63,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>HSK Master Pro ✨</h1><div class="sub">Flashcard, Minigame & Luyện thi thông minh</div></div>
+    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Minigame Thông Minh</div></div>
   </div>
   <button class="btn" id="resetBtn" title="Làm mới">↻ Làm mới</button>
 </header>
@@ -111,55 +119,55 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
 </div>
 
 <div id="quizView" style="display:none;">
-  <section class="card-box" style="min-height:370px;">
+  <section class="card-box" style="min-height:350px;">
     <div class="tag">TRẮC NGHIỆM ĐOÁN TỪ</div>
-    <div class="hanzi" id="quizHanzi" style="font-size:52px;">?</div>
-    <div class="pinyin" id="quizPinyin" style="font-size:18px;">Nghĩa của từ này là gì?</div>
+    <div class="hanzi" id="quizHanzi" style="font-size:46px;">?</div>
+    <div class="pinyin" id="quizPinyin" style="font-size:16px;">Nghĩa của từ này là gì?</div>
     <div class="quiz-options" id="quizOptions"></div>
-    <button class="btn primary" id="nextQuizBtn" style="margin-top:20px;display:none;padding:12px 20px;font-size:16px;">Câu tiếp theo ▶</button>
+    <button class="btn primary" id="nextQuizBtn" style="margin-top:16px;display:none;padding:12px 20px;font-size:15px;">Câu tiếp theo ▶</button>
   </section>
 </div>
 
 <div id="puzzleView" style="display:none;">
-  <section class="card-box" style="min-height:370px;">
+  <section class="card-box" style="min-height:350px;">
     <div class="tag">SẮP XẾP CÂU / GHÉP TỪ</div>
-    <div class="sub" style="margin-bottom:8px;font-size:15px;">Bấm chọn các chữ bên dưới để xếp lại câu đúng:</div>
-    <div class="meaning" id="puzzleMeaning" style="font-weight:bold;color:var(--red);font-size:20px;">...</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Bấm chọn các chữ bên dưới để xếp lại câu đúng:</div>
+    <div class="meaning" id="puzzleMeaning" style="font-weight:bold;color:var(--red);font-size:18px;">...</div>
     <div class="puzzle-words" id="puzzleChips"></div>
-    <div style="margin:16px 0;font-size:24px;min-height:45px;border-bottom:2px dashed var(--line);padding-bottom:8px;display:flex;justify-content:center;gap:8px;align-items:center;" id="puzzleAns"></div>
-    <div id="puzzleResultMsg" style="font-weight:bold;margin:6px 0;min-height:24px;font-size:18px;"></div>
+    <div style="margin:14px 0;font-size:22px;min-height:40px;border-bottom:2px dashed var(--line);padding-bottom:6px;display:flex;justify-content:center;gap:6px;align-items:center;" id="puzzleAns"></div>
+    <div id="puzzleResultMsg" style="font-weight:bold;margin:4px 0;min-height:22px;font-size:16px;"></div>
     <div class="actions">
-      <button class="btn" id="resetPuzzleBtn" style="padding:10px 18px;font-size:16px;">Làm lại</button>
-      <button class="btn primary" id="checkPuzzleBtn" style="padding:10px 18px;font-size:16px;">Kiểm tra đáp án</button>
-      <button class="btn primary" id="nextPuzzleBtn" style="display:none;padding:10px 18px;font-size:16px;">Câu tiếp ▶</button>
+      <button class="btn" id="resetPuzzleBtn" style="padding:10px 16px;font-size:15px;">Làm lại</button>
+      <button class="btn primary" id="checkPuzzleBtn" style="padding:10px 16px;font-size:15px;">Kiểm tra</button>
+      <button class="btn primary" id="nextPuzzleBtn" style="display:none;padding:10px 16px;font-size:15px;">Câu tiếp ▶</button>
     </div>
   </section>
 </div>
 
 <div id="fixView" style="display:none;">
-  <section class="card-box" style="min-height:380px;">
+  <section class="card-box" style="min-height:350px;">
     <div class="tag">TÌM VÀ SỬA CÂU SAI NGỮ PHÁP</div>
-    <div class="sub" style="margin-bottom:8px;font-size:15px;">Câu tiếng Trung dưới đây bị sai trật tự, chọn câu sửa đúng:</div>
-    <div class="hanzi" id="fixWrongSentence" style="font-size:28px;color:var(--red);margin-bottom:12px;line-height:1.4;">...</div>
-    <div class="meaning" id="fixHint" style="font-size:17px;color:var(--muted);margin-bottom:14px;font-style:italic;">...</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Câu tiếng Trung dưới đây bị sai trật tự, chọn câu sửa đúng:</div>
+    <div class="hanzi" id="fixWrongSentence" style="font-size:24px;color:var(--red);margin-bottom:10px;line-height:1.35;">...</div>
+    <div class="meaning" id="fixHint" style="font-size:15px;color:var(--muted);margin-bottom:12px;font-style:italic;">...</div>
     <div class="quiz-options" id="fixOptions"></div>
-    <button class="btn primary" id="nextFixBtn" style="margin-top:20px;display:none;padding:12px 20px;font-size:16px;">Câu tiếp theo ▶</button>
+    <button class="btn primary" id="nextFixBtn" style="margin-top:16px;display:none;padding:12px 20px;font-size:15px;">Câu tiếp theo ▶</button>
   </section>
 </div>
 
 <div id="synonymView" style="display:none;">
-  <section class="card-box" style="min-height:380px;">
+  <section class="card-box" style="min-height:350px;">
     <div class="tag">TỪ ĐỒNG NGHĨA & PHÂN BIỆT</div>
-    <div class="sub" style="margin-bottom:8px;font-size:15px;">Chọn từ có nghĩa tương đương hoặc phù hợp nhất:</div>
-    <div class="hanzi" id="synQuestion" style="font-size:27px;margin-bottom:12px;line-height:1.4;">...</div>
-    <div class="meaning" id="synMeaning" style="font-size:17px;color:var(--muted);margin-bottom:14px;">...</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Chọn từ có nghĩa tương đương hoặc phù hợp nhất:</div>
+    <div class="hanzi" id="synQuestion" style="font-size:24px;margin-bottom:10px;line-height:1.35;">...</div>
+    <div class="meaning" id="synMeaning" style="font-size:15px;color:var(--muted);margin-bottom:12px;">...</div>
     <div class="quiz-options" id="synOptions"></div>
-    <button class="btn primary" id="nextSynBtn" style="margin-top:20px;display:none;padding:12px 20px;font-size:16px;">Câu tiếp theo ▶</button>
+    <button class="btn primary" id="nextSynBtn" style="margin-top:16px;display:none;padding:12px 20px;font-size:15px;">Câu tiếp theo ▶</button>
   </section>
 </div>
 
 <div class="stats" id="statsBar">
-  <div class="stat"><strong id="totalStat">0</strong><span>Từ trong bộ lọc</span></div>
+  <div class="stat"><strong id="totalStat">0</strong><span>Tổng số từ</span></div>
   <div class="stat"><strong id="knownStat">0</strong><span>Đã thuộc</span></div>
   <div class="stat"><strong id="unknownStat">0</strong><span>Chưa thuộc</span></div>
 </div>
@@ -168,6 +176,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
 </div>
 
 <script>
+// TRỌN BỘ DỮ LIỆU HSK 1 & HSK 2
 const HSK1_DATA = [
   { "id": "h1_001", "h": "爱", "p": "ài", "m": "yêu, thích", "c": "HSK 1", "ec": "我爱吃中国菜。", "ep": "Wǒ ài chī Zhōngguó cài.", "ev": "Tôi thích ăn món Trung Quốc." },
   { "id": "h1_002", "h": "八", "p": "bā", "m": "tám", "c": "HSK 1", "ec": "我有八本书。", "ep": "Wǒ yǒu bā běn shū.", "ev": "Tôi có tám quyển sách." },
@@ -177,12 +186,43 @@ const HSK1_DATA = [
 ];
 
 const HSK2_DATA = [
-  { "id": "h2_001", "h": "吧", "p": "ba", "m": "nhé, đi nào", "c": "HSK 2", "ec": "我们走吧。", "ep": "Wǒmen zǒu ba.", "ev": "Chúng ta đi thôi." },
+  { "id": "h2_001", "h": "吧", "p": "ba", "m": "nhé, đi nào (trợ từ)", "c": "HSK 2", "ec": "我们走吧。", "ep": "Wǒmen zǒu ba.", "ev": "Chúng ta đi thôi." },
   { "id": "h2_002", "h": "白", "p": "bái", "m": "trắng", "c": "HSK 2", "ec": "白色的衣服很漂亮。", "ep": "Báisè de yīfu hěn piàoliang.", "ev": "Quần áo màu trắng rất đẹp." },
   { "id": "h2_003", "h": "帮助", "p": "bāngzhù", "m": "giúp đỡ", "c": "HSK 2", "ec": "谢谢你的帮助。", "ep": "Xièxie nǐ de bāngzhù.", "ev": "Cảm ơn sự giúp đỡ của bạn." }
 ];
 
-const STORAGE_KEY = "hsk_vocab_v31";
+// Hiệu ứng âm thanh chuẩn Web Audio API (Không cần file nhạc ngoài)
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playSound(type) {
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  let osc = audioCtx.createOscillator();
+  let gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  
+  let now = audioCtx.currentTime;
+  if (type === 'correct') {
+    // Âm thanh "Ting ting" vui tai
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(587.33, now); // D5
+    osc.frequency.setValueAtTime(880, now + 0.1); // A5
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+    osc.start(now);
+    osc.stop(now + 0.4);
+  } else {
+    // Âm thanh "Tạch" trầm báo sai
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(150, now);
+    osc.frequency.setValueAtTime(100, now + 0.1);
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+    osc.start(now);
+    osc.stop(now + 0.25);
+  }
+}
+
+const STORAGE_KEY = "hsk_vocab_v33";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -303,8 +343,13 @@ function initQuiz() {
 window.checkQuiz = function(el, isCorrect) {
   let btns = document.querySelectorAll('#quizView .quiz-btn');
   btns.forEach(b => b.style.pointerEvents = 'none');
-  if (isCorrect) el.classList.add('correct');
-  else el.classList.add('wrong');
+  if (isCorrect) {
+    el.classList.add('correct');
+    playSound('correct');
+  } else {
+    el.classList.add('wrong');
+    playSound('wrong');
+  }
   $("nextQuizBtn").style.display = "block";
 };
 $("nextQuizBtn").onclick = initQuiz;
@@ -347,7 +392,7 @@ function renderPuzzleBoard(shuffledTokens) {
 
   let ansHtml = "";
   if (selectedTokens.length === 0) {
-    ansHtml = `<span style="color:var(--muted);font-size:16px;">Bấm chọn các chữ bên trên để xếp câu...</span>`;
+    ansHtml = `<span style="color:var(--muted);font-size:15px;">Bấm chọn các chữ bên trên...</span>`;
   } else {
     selectedTokens.forEach((s, sIdx) => {
       ansHtml += `<span class="p-chip" style="background:var(--blue);color:white;cursor:pointer;" onclick="removeToken(${sIdx})">${s.char}</span>`;
@@ -388,11 +433,13 @@ $("checkPuzzleBtn").onclick = () => {
   if (userAns === currentPuzzleTarget) {
     msgEl.style.color = "var(--green)";
     msgEl.innerHTML = "🎉 Chính xác tuyệt vời!";
+    playSound('correct');
     $("checkPuzzleBtn").style.display = "none";
     $("nextPuzzleBtn").style.display = "inline-block";
   } else {
     msgEl.style.color = "var(--red)";
-    msgEl.innerHTML = "❌ Chưa đúng rồi, thử sắp xếp lại nhé!";
+    msgEl.innerHTML = "❌ Chưa đúng rồi, thử lại nhé!";
+    playSound('wrong');
   }
 };
 
@@ -422,8 +469,13 @@ function initFixGrammar() {
 window.checkFix = function(el, isCorrect) {
   let btns = document.querySelectorAll('#fixView .quiz-btn');
   btns.forEach(b => b.style.pointerEvents = 'none');
-  if (isCorrect) el.classList.add('correct');
-  else el.classList.add('wrong');
+  if (isCorrect) {
+    el.classList.add('correct');
+    playSound('correct');
+  } else {
+    el.classList.add('wrong');
+    playSound('wrong');
+  }
   $("nextFixBtn").style.display = "block";
 };
 $("nextFixBtn").onclick = initFixGrammar;
@@ -452,8 +504,13 @@ function initSynonym() {
 window.checkSyn = function(el, isCorrect) {
   let btns = document.querySelectorAll('#synonymView .quiz-btn');
   btns.forEach(b => b.style.pointerEvents = 'none');
-  if (isCorrect) el.classList.add('correct');
-  else el.classList.add('wrong');
+  if (isCorrect) {
+    el.classList.add('correct');
+    playSound('correct');
+  } else {
+    el.classList.add('wrong');
+    playSound('wrong');
+  }
   $("nextSynBtn").style.display = "block";
 };
 $("nextSynBtn").onclick = initSynonym;
