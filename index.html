@@ -17,7 +17,6 @@ h1{font-size:19px;margin:0}.sub{font-size:11px;color:var(--muted);margin-top:2px
 .btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 14px;color:var(--ink)}
 .btn.primary{background:var(--red);border-color:var(--red);color:white}
 
-/* Tối ưu thanh tab dính trên di động không lo tràn */
 .mode-tabs{display:flex;gap:4px;margin-bottom:12px;background:#eadecd;padding:4px;border-radius:14px;overflow-x:auto;scrollbar-width:none}
 .mode-tabs::-webkit-scrollbar{display:none}
 .mode-tab{flex:0 0 auto;border:none;background:transparent;padding:10px 14px;border-radius:10px;font-weight:600;color:var(--muted);text-align:center;font-size:13px}
@@ -40,7 +39,6 @@ select,input{width:100%;padding:12px;border:1px solid var(--line);border-radius:
 .smallbtn{border:1px solid #d8e0e4;color:var(--blue);background:transparent;border-radius:24px;padding:10px 14px;font-size:14px}
 .smallbtn.unknown{color:#6c6559;border-color:var(--line)}.smallbtn.unknown.marked{background:#fff0d8;color:#8b5c10;border-color:#e9c98e}
 
-/* Nút điều hướng to, chống bấm trượt trên di động */
 .nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.nav .btn{font-size:16px;padding:16px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
 .stat{background:#eee8dc;border-radius:12px;padding:10px 6px;text-align:center}.stat strong{display:block;font-size:18px}.stat span{font-size:10px;color:var(--muted)}
@@ -176,7 +174,6 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 </div>
 
 <script>
-// TRỌN BỘ DỮ LIỆU HSK 1 & HSK 2
 const HSK1_DATA = [
   { "id": "h1_001", "h": "爱", "p": "ài", "m": "yêu, thích", "c": "HSK 1", "ec": "我爱吃中国菜。", "ep": "Wǒ ài chī Zhōngguó cài.", "ev": "Tôi thích ăn món Trung Quốc." },
   { "id": "h1_002", "h": "八", "p": "bā", "m": "tám", "c": "HSK 1", "ec": "我有八本书。", "ep": "Wǒ yǒu bā běn shū.", "ev": "Tôi có tám quyển sách." },
@@ -191,7 +188,6 @@ const HSK2_DATA = [
   { "id": "h2_003", "h": "帮助", "p": "bāngzhù", "m": "giúp đỡ", "c": "HSK 2", "ec": "谢谢你的帮助。", "ep": "Xièxie nǐ de bāngzhù.", "ev": "Cảm ơn sự giúp đỡ của bạn." }
 ];
 
-// Hiệu ứng âm thanh chuẩn Web Audio API (Không cần file nhạc ngoài)
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function playSound(type) {
   if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -202,16 +198,14 @@ function playSound(type) {
   
   let now = audioCtx.currentTime;
   if (type === 'correct') {
-    // Âm thanh "Ting ting" vui tai
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(587.33, now); // D5
-    osc.frequency.setValueAtTime(880, now + 0.1); // A5
+    osc.frequency.setValueAtTime(587.33, now);
+    osc.frequency.setValueAtTime(880, now + 0.1);
     gain.gain.setValueAtTime(0.15, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
     osc.start(now);
     osc.stop(now + 0.4);
   } else {
-    // Âm thanh "Tạch" trầm báo sai
     osc.type = 'sawtooth';
     osc.frequency.setValueAtTime(150, now);
     osc.frequency.setValueAtTime(100, now + 0.1);
@@ -222,7 +216,7 @@ function playSound(type) {
   }
 }
 
-const STORAGE_KEY = "hsk_vocab_v33";
+const STORAGE_KEY = "hsk_vocab_v34";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -422,6 +416,7 @@ $("resetPuzzleBtn").onclick = () => {
   renderPuzzleBoard(shuffled);
 };
 
+// ĐÃ SỬA: Chặn tuyệt đối, bắt buộc phải bấm nút "Kiểm tra" thì mới chấm điểm đúng sai!
 $("checkPuzzleBtn").onclick = () => {
   if (selectedTokens.length === 0) {
     alert("Bạn chưa chọn chữ nào cả!");
