@@ -72,7 +72,7 @@ const HSK2_DATA = [
   { "id": "h2_0221", "h": "牛奶", "p": "niúnǎi", "m": "sữa bò", "c": "HSK 2", "ec": "早上喝牛奶对身体好", "ep": "Zǎoshang hē niúnǎi duì shēntǐ hǎo", "ev": "Buổi sáng uống sữa bò tốt cho cơ thể.", "us": "Danh từ thực phẩm." },
   { "id": "h2_0222", "h": "女人", "p": "nǚrén", "m": "phụ nữ, nữ giới", "c": "HSK 2", "ec": "她们都是公司的职员", "ep": "Tāmen dōu shì gōngsī de zhíyuán", "ev": "Họ đều là nhân viên công ty.", "us": "Danh từ chỉ giới tính." },
   { "id": "h2_0223", "h": "旁边", "p": "pángbiān", "m": "bên cạnh", "c": "HSK 2", "ec": "医院在银行旁边", "ep": "Yīyuàn zài yínháng pángbiān", "ev": "Bệnh viện ở bên cạnh ngân hàng.", "us": "Danh từ phương vị." },
-  { "id": "h2_0224", "h": "跑步", "pàobù", "m": "chạy bộ", "c": "HSK 2", "ec": "每天早上我都去跑步", "ep": "Meitiān zǎoshang wǒ dōu qù pàobù", "ev": "Mỗi buổi sáng tôi đều đi chạy bộ.", "us": "Động từ ly hợp." },
+  { "id": "h2_0224", "h": "跑步", "p": "pàobù", "m": "chạy bộ", "c": "HSK 2", "ec": "每天早上我都去跑步", "ep": "Měitiān zǎoshang wǒ dōu qù pàobù", "ev": "Mỗi buổi sáng tôi đều đi chạy bộ.", "us": "Động từ ly hợp." },
   { "id": "h2_0225", "h": "便宜", "p": "piányi", "m": "rẻ", "c": "HSK 2", "ec": "这件衣服真便宜", "ep": "Zhè jiàn yīfu zhēn piányi", "ev": "Bộ quần áo này rẻ thật.", "us": "Tính từ. Trái nghĩa với 贵 (guì)." },
   { "id": "h2_0226", "h": "机票", "p": "jīpiào", "m": "vé máy bay", "c": "HSK 2", "ec": "我已经买好机票了", "ep": "Wǒ yǐjīng mǎi hǎo jīpiào le", "ev": "Tôi đã mua xong vé máy bay rồi.", "us": "Danh từ. Lượng từ: 张 (zhāng)." },
   { "id": "h2_0227", "h": "踢足球", "p": "tī zúqiú", "m": "đá bóng", "c": "HSK 2", "ec": "周末我和朋友去踢足球", "ep": "Zhōumò wǒ hé péngyou qù tī zúqiú", "ev": "Cuối tuần tôi cùng bạn đi đá bóng.", "us": "Động từ thể thao dùng chân (踢)." },
