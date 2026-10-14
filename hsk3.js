@@ -494,7 +494,6 @@ const HSK3_DATA = [
   { "id": "h3_0493", "h": "判断", "p": "pànduàn", "m": "phán đoán", "c": "HSK 3", "ec": "请根据事实做出判断", "ep": "Qǐng gēnjù shìshí zuò chū pànduàn", "ev": "Xin hãy đưa ra phán đoán dựa theo sự thật.", "us": "Động từ/Danh từ." },
   { "id": "h3_0494", "h": "盘子", "p": "pánzi", "m": "cái đĩa", "c": "HSK 3", "ec": "盘子里装满了水果", "ep": "Pánzi lǐ zhuāng mǎn le shuǐguǒ", "ev": "Trong đĩa đựng đầy trái cây.", "us": "Danh từ đồ vật." },
   { "id": "h3_0495", "h": "陪", "p": "péi", "m": "cùng, đi cùng, đồng hành", "c": "HSK 3", "ec": "周末我要陪妈妈去买菜", "ep": "Zhōumò wǒ yào péi māma qù mài cài", "ev": "Cuối tuần tôi đi mua rau cùng mẹ.", "us": "Động từ." },
-  { "id": "h3_0496", "h": "批评", "p": "pīpíng", "m": "phê bình", "c": "HSK 3", "ec": "做错了事受到老师批评", "ep": "Zuò cuò le shì shòudào lǎoshī pīpíng", "ev": "Làm sai việc bị thầy cô phê bình.", "us": "Động từ/Danh từ." },
   { "id": "h3_0497", "h": "脾气", "p": "píqi", "m": "tính khí, cá tính", "c": "HSK 3", "ec": "他的脾气很好", "ep": "Tā de píqi hěn hǎo", "ev": "Tính khí của cậu ấy rất tốt.", "us": "Danh từ." },
   { "id": "h3_0498", "h": "篇", "p": "piān", "m": "bài, tờ (lượng từ bài văn/thơ)", "c": "HSK 3", "ec": "我写了一篇作文", "ep": "Wǒ xiě le yī piān zuòwén", "ev": "Tôi đã viết một bài văn.", "us": "Lượng từ văn bản." },
   { "id": "h3_0499", "h": "骗", "p": "piàn", "m": "lừa gạt, lừa đảo", "c": "HSK 3", "ec": "不要相信陌生人的骗局", "ep": "Bùyào xiāngxìn mòshēngrén de piànjù", "ev": "Đừng tin lời lừa gạt của người lạ.", "us": "Động từ." },
