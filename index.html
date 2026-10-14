@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f4f0e7">
-<title>Học Từ Vựng HSK 1-6 Trọn Bộ</title>
+<title>Học Từ Vựng HSK 1-6 Trọn Bộ & Luyện Tập</title>
 
-<!-- Load dữ liệu các cấp độ HSK -->
+<!-- Nhúng 6 file dữ liệu HSK -->
 <script src="hsk1.js"></script>
 <script src="hsk2.js"></script>
 <script src="hsk3.js"></script>
@@ -15,7 +15,7 @@
 <script src="hsk6.js"></script>
 
 <style>
-:root{--bg:#f4f0e7;--card:#fffdf7;--ink:#252525;--muted:#77746d;--red:#c94737;--line:#e3dccd;--blue:#427eae}
+:root{--bg:#f4f0e7;--card:#fffdf7;--ink:#252525;--muted:#77746d;--red:#c94737;--line:#e3dccd;--blue:#427eae;--green:#2e7d32}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
 button,input,select{font:inherit}button{cursor:pointer}
 .app{max-width:780px;margin:auto;min-height:100vh;padding:18px 16px 28px}
@@ -25,12 +25,15 @@ header{display:flex;justify-content:space-between;align-items:center;gap:12px;ma
 h1{font-size:21px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:2px}
 .btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 13px;color:var(--ink)}
 .btn.primary{background:var(--red);border-color:var(--red);color:white}
+.mode-tabs{display:flex;gap:6px;margin-bottom:14px;background:#eadecd;padding:4px;border-radius:14px}
+.mode-tab{flex:1;border:none;background:transparent;padding:10px;border-radius:10px;font-weight:600;color:var(--muted);text-align:center}
+.mode-tab.active{background:var(--card);color:var(--red);box-shadow:0 2px 8px #0000000a}
 .toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
 .toolbar label{font-size:12px;color:var(--muted);display:block;margin:0 0 5px 3px}
 select,input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);outline-color:var(--blue)}
 .progress{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;margin:14px 3px 9px}
 .track{height:5px;background:#e3dccd;border-radius:10px;overflow:hidden;margin-bottom:15px}.fill{height:100%;width:0;background:var(--red);transition:width .2s}
-.flashcard{background:var(--card);border:1px solid #e2dac8;border-radius:22px;padding:26px 20px 20px;text-align:center;box-shadow:0 5px 18px #55442b0c;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.card-box{background:var(--card);border:1px solid #e2dac8;border-radius:22px;padding:26px 20px 20px;text-align:center;box-shadow:0 5px 18px #55442b0c;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f1ece1;padding:5px 9px;border-radius:20px;margin-bottom:16px}
 .hanzi{font-size:clamp(42px,9vw,66px);font-weight:650;line-height:1.18;letter-spacing:.03em;margin:0 0 13px}
 .pinyin{font-size:24px;color:var(--red);margin:0 0 8px}.meaning{font-size:20px;margin:0 0 22px}
@@ -42,6 +45,15 @@ select,input{width:100%;padding:11px 12px;border:1px solid var(--line);border-ra
 .nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.nav .btn{font-size:17px;padding:15px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}
 .stat{background:#eee8dc;border-radius:12px;padding:10px;text-align:center}.stat strong{display:block;font-size:19px}.stat span{font-size:11px;color:var(--muted)}
+/* Quiz & Game styles */
+.quiz-options{display:grid;grid-template-columns:1fr;gap:10px;width:100%;max-width:500px;margin-top:15px}
+.quiz-btn{background:var(--card);border:1px solid var(--line);padding:14px;border-radius:14px;font-size:17px;text-align:center;cursor:pointer;transition:.2s}
+.quiz-btn:hover{background:#f1ece1;border-color:var(--blue)}
+.quiz-btn.correct{background:#e8f5e9;border-color:var(--green);color:var(--green);font-weight:bold}
+.quiz-btn.wrong{background:#ffebee;border-color:var(--red);color:var(--red);font-weight:bold}
+.puzzle-words{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:15px 0}
+.p-chip{background:#e5dfd3;border:1px solid var(--line);padding:8px 14px;border-radius:10px;cursor:pointer;font-size:18px}
+.p-chip.selected{background:var(--blue);color:white;border-color:var(--blue)}
 footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
 </style>
 </head>
@@ -50,12 +62,18 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>HSK 1-6 Flashcard ✨</h1><div class="sub">Ôn tập từ vựng chuẩn chỉnh</div></div>
+    <div><h1>HSK 1-6 Flashcard & Game ✨</h1><div class="sub">Học và Luyện tập đỉnh cao</div></div>
   </div>
-  <button class="btn" id="resetBtn" title="Đặt lại bộ lọc">↻ Làm mới</button>
+  <button class="btn" id="resetBtn" title="Làm mới">↻ Làm mới</button>
 </header>
 
-<div class="toolbar">
+<div class="mode-tabs">
+  <button class="mode-tab active" data-mode="flashcard">📖 Flashcard</button>
+  <button class="mode-tab" data-mode="quiz">❓ Trắc nghiệm đoán từ</button>
+  <button class="mode-tab" data-mode="puzzle">🧩 Sắp xếp / Ghép câu</button>
+</div>
+
+<div class="toolbar" id="filterToolbar">
   <div>
     <label for="category">Cấp độ HSK</label>
     <select id="category">
@@ -75,31 +93,57 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
   </div>
 </div>
 
-<div class="progress"><span id="counter">Từ 0 / 0</span><span id="percent">0% đã thuộc</span></div>
-<div class="track"><div class="fill" id="fill"></div></div>
+<div id="flashcardView">
+  <div class="progress"><span id="counter">Từ 0 / 0</span><span id="percent">0% đã thuộc</span></div>
+  <div class="track"><div class="fill" id="fill"></div></div>
 
-<section class="flashcard">
-  <div class="tag" id="tag">HSK · TỪ VỰNG</div>
-  <div class="hanzi" id="hanzi">Đang tải...</div>
-  <div class="pinyin" id="pinyin">loading...</div>
-  <div class="meaning" id="meaning">Đang nạp dữ liệu...</div>
-  <div class="example" id="example">
-    <div class="example-cn" id="exampleCn">...</div>
-    <div class="example-py" id="examplePy">...</div>
-    <div class="example-vi" id="exampleVi">...</div>
-  </div>
-  <div class="actions">
-    <button class="smallbtn" id="speakBtn">🔊 Nghe phát âm</button>
-    <button class="smallbtn unknown" id="unknownBtn">⭐ Chưa thuộc</button>
-  </div>
-</section>
+  <section class="card-box">
+    <div class="tag" id="tag">HSK · TỪ VỰNG</div>
+    <div class="hanzi" id="hanzi">Đang tải...</div>
+    <div class="pinyin" id="pinyin">loading...</div>
+    <div class="meaning" id="meaning">Đang nạp dữ liệu...</div>
+    <div class="example" id="example">
+      <div class="example-cn" id="exampleCn">...</div>
+      <div class="example-py" id="examplePy">...</div>
+      <div class="example-vi" id="exampleVi">...</div>
+    </div>
+    <div class="actions">
+      <button class="smallbtn" id="speakBtn">🔊 Nghe phát âm</button>
+      <button class="smallbtn unknown" id="unknownBtn">⭐ Chưa thuộc</button>
+    </div>
+  </section>
 
-<div class="nav">
-  <button class="btn" id="prevBtn">◀ Từ trước</button>
-  <button class="btn primary" id="nextBtn">Từ tiếp ▶</button>
+  <div class="nav">
+    <button class="btn" id="prevBtn">◀ Từ trước</button>
+    <button class="btn primary" id="nextBtn">Từ tiếp ▶</button>
+  </div>
 </div>
 
-<div class="stats">
+<div id="quizView" style="display:none;">
+  <section class="card-box" style="min-height:350px;">
+    <div class="tag">TRẮC NGHIỆM ĐOÁN TỪ</div>
+    <div class="hanzi" id="quizHanzi">?</div>
+    <div class="pinyin" id="quizPinyin">Nghĩa của từ này là gì?</div>
+    <div class="quiz-options" id="quizOptions"></div>
+    <button class="btn primary" id="nextQuizBtn" style="margin-top:20px;display:none;">Câu tiếp theo ▶</button>
+  </section>
+</div>
+
+<div id="puzzleView" style="display:none;">
+  <section class="card-box" style="min-height:350px;">
+    <div class="tag">SẮP XẾP CÂU / GHÉP TỪ</div>
+    <div class="sub" style="margin-bottom:10px;">Ghép các chữ cái/từ sau thành câu tiếng Trung đúng nghĩa:</div>
+    <div class="meaning" id="puzzleMeaning" style="font-weight:bold;color:var(--red);">...</div>
+    <div class="puzzle-words" id="puzzleChips"></div>
+    <div style="margin:15px 0;font-size:20px;min-height:35px;border-bottom:2px dashed var(--line);padding-bottom:5px;" id="puzzleAns"></div>
+    <div class="actions">
+      <button class="btn" id="checkPuzzleBtn">Kiểm tra</button>
+      <button class="btn primary" id="nextPuzzleBtn">Câu tiếp ▶</button>
+    </div>
+  </section>
+</div>
+
+<div class="stats" id="statsBar">
   <div class="stat"><strong id="totalStat">0</strong><span>Từ trong bộ lọc</span></div>
   <div class="stat"><strong id="knownStat">0</strong><span>Đã thuộc</span></div>
   <div class="stat"><strong id="unknownStat">0</strong><span>Chưa thuộc</span></div>
@@ -109,7 +153,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
 </div>
 
 <script>
-const STORAGE_KEY = "hsk_vocab_v20";
+const STORAGE_KEY = "hsk_vocab_v21";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -118,15 +162,13 @@ let marks = new Set(saved.marks || []);
 let known = new Set(saved.known || []);
 let current = 0;
 let view = [];
+let currentMode = 'flashcard';
 
 const $ = id => document.getElementById(id);
 
 function persist() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      marks: [...marks],
-      known: [...known]
-    }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ marks: [...marks], known: [...known] }));
   } catch(e) {}
 }
 
@@ -139,6 +181,25 @@ function getFilteredWords() {
     return matchCat && matchSearch;
   });
 }
+
+// Mode switching
+document.querySelectorAll('.mode-tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentMode = tab.dataset.mode;
+    
+    $("flashcardView").style.display = currentMode === 'flashcard' ? 'block' : 'none';
+    $("quizView").style.display = currentMode === 'quiz' ? 'block' : 'none';
+    $("puzzleView").style.display = currentMode === 'puzzle' ? 'block' : 'none';
+    $("filterToolbar").style.display = currentMode === 'flashcard' ? 'grid' : 'none';
+    $("statsBar").style.display = currentMode === 'flashcard' ? 'grid' : 'none';
+
+    if (currentMode === 'flashcard') render();
+    if (currentMode === 'quiz') initQuiz();
+    if (currentMode === 'puzzle') initPuzzle();
+  };
+});
 
 function render() {
   view = getFilteredWords();
@@ -184,6 +245,96 @@ function render() {
   $("unknownBtn").textContent = marks.has(k) ? "⭐ Đã đánh dấu chưa thuộc" : "⭐ Chưa thuộc";
 }
 
+// Quiz mode logic
+function initQuiz() {
+  if (!words.length) return;
+  let correctWord = words[Math.floor(Math.random() * words.length)];
+  $("quizHanzi").textContent = correctWord.h;
+  $("quizPinyin").textContent = correctWord.p;
+
+  let options = [correctWord];
+  while (options.length < 4 && options.length < words.length) {
+    let randW = words[Math.floor(Math.random() * words.length)];
+    if (!options.includes(randW)) options.push(randW);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  let html = "";
+  options.forEach(opt => {
+    let isCorrect = (opt.m === correctWord.m);
+    html += `<div class="quiz-btn" onclick="checkQuiz(this, ${isCorrect})">${opt.m}</div>`;
+  });
+  $("quizOptions").innerHTML = html;
+  $("nextQuizBtn").style.display = "none";
+}
+
+window.checkQuiz = function(el, isCorrect) {
+  let btns = document.querySelectorAll('.quiz-btn');
+  btns.forEach(b => b.style.pointerEvents = 'none');
+  if (isCorrect) {
+    el.classList.add('correct');
+  } else {
+    el.classList.add('wrong');
+    btns.forEach(b => {
+      if (b.textContent === words.find(w => w.m === b.textContent)?.m) {} // highlight correct if needed
+    });
+  }
+  $("nextQuizBtn").style.display = "block";
+};
+
+$("nextQuizBtn").onclick = initQuiz;
+
+// Puzzle mode logic (Sắp xếp câu ví dụ)
+let currentPuzzleTarget = "";
+let selectedPuzzleChars = [];
+
+function initPuzzle() {
+  let validWords = words.filter(w => w.ec && w.ec.length >= 2);
+  if (!validWords.length) {
+    $("puzzleMeaning").textContent = "Không có câu ví dụ để sắp xếp!";
+    $("puzzleChips").innerHTML = "";
+    return;
+  }
+  let w = validWords[Math.floor(Math.random() * validWords.length)];
+  currentPuzzleTarget = w.h.trim(); // hoặc w.ec lấy cả câu
+  // Lấy câu ví dụ tiếng Trung làm mục tiêu sắp xếp (bỏ dấu câu)
+  let sentence = (w.ec || "").replace(/[。，！？]/g, "").trim();
+  if (!sentence) sentence = w.h;
+  
+  currentPuzzleTarget = sentence;
+  $("puzzleMeaning").textContent = "Nghĩa: " + (w.ev || w.m);
+  $("puzzleAns").textContent = "";
+  selectedPuzzleChars = [];
+
+  let chars = currentPuzzleTarget.split('').sort(() => Math.random() - 0.5);
+  let html = "";
+  chars.forEach((c, idx) => {
+    html += `<span class="p-chip" id="chip-${idx}" onclick="selectChip('${c}', 'chip-${idx}')">${c}</span>`;
+  });
+  $("puzzleChips").innerHTML = html;
+}
+
+window.selectChip = function(char, id) {
+  let el = $(id);
+  if (el.classList.contains('selected')) return;
+  el.classList.add('selected');
+  selectedPuzzleChars.push({ char, id });
+  $("puzzleAns").textContent = selectedPuzzleChars.map(x => x.char).join('');
+};
+
+$("checkPuzzleBtn").onclick = () => {
+  let userAns = selectedPuzzleChars.map(x => x.char).join('');
+  if (userAns === currentPuzzleTarget) {
+    alert("🎉 Chính xác tuyệt vời!");
+    initPuzzle();
+  } else {
+    alert("❌ Chưa đúng, thử lại xem nào!");
+  }
+};
+
+$("nextPuzzleBtn").onclick = initPuzzle;
+
+// Controls
 $("prevBtn").onclick = () => { current--; render(); };
 $("nextBtn").onclick = () => { current++; render(); };
 
@@ -211,7 +362,7 @@ $("speakBtn").onclick = () => {
   speechSynthesis.speak(u);
 };
 
-// Hàm tự động gộp tất cả dữ liệu từ hsk1 đến hsk6
+// Nạp dữ liệu từ hsk1 đến hsk6
 function loadLocalData() {
   try {
     let d1 = typeof HSK1_DATA !== 'undefined' ? HSK1_DATA : [];
