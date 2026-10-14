@@ -135,18 +135,18 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
   </section>
 </div>
 
-<!-- Puzzle View (Ghép câu) -->
+<!-- Puzzle View (Ghép câu - Đã sửa hoàn toàn logic bấm nút) -->
 <div id="puzzleView" style="display:none;">
   <section class="card-box" style="min-height:370px;">
     <div class="tag">SẮP XẾP CÂU / GHÉP TỪ</div>
-    <div class="sub" style="margin-bottom:8px;font-size:15px;">Bấm chọn các chữ bên dưới để ghép thành câu đúng nghĩa:</div>
+    <div class="sub" style="margin-bottom:8px;font-size:15px;">Bấm chọn các chữ bên dưới để xếp lại câu đúng:</div>
     <div class="meaning" id="puzzleMeaning" style="font-weight:bold;color:var(--red);font-size:20px;">...</div>
     <div class="puzzle-words" id="puzzleChips"></div>
     <div style="margin:16px 0;font-size:24px;min-height:45px;border-bottom:2px dashed var(--line);padding-bottom:8px;display:flex;justify-content:center;gap:8px;align-items:center;" id="puzzleAns"></div>
     <div id="puzzleResultMsg" style="font-weight:bold;margin:6px 0;min-height:24px;font-size:18px;"></div>
     <div class="actions">
       <button class="btn" id="resetPuzzleBtn" style="padding:10px 18px;font-size:16px;">Làm lại</button>
-      <button class="btn primary" id="checkPuzzleBtn" style="padding:10px 18px;font-size:16px;">Kiểm tra</button>
+      <button class="btn primary" id="checkPuzzleBtn" style="padding:10px 18px;font-size:16px;">Kiểm tra đáp án</button>
       <button class="btn primary" id="nextPuzzleBtn" style="display:none;padding:10px 18px;font-size:16px;">Câu tiếp ▶</button>
     </div>
   </section>
@@ -186,7 +186,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
 </div>
 
 <script>
-const STORAGE_KEY = "hsk_vocab_v27";
+const STORAGE_KEY = "hsk_vocab_v28";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -315,7 +315,7 @@ window.checkQuiz = function(el, isCorrect) {
 };
 $("nextQuizBtn").onclick = initQuiz;
 
-// Puzzle mode logic (Bắt buộc phải bấm Kiểm tra mới chấm điểm)
+// Puzzle mode logic (Bắt buộc click đủ token, bấm Kiểm tra đáp án mới chấm)
 let currentPuzzleTarget = "";
 let puzzleTokens = [];
 let selectedTokens = [];
@@ -337,7 +337,8 @@ function initPuzzle() {
   $("checkPuzzleBtn").style.display = "inline-block";
   $("nextPuzzleBtn").style.display = "none";
 
-  puzzleTokens = cleanSentence.split('').map((char, idx) => ({ id: 't-' + idx, char }));
+  // Tạo mảng token độc lập với ID riêng biệt để không bị trùng lặp index
+  puzzleTokens = cleanSentence.split('').map((char, idx) => ({ uid: 'tok-' + idx + '-' + Math.random().toString(36.substring(2, 7)), char }));
   let shuffled = [...puzzleTokens].sort(() => Math.random() - 0.5);
   selectedTokens = [];
   renderPuzzleBoard(shuffled);
@@ -346,9 +347,9 @@ function initPuzzle() {
 function renderPuzzleBoard(shuffledTokens) {
   let chipsHtml = "";
   shuffledTokens.forEach(t => {
-    let isSelected = selectedTokens.some(s => s.id === t.id);
+    let isSelected = selectedTokens.some(s => s.uid === t.uid);
     let cls = isSelected ? "p-chip selected" : "p-chip";
-    chipsHtml += `<span class="${cls}" id="${t.id}" onclick="clickToken('${t.id}', '${t.char}')">${t.char}</span>`;
+    chipsHtml += `<span class="${cls}" onclick="clickToken('${t.uid}', '${t.char}')">${t.char}</span>`;
   });
   $("puzzleChips").innerHTML = chipsHtml;
 
@@ -363,15 +364,17 @@ function renderPuzzleBoard(shuffledTokens) {
   $("puzzleAns").innerHTML = ansHtml;
 }
 
-window.clickToken = function(id, char) {
-  selectedTokens.push({ id, char });
-  renderPuzzleBoard(puzzleTokens.map(t => ({ ...t })));
+window.clickToken = function(uid, char) {
+  // Kiểm tra xem token này đã được chọn chưa
+  if (selectedTokens.some(s => s.uid === uid)) return;
+  selectedTokens.push({ uid, char });
+  renderPuzzleBoard(puzzleTokens);
 };
 
 window.removeToken = function(index) {
   selectedTokens.splice(index, 1);
   $("puzzleResultMsg").innerHTML = "";
-  renderPuzzleBoard(puzzleTokens.map(t => ({ ...t })));
+  renderPuzzleBoard(puzzleTokens);
 };
 
 $("resetPuzzleBtn").onclick = () => {
@@ -379,23 +382,25 @@ $("resetPuzzleBtn").onclick = () => {
   $("puzzleResultMsg").innerHTML = "";
   $("nextPuzzleBtn").style.display = "none";
   $("checkPuzzleBtn").style.display = "inline-block";
-  renderPuzzleBoard(puzzleTokens.map(t => ({ ...t })));
+  // Xáo trộn lại từ đầu
+  let shuffled = [...puzzleTokens].sort(() => Math.random() - 0.5);
+  renderPuzzleBoard(shuffled);
 };
 
-// Nút Kiểm Tra độc lập
+// Nút Kiểm tra đáp án độc lập
 $("checkPuzzleBtn").onclick = () => {
   if (selectedTokens.length === 0) {
-    alert("Bạn chưa chọn từ nào cả!");
+    alert("Bạn chưa chọn chữ nào cả!");
     return;
   }
   let userAns = selectedTokens.map(s => s.char).join('');
   let msgEl = $("puzzleResultMsg");
+  
   if (userAns === currentPuzzleTarget) {
     msgEl.style.color = "var(--green)";
     msgEl.innerHTML = "🎉 Chính xác tuyệt vời!";
     $("checkPuzzleBtn").style.display = "none";
     $("nextPuzzleBtn").style.display = "inline-block";
-    document.querySelectorAll('#puzzleView .p-chip').forEach(c => c.style.pointerEvents = 'none');
   } else {
     msgEl.style.color = "var(--red)";
     msgEl.innerHTML = "❌ Chưa đúng rồi, thử sắp xếp lại nhé!";
