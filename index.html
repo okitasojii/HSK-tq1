@@ -5,15 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#f4f0e7">
 <title>Học Từ Vựng HSK 1-6 Pro & Luyện Thi</title>
-
-<!-- Nhúng 6 file dữ liệu HSK -->
-<script src="hsk1.js"></script>
-<script src="hsk2.js"></script>
-<script src="hsk3.js"></script>
-<script src="hsk4.js"></script>
-<script src="hsk5.js"></script>
-<script src="hsk6.js"></script>
-
 <style>
 :root{--bg:#f4f0e7;--card:#fffdf7;--ink:#252525;--muted:#77746d;--red:#c94737;--line:#e3dccd;--blue:#427eae;--green:#2e7d32}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -81,13 +72,9 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
   <div>
     <label for="category">Cấp độ HSK</label>
     <select id="category">
-      <option value="all">Tất cả (HSK 1 - 6)</option>
+      <option value="all">Tất cả (HSK 1 - 2)</option>
       <option value="HSK 1">HSK 1</option>
       <option value="HSK 2">HSK 2</option>
-      <option value="HSK 3">HSK 3</option>
-      <option value="HSK 4">HSK 4</option>
-      <option value="HSK 5">HSK 5</option>
-      <option value="HSK 6">HSK 6</option>
       <option value="marked">Từ chưa thuộc ⭐</option>
     </select>
   </div>
@@ -97,7 +84,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
   </div>
 </div>
 
-<!-- Flashcard View -->
 <div id="flashcardView">
   <div class="progress"><span id="counter">Từ 0 / 0</span><span id="percent">0% đã thuộc</span></div>
   <div class="track"><div class="fill" id="fill"></div></div>
@@ -124,7 +110,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
   </div>
 </div>
 
-<!-- Quiz View -->
 <div id="quizView" style="display:none;">
   <section class="card-box" style="min-height:370px;">
     <div class="tag">TRẮC NGHIỆM ĐOÁN TỪ</div>
@@ -135,7 +120,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
   </section>
 </div>
 
-<!-- Puzzle View (Ghép câu - Đã sửa hoàn toàn logic bấm nút) -->
 <div id="puzzleView" style="display:none;">
   <section class="card-box" style="min-height:370px;">
     <div class="tag">SẮP XẾP CÂU / GHÉP TỪ</div>
@@ -152,7 +136,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
   </section>
 </div>
 
-<!-- Fix Grammar View (Sửa câu sai) -->
 <div id="fixView" style="display:none;">
   <section class="card-box" style="min-height:380px;">
     <div class="tag">TÌM VÀ SỬA CÂU SAI NGỮ PHÁP</div>
@@ -164,7 +147,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
   </section>
 </div>
 
-<!-- Synonym / Homophone View (Từ đồng nghĩa / Phân biệt) -->
 <div id="synonymView" style="display:none;">
   <section class="card-box" style="min-height:380px;">
     <div class="tag">TỪ ĐỒNG NGHĨA & PHÂN BIỆT</div>
@@ -186,11 +168,25 @@ footer{text-align:center;color:var(--muted);font-size:12px;margin:18px 0 0}
 </div>
 
 <script>
-const STORAGE_KEY = "hsk_vocab_v28";
+const HSK1_DATA = [
+  { "id": "h1_001", "h": "爱", "p": "ài", "m": "yêu, thích", "c": "HSK 1", "ec": "我爱吃中国菜。", "ep": "Wǒ ài chī Zhōngguó cài.", "ev": "Tôi thích ăn món Trung Quốc." },
+  { "id": "h1_002", "h": "八", "p": "bā", "m": "tám", "c": "HSK 1", "ec": "我有八本书。", "ep": "Wǒ yǒu bā běn shū.", "ev": "Tôi có tám quyển sách." },
+  { "id": "h1_003", "h": "爸爸", "p": "bàba", "m": "bố, ba", "c": "HSK 1", "ec": "我爸爸是医生。", "ep": "Wǒ bàba shì yīshēng.", "ev": "Bố tôi là bác sĩ." },
+  { "id": "h1_004", "h": "杯子", "p": "bēizi", "m": "cốc, ly", "c": "HSK 1", "ec": "杯子里有水。", "ep": "Bēizi li yǒu shuǐ.", "ev": "Trong cốc có nước." },
+  { "id": "h1_005", "h": "北京", "p": "Běijīng", "m": "Bắc Kinh", "c": "HSK 1", "ec": "我住在北京。", "ep": "Wǒ zhù zài Běijīng.", "ev": "Tôi sống ở Bắc Kinh." }
+];
+
+const HSK2_DATA = [
+  { "id": "h2_001", "h": "吧", "p": "ba", "m": "nhé, đi nào", "c": "HSK 2", "ec": "我们走吧。", "ep": "Wǒmen zǒu ba.", "ev": "Chúng ta đi thôi." },
+  { "id": "h2_002", "h": "白", "p": "bái", "m": "trắng", "c": "HSK 2", "ec": "白色的衣服很漂亮。", "ep": "Báisè de yīfu hěn piàoliang.", "ev": "Quần áo màu trắng rất đẹp." },
+  { "id": "h2_003", "h": "帮助", "p": "bāngzhù", "m": "giúp đỡ", "c": "HSK 2", "ec": "谢谢你的帮助。", "ep": "Xièxie nǐ de bāngzhù.", "ev": "Cảm ơn sự giúp đỡ của bạn." }
+];
+
+const STORAGE_KEY = "hsk_vocab_v31";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
-let words = [];
+let words = [...HSK1_DATA, ...HSK2_DATA];
 let marks = new Set(saved.marks || []);
 let known = new Set(saved.known || []);
 let current = 0;
@@ -215,7 +211,6 @@ function getFilteredWords() {
   });
 }
 
-// Mode switching
 document.querySelectorAll('.mode-tab').forEach(tab => {
   tab.onclick = () => {
     document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
@@ -283,7 +278,6 @@ function render() {
   $("unknownBtn").textContent = marks.has(k) ? "⭐ Đã đánh dấu chưa thuộc" : "⭐ Chưa thuộc";
 }
 
-// Quiz mode logic
 function initQuiz() {
   if (!words.length) return;
   let correctWord = words[Math.floor(Math.random() * words.length)];
@@ -315,7 +309,6 @@ window.checkQuiz = function(el, isCorrect) {
 };
 $("nextQuizBtn").onclick = initQuiz;
 
-// Puzzle mode logic (Bắt buộc click đủ token, bấm Kiểm tra đáp án mới chấm)
 let currentPuzzleTarget = "";
 let puzzleTokens = [];
 let selectedTokens = [];
@@ -337,8 +330,7 @@ function initPuzzle() {
   $("checkPuzzleBtn").style.display = "inline-block";
   $("nextPuzzleBtn").style.display = "none";
 
-  // Tạo mảng token độc lập với ID riêng biệt để không bị trùng lặp index
-  puzzleTokens = cleanSentence.split('').map((char, idx) => ({ uid: 'tok-' + idx + '-' + Math.random().toString(36.substring(2, 7)), char }));
+  puzzleTokens = cleanSentence.split('').map((char, idx) => ({ uid: 'tok-' + idx + '-' + Math.random().toString(36).substring(2, 7), char }));
   let shuffled = [...puzzleTokens].sort(() => Math.random() - 0.5);
   selectedTokens = [];
   renderPuzzleBoard(shuffled);
@@ -365,7 +357,6 @@ function renderPuzzleBoard(shuffledTokens) {
 }
 
 window.clickToken = function(uid, char) {
-  // Kiểm tra xem token này đã được chọn chưa
   if (selectedTokens.some(s => s.uid === uid)) return;
   selectedTokens.push({ uid, char });
   renderPuzzleBoard(puzzleTokens);
@@ -382,12 +373,10 @@ $("resetPuzzleBtn").onclick = () => {
   $("puzzleResultMsg").innerHTML = "";
   $("nextPuzzleBtn").style.display = "none";
   $("checkPuzzleBtn").style.display = "inline-block";
-  // Xáo trộn lại từ đầu
   let shuffled = [...puzzleTokens].sort(() => Math.random() - 0.5);
   renderPuzzleBoard(shuffled);
 };
 
-// Nút Kiểm tra đáp án độc lập
 $("checkPuzzleBtn").onclick = () => {
   if (selectedTokens.length === 0) {
     alert("Bạn chưa chọn chữ nào cả!");
@@ -409,11 +398,9 @@ $("checkPuzzleBtn").onclick = () => {
 
 $("nextPuzzleBtn").onclick = initPuzzle;
 
-// Fix Grammar Mode
 const grammarBugs = [
-  { wrong: "我 喜欢 听 音乐 很。", hint: "Trạng ngữ mức độ (很) phải đứng trước động từ/tính từ.", correct: "我 很大 喜欢 音乐 (Sai) -> 我 很 喜欢 听 音乐。", options: ["我 很 喜欢 听 音乐。", "我 喜欢 很 听 音乐。", "音乐 听 很 我 喜欢。"] },
-  { wrong: "昨天我去商店买东西 and。", hint: "Sai trật tự hoặc từ nối tiếng Trung.", correct: "昨天我去商店买东西。", options: ["昨天我去商店买东西。", "昨天商店我去买东西。", "买东西昨天我去商店。"] },
-  { wrong: "她比我 汉语 说 得 很好。", hint: "Cấu trúc bổ ngữ trạng thái với từ 比.", correct: "她说汉语比我好。", options: ["她说汉语比我好。", "她比我汉语说得好。", "比我她汉语说得好。"] }
+  { wrong: "我 喜欢 听 音乐 很。", hint: "Trạng ngữ mức độ (很) phải đứng trước động từ/tính từ.", options: ["我 很 喜欢 听 音乐。", "我 喜欢 很 听 音乐。", "音乐 听 很 我 喜欢。"] },
+  { wrong: "昨天我去商店买东西 and。", hint: "Sai trật tự hoặc từ nối tiếng Trung.", options: ["昨天我去商店买东西。", "昨天商店我去买东西。", "买东西昨天我去商店。"] }
 ];
 
 function initFixGrammar() {
@@ -421,10 +408,11 @@ function initFixGrammar() {
   $("fixWrongSentence").textContent = "❌ " + item.wrong;
   $("fixHint").textContent = "Gợi ý: " + item.hint;
 
+  let correctAns = item.options[0];
   let opts = [...item.options].sort(() => Math.random() - 0.5);
   let html = "";
   opts.forEach(opt => {
-    let isCorrect = (opt === item.options[0]);
+    let isCorrect = (opt === correctAns);
     html += `<div class="quiz-btn" onclick="checkFix(this, ${isCorrect})">${opt}</div>`;
   });
   $("fixOptions").innerHTML = html;
@@ -440,11 +428,9 @@ window.checkFix = function(el, isCorrect) {
 };
 $("nextFixBtn").onclick = initFixGrammar;
 
-// Synonym Mode
 const synonymBank = [
   { q: "请问这件衣服多少______？", meaning: "Hỏi giá tiền (Chọn từ chỉ tiền)", correct: "钱 (qián)", options: ["钱 (qián)", "千 (qiān)", "铅笔 (qiānbǐ)", "前面 (qiánmian)"] },
-  { q: "虽然很累，______我很开心。", meaning: "Quan hệ tương phản (Mặc dù... nhưng...)", correct: "但是 (dànshì)", options: ["但是 (dànshì)", "因为 (yīnwèi)", "所以 (suǒyǐ)", "或者 (huòzhě)"] },
-  { q: "我每天早上______ 跑步锻炼。", meaning: "Trạng từ chỉ thời gian (Mỗi ngày)", correct: "每天 (měitiān)", options: ["每天 (měitiān)", "明年 (míngnián)", "名字 (míngzi)", "明天 (míngtiān)"] }
+  { q: "虽然很累，______我很开心。", meaning: "Quan hệ tương phản (Mặc dù... nhưng...)", correct: "但是 (dànshì)", options: ["但是 (dànshì)", "因为 (yīnwèi)", "所以 (suǒyǐ)", "或者 (huòzhě)"] }
 ];
 
 function initSynonym() {
@@ -452,10 +438,11 @@ function initSynonym() {
   $("synQuestion").textContent = item.q;
   $("synMeaning").textContent = "Ngữ cảnh: " + item.meaning;
 
+  let correctAns = item.options[0];
   let opts = [...item.options].sort(() => Math.random() - 0.5);
   let html = "";
   opts.forEach(opt => {
-    let isCorrect = (opt === item.options[0]);
+    let isCorrect = (opt === correctAns);
     html += `<div class="quiz-btn" onclick="checkSyn(this, ${isCorrect})">${opt}</div>`;
   });
   $("synOptions").innerHTML = html;
@@ -471,7 +458,6 @@ window.checkSyn = function(el, isCorrect) {
 };
 $("nextSynBtn").onclick = initSynonym;
 
-// Controls
 $("prevBtn").onclick = () => { current--; render(); };
 $("nextBtn").onclick = () => { current++; render(); };
 
@@ -499,24 +485,7 @@ $("speakBtn").onclick = () => {
   speechSynthesis.speak(u);
 };
 
-// Nạp dữ liệu từ hsk1 đến hsk6
-function loadLocalData() {
-  try {
-    let d1 = typeof HSK1_DATA !== 'undefined' ? HSK1_DATA : [];
-    let d2 = typeof HSK2_DATA !== 'undefined' ? HSK2_DATA : [];
-    let d3 = typeof HSK3_DATA !== 'undefined' ? HSK3_DATA : [];
-    let d4 = typeof HSK4_DATA !== 'undefined' ? HSK4_DATA : [];
-    let d5 = typeof HSK5_DATA !== 'undefined' ? HSK5_DATA : [];
-    let d6 = typeof HSK6_DATA !== 'undefined' ? HSK6_DATA : [];
-
-    words = [...d1, ...d2, ...d3, ...d4, ...d5, ...d6];
-    render();
-  } catch (err) {
-    alert("⚠️ Lỗi tải dữ liệu!");
-  }
-}
-
-loadLocalData();
+render();
 </script>
 </body>
 </html>
