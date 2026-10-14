@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f4f0e7">
 <title>HSK Master Pro ✨</title>
 
-<!-- Nhúng trực tiếp các file .js dữ liệu rời ở đây -->
+<!-- Nhúng trực tiếp các file .js dữ liệu rời -->
 <script src="hsk1.js"></script>
 <script src="hsk2.js"></script>
 <script src="hsk3.js"></script>
@@ -70,7 +70,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Minigame (Modular JS)</div></div>
+    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Minigame (Auto-Sync Modular)</div></div>
   </div>
   <button class="btn" id="resetBtn" title="Làm mới">↻ Làm mới</button>
 </header>
@@ -142,7 +142,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <div id="puzzleView" style="display:none;">
   <section class="card-box" style="min-height:350px;">
     <div class="tag">SẮP XẾP CÂU / GHÉP TỪ</div>
-    <div class="sub" style="margin-bottom:6px;font-size:14px;">Bấm chọn các chữ bên dưới để xếp lại câu đúng:</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Bấm chọn các chữ bên dưới để xếp lại câu ví dụ đúng:</div>
     <div class="meaning" id="puzzleMeaning" style="font-weight:bold;color:var(--red);font-size:18px;">...</div>
     <div class="puzzle-words" id="puzzleChips"></div>
     <div style="margin:14px 0;font-size:22px;min-height:40px;border-bottom:2px dashed var(--line);padding-bottom:6px;display:flex;justify-content:center;gap:6px;align-items:center;" id="puzzleAns"></div>
@@ -158,7 +158,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <div id="fixView" style="display:none;">
   <section class="card-box" style="min-height:350px;">
     <div class="tag">TÌM VÀ SỬA CÂU SAI NGỮ PHÁP</div>
-    <div class="sub" style="margin-bottom:6px;font-size:14px;">Câu tiếng Trung dưới đây bị sai trật tự, chọn câu sửa đúng:</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Câu tiếng Trung dưới đây bị đảo lộn trật tự, hãy chọn đáp án đúng:</div>
     <div class="hanzi" id="fixWrongSentence" style="font-size:24px;color:var(--red);margin-bottom:10px;line-height:1.35;">...</div>
     <div class="meaning" id="fixHint" style="font-size:15px;color:var(--muted);margin-bottom:12px;font-style:italic;">...</div>
     <div class="quiz-options" id="fixOptions"></div>
@@ -168,8 +168,8 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 
 <div id="synonymView" style="display:none;">
   <section class="card-box" style="min-height:350px;">
-    <div class="tag">TỪ ĐỒNG NGHĨA & PHÂN BIỆT</div>
-    <div class="sub" style="margin-bottom:6px;font-size:14px;">Chọn từ có nghĩa tương đương hoặc phù hợp nhất:</div>
+    <div class="tag">TỪ ĐỒNG NGHĨA & ÔN TẬP TỪ VỰNG</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Chọn từ có nghĩa phù hợp với từ gốc:</div>
     <div class="hanzi" id="synQuestion" style="font-size:24px;margin-bottom:10px;line-height:1.35;">...</div>
     <div class="meaning" id="synMeaning" style="font-size:15px;color:var(--muted);margin-bottom:12px;">...</div>
     <div class="quiz-options" id="synOptions"></div>
@@ -234,7 +234,7 @@ function playSound(type) {
   }
 }
 
-const STORAGE_KEY = "hsk_vocab_v38";
+const STORAGE_KEY = "hsk_vocab_v39";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -340,6 +340,7 @@ function getActivePool() {
   return filtered.length ? filtered : words;
 }
 
+// 1. TRẮC NGHIỆM ĐOÁN TỪ
 function initQuiz() {
   let pool = getActivePool();
   if (!pool.length) return;
@@ -372,6 +373,7 @@ window.checkQuiz = function(el, isCorrect) {
 };
 $("nextQuizBtn").onclick = initQuiz;
 
+// 2. GHÉP CÂU (Tự động lấy câu ví dụ ec từ từ vựng)
 let currentPuzzleTarget = "";
 let shuffledTokens = [];
 let selectedTokens = [];
@@ -460,19 +462,41 @@ $("checkPuzzleBtn").onclick = () => {
 };
 $("nextPuzzleBtn").onclick = initPuzzle;
 
-const grammarBugs = [
-  { wrong: "我 喜欢 听 音乐 很。", hint: "Trạng ngữ mức độ phải đứng trước động từ/tính từ.", options: ["我 很 喜欢 听 音乐。", "我 喜欢 很 听 音乐。", "音乐 听 很 我 喜欢。"] }
-];
-
+// 3. SỬA CÂU SAI (Tự động tạo câu hỏi từ ví dụ từ vựng)
 function initFixGrammar() {
-  let item = grammarBugs[Math.floor(Math.random() * grammarBugs.length)];
-  $("fixWrongSentence").textContent = "❌ " + item.wrong;
-  $("fixHint").textContent = "Gợi ý: " + item.hint;
-  let correctAns = item.options[0];
-  let opts = [...item.options].sort(() => Math.random() - 0.5);
+  let pool = getActivePool();
+  let validWords = pool.filter(w => w.ec && w.ec.length >= 3);
+  if (!validWords.length) validWords = words.filter(w => w.ec && w.ec.length >= 3);
+  if (!validWords.length) {
+    $("fixWrongSentence").textContent = "❌ Chưa có đủ dữ liệu từ vựng.";
+    $("fixHint").textContent = "";
+    $("fixOptions").innerHTML = "";
+    return;
+  }
+
+  let w = validWords[Math.floor(Math.random() * validWords.length)];
+  let correctSentence = (w.ec || "").replace(/[。，！？]/g, "").trim();
+  let chars = correctSentence.split('');
+  // Tạo câu sai bằng cách đảo ngẫu nhiên 2 ký tự đầu hoặc giữa
+  if (chars.length >= 3) {
+    let temp = chars[0]; chars[0] = chars[1]; chars[1] = temp;
+  }
+  let wrongSentence = chars.join('') + " (Sai trật tự)";
+
+  $("fixWrongSentence").textContent = "❌ " + wrongSentence;
+  $("fixHint").textContent = "Gợi ý nghĩa: " + (w.ev || w.m) + " | Sắp xếp lại cho đúng cấu trúc.";
+
+  let options = [correctSentence];
+  while (options.length < 3 && validWords.length >= 3) {
+    let randW = validWords[Math.floor(Math.random() * validWords.length)];
+    let sent = (randW.ec || "").replace(/[。，！？]/g, "").trim();
+    if (sent && !options.includes(sent)) options.push(sent);
+  }
+  options.sort(() => Math.random() - 0.5);
+
   let html = "";
-  opts.forEach(opt => {
-    let isCorrect = (opt === correctAns);
+  options.forEach(opt => {
+    let isCorrect = (opt === correctSentence);
     html += `<div class="quiz-btn" onclick="checkFix(this, ${isCorrect})">${opt}</div>`;
   });
   $("fixOptions").innerHTML = html;
@@ -488,20 +512,25 @@ window.checkFix = function(el, isCorrect) {
 };
 $("nextFixBtn").onclick = initFixGrammar;
 
-const synonymBank = [
-  { q: "请问这件衣服多少______？", meaning: "Hỏi giá tiền", correct: "钱 (qián)", options: ["钱 (qián)", "千 (qiān)", "铅笔 (qiānbǐ)", "前面 (qiánmian)"] }
-];
-
+// 4. TỪ ĐỒNG NGHĨA / ÔN TẬP TỪ VỰNG
 function initSynonym() {
-  let item = synonymBank[Math.floor(Math.random() * synonymBank.length)];
-  $("synQuestion").textContent = item.q;
-  $("synMeaning").textContent = "Ngữ cảnh: " + item.meaning;
-  let correctAns = item.options[0];
-  let opts = [...item.options].sort(() => Math.random() - 0.5);
+  let pool = getActivePool();
+  if (!pool.length) return;
+  let correctWord = pool[Math.floor(Math.random() * pool.length)];
+  $("synQuestion").textContent = "Từ nào có nghĩa là: " + correctWord.m + " ?";
+  $("synMeaning").textContent = "Cấp độ: " + (correctWord.c || "HSK");
+
+  let options = [correctWord];
+  while (options.length < 4 && options.length < pool.length) {
+    let randW = pool[Math.floor(Math.random() * pool.length)];
+    if (!options.includes(randW)) options.push(randW);
+  }
+  options.sort(() => Math.random() - 0.5);
+
   let html = "";
-  opts.forEach(opt => {
-    let isCorrect = (opt === correctAns);
-    html += `<div class="quiz-btn" onclick="checkSyn(this, ${isCorrect})">${opt}</div>`;
+  options.forEach(opt => {
+    let isCorrect = (opt.h === correctWord.h);
+    html += `<div class="quiz-btn" onclick="checkSyn(this, ${isCorrect})">${opt.h} (${opt.p})</div>`;
   });
   $("synOptions").innerHTML = html;
   $("nextSynBtn").style.display = "none";
