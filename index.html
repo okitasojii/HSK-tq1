@@ -216,7 +216,7 @@ function playSound(type) {
   }
 }
 
-const STORAGE_KEY = "hsk_vocab_v34";
+const STORAGE_KEY = "hsk_vocab_v35";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -349,7 +349,7 @@ window.checkQuiz = function(el, isCorrect) {
 $("nextQuizBtn").onclick = initQuiz;
 
 let currentPuzzleTarget = "";
-let puzzleTokens = [];
+let shuffledTokens = [];
 let selectedTokens = [];
 
 function initPuzzle() {
@@ -369,13 +369,13 @@ function initPuzzle() {
   $("checkPuzzleBtn").style.display = "inline-block";
   $("nextPuzzleBtn").style.display = "none";
 
-  puzzleTokens = cleanSentence.split('').map((char, idx) => ({ uid: 'tok-' + idx + '-' + Math.random().toString(36).substring(2, 7), char }));
-  let shuffled = [...puzzleTokens].sort(() => Math.random() - 0.5);
+  let baseTokens = cleanSentence.split('').map((char, idx) => ({ uid: 'tok-' + idx + '-' + Math.random().toString(36).substring(2, 7), char }));
+  shuffledTokens = [...baseTokens].sort(() => Math.random() - 0.5);
   selectedTokens = [];
-  renderPuzzleBoard(shuffled);
+  renderPuzzleBoard();
 }
 
-function renderPuzzleBoard(shuffledTokens) {
+function renderPuzzleBoard() {
   let chipsHtml = "";
   shuffledTokens.forEach(t => {
     let isSelected = selectedTokens.some(s => s.uid === t.uid);
@@ -398,13 +398,13 @@ function renderPuzzleBoard(shuffledTokens) {
 window.clickToken = function(uid, char) {
   if (selectedTokens.some(s => s.uid === uid)) return;
   selectedTokens.push({ uid, char });
-  renderPuzzleBoard(puzzleTokens);
+  renderPuzzleBoard();
 };
 
 window.removeToken = function(index) {
   selectedTokens.splice(index, 1);
   $("puzzleResultMsg").innerHTML = "";
-  renderPuzzleBoard(puzzleTokens);
+  renderPuzzleBoard();
 };
 
 $("resetPuzzleBtn").onclick = () => {
@@ -412,11 +412,11 @@ $("resetPuzzleBtn").onclick = () => {
   $("puzzleResultMsg").innerHTML = "";
   $("nextPuzzleBtn").style.display = "none";
   $("checkPuzzleBtn").style.display = "inline-block";
-  let shuffled = [...puzzleTokens].sort(() => Math.random() - 0.5);
-  renderPuzzleBoard(shuffled);
+  shuffledTokens.sort(() => Math.random() - 0.5);
+  renderPuzzleBoard();
 };
 
-// ĐÃ SỬA: Chặn tuyệt đối, bắt buộc phải bấm nút "Kiểm tra" thì mới chấm điểm đúng sai!
+// ĐÃ SỬA: Tuyệt đối không tự động check, phải bấm nút Kiểm tra mới chấm điểm!
 $("checkPuzzleBtn").onclick = () => {
   if (selectedTokens.length === 0) {
     alert("Bạn chưa chọn chữ nào cả!");
@@ -526,6 +526,8 @@ $("unknownBtn").onclick = () => {
 $("category").onchange = () => { current = 0; render(); };
 $("search").oninput = () => { current = 0; render(); };
 $("resetBtn").onclick = () => { $("category").value = "all"; $("search").value = ""; current = 0; render(); };
+
+$("speakBtn").onload = () => {}; // Tránh lỗi
 
 $("speakBtn").onclick = () => {
   let w = view[current];
