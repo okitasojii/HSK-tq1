@@ -245,7 +245,6 @@ function initAudio() {
 document.addEventListener('click', initAudio, { once: true });
 document.addEventListener('touchstart', initAudio, { once: true });
 
-// --- HIỆU ỨNG ÂM THANH ĐÚNG (TING TING) / SAI (TẸT TẸT) ---
 function playSound(type) {
   try {
     let ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -463,7 +462,6 @@ function getActivePool() {
   return filtered.length ? filtered : words;
 }
 
-// 1. TRẮC NGHIỆM ĐOÁN TỪ
 function initQuiz() {
   let pool = getActivePool();
   if (!pool.length) return;
@@ -502,7 +500,6 @@ window.checkQuiz = function(el, isCorrect) {
 };
 if($("nextQuizBtn")) $("nextQuizBtn").onclick = initQuiz;
 
-// 2. GHÉP CÂU
 let currentPuzzleTarget = "";
 let shuffledTokens = [];
 let selectedTokens = [];
@@ -595,7 +592,6 @@ if($("checkPuzzleBtn")) {
 }
 if($("nextPuzzleBtn")) $("nextPuzzleBtn").onclick = initPuzzle;
 
-// 3. SỬA CÂU SAI
 function initFixGrammar() {
   let pool = getActivePool();
   let validWords = pool.filter(w => w && w.ec && w.ec.length >= 3);
@@ -649,7 +645,6 @@ window.checkFix = function(el, isCorrect) {
 };
 if($("nextFixBtn")) $("nextFixBtn").onclick = initFixGrammar;
 
-// 4. TỪ ĐỒNG NGHĨA
 function initSynonym() {
   let pool = getActivePool();
   if (!pool.length) return;
@@ -691,7 +686,6 @@ if($("nextSynBtn")) $("nextSynBtn").onclick = initSynonym;
 if($("prevBtn")) $("prevBtn").onclick = () => { current--; render(); };
 if($("nextBtn")) $("nextBtn").onclick = () => { current++; render(); };
 
-// Sự kiện bấm nút ĐÃ THUỘC
 if($("knownBtn")) {
   $("knownBtn").onclick = () => {
     let w = view[current];
@@ -700,14 +694,13 @@ if($("knownBtn")) {
     if (known.has(k)) known.delete(k);
     else {
       known.add(k);
-      marks.delete(k); // Đã thuộc thì gỡ khỏi danh sách chưa thuộc
+      marks.delete(k);
     }
     persist();
     render();
   };
 }
 
-// Sự kiện bấm nút CHƯA THUỘC
 if($("unknownBtn")) {
   $("unknownBtn").onclick = () => {
     let w = view[current];
@@ -716,7 +709,7 @@ if($("unknownBtn")) {
     if (marks.has(k)) marks.delete(k);
     else {
       marks.add(k);
-      known.delete(k); // Chưa thuộc thì gỡ khỏi danh sách đã thuộc
+      known.delete(k);
     }
     persist();
     render();
