@@ -241,6 +241,37 @@ function initAudio() {
 document.addEventListener('click', initAudio, { once: true });
 document.addEventListener('touchstart', initAudio, { once: true });
 
+// --- HIỆU ỨNG ÂM THANH ĐÚNG (TING TING) / SAI (TẸT TẸT) ---
+function playSound(type) {
+  try {
+    let ctx = new (window.AudioContext || window.webkitAudioContext)();
+    let osc = ctx.createOscillator();
+    let gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    if (type === 'correct') {
+      // Tiếng "Ting ting" vui tai
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    } else {
+      // Tiếng "Tẹt tẹt" cảnh báo sai
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(140, ctx.currentTime);
+      osc.frequency.setValueAtTime(90, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.25);
+    }
+  } catch(e) {}
+}
+
 const STORAGE_KEY = "hsk_vocab_v44";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
@@ -451,7 +482,13 @@ function initQuiz() {
 window.checkQuiz = function(el, isCorrect) {
   let btns = document.querySelectorAll('#quizView .quiz-btn');
   btns.forEach(b => b.style.pointerEvents = 'none');
-  if (isCorrect) { el.classList.add('correct'); } else { el.classList.add('wrong'); }
+  if (isCorrect) { 
+    el.classList.add('correct'); 
+    playSound('correct');
+  } else { 
+    el.classList.add('wrong'); 
+    playSound('wrong');
+  }
   $("nextQuizBtn").style.display = "block";
 };
 if($("nextQuizBtn")) $("nextQuizBtn").onclick = initQuiz;
@@ -537,11 +574,13 @@ if($("checkPuzzleBtn")) {
     if (userAns === currentPuzzleTarget) {
       msgEl.style.color = "var(--green)";
       msgEl.innerHTML = "🎉 Chính xác tuyệt vời!";
+      playSound('correct');
       $("checkPuzzleBtn").style.display = "none";
       $("nextPuzzleBtn").style.display = "inline-block";
     } else {
       msgEl.style.color = "var(--red)";
       msgEl.innerHTML = "❌ Chưa đúng rồi, thử lại nhé!";
+      playSound('wrong');
     }
   };
 }
@@ -590,7 +629,13 @@ function initFixGrammar() {
 window.checkFix = function(el, isCorrect) {
   let btns = document.querySelectorAll('#fixView .quiz-btn');
   btns.forEach(b => b.style.pointerEvents = 'none');
-  if (isCorrect) { el.classList.add('correct'); } else { el.classList.add('wrong'); }
+  if (isCorrect) { 
+    el.classList.add('correct'); 
+    playSound('correct');
+  } else { 
+    el.classList.add('wrong'); 
+    playSound('wrong');
+  }
   $("nextFixBtn").style.display = "block";
 };
 if($("nextFixBtn")) $("nextFixBtn").onclick = initFixGrammar;
@@ -623,7 +668,13 @@ function initSynonym() {
 window.checkSyn = function(el, isCorrect) {
   let btns = document.querySelectorAll('#synonymView .quiz-btn');
   btns.forEach(b => b.style.pointerEvents = 'none');
-  if (isCorrect) { el.classList.add('correct'); } else { el.classList.add('wrong'); }
+  if (isCorrect) { 
+    el.classList.add('correct'); 
+    playSound('correct');
+  } else { 
+    el.classList.add('wrong'); 
+    playSound('wrong');
+  }
   $("nextSynBtn").style.display = "block";
 };
 if($("nextSynBtn")) $("nextSynBtn").onclick = initSynonym;
