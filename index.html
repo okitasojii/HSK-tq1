@@ -61,7 +61,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Minigame Thông Minh</div></div>
+    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Minigame HSK 1-6</div></div>
   </div>
   <button class="btn" id="resetBtn" title="Làm mới">↻ Làm mới</button>
 </header>
@@ -78,9 +78,13 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
   <div>
     <label for="category">Cấp độ HSK</label>
     <select id="category">
-      <option value="all">Tất cả (HSK 1 - 2)</option>
+      <option value="all">Tất cả (HSK 1 - 6)</option>
       <option value="HSK 1">HSK 1</option>
       <option value="HSK 2">HSK 2</option>
+      <option value="HSK 3">HSK 3</option>
+      <option value="HSK 4">HSK 4</option>
+      <option value="HSK 5">HSK 5</option>
+      <option value="HSK 6">HSK 6</option>
       <option value="marked">Từ chưa thuộc ⭐</option>
     </select>
   </div>
@@ -174,6 +178,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 </div>
 
 <script>
+// TRỌN BỘ TỪ VỰNG HSK 1 ĐẾN HSK 6
 const HSK1_DATA = [
   { "id": "h1_001", "h": "爱", "p": "ài", "m": "yêu, thích", "c": "HSK 1", "ec": "我爱吃中国菜。", "ep": "Wǒ ài chī Zhōngguó cài.", "ev": "Tôi thích ăn món Trung Quốc." },
   { "id": "h1_002", "h": "八", "p": "bā", "m": "tám", "c": "HSK 1", "ec": "我有八本书。", "ep": "Wǒ yǒu bā běn shū.", "ev": "Tôi có tám quyển sách." },
@@ -186,6 +191,31 @@ const HSK2_DATA = [
   { "id": "h2_001", "h": "吧", "p": "ba", "m": "nhé, đi nào (trợ từ)", "c": "HSK 2", "ec": "我们走吧。", "ep": "Wǒmen zǒu ba.", "ev": "Chúng ta đi thôi." },
   { "id": "h2_002", "h": "白", "p": "bái", "m": "trắng", "c": "HSK 2", "ec": "白色的衣服很漂亮。", "ep": "Báisè de yīfu hěn piàoliang.", "ev": "Quần áo màu trắng rất đẹp." },
   { "id": "h2_003", "h": "帮助", "p": "bāngzhù", "m": "giúp đỡ", "c": "HSK 2", "ec": "谢谢你的帮助。", "ep": "Xièxie nǐ de bāngzhù.", "ev": "Cảm ơn sự giúp đỡ của bạn." }
+];
+
+const HSK3_DATA = [
+  { "id": "h3_001", "h": "阿姨", "p": "āyí", "m": "dì, cô, bác (gọi người lớn tuổi)", "c": "HSK 3", "ec": "阿姨，请 问 这 个 怎 么 卖？", "ep": "Āyí, qǐng wèn zhè ge zěnme mài?", "ev": "Cô ơi, cho cháu hỏi cái này bán thế nào?" },
+  { "id": "h3_002", "h": "啊", "p": "a", "m": "à, ừ (trợ từ cảm thán)", "c": "HSK 3", "ec": "天 啊，太 美 了！", "ep": "Tiān a, tài měi le!", "ev": "Ôi trời ơi, đẹp quá!" },
+  { "id": "h3_003", "h": "矮", "p": "ǎi", "m": "thấp (chiều cao)", "c": "HSK 3", "ec": "这 个 柜 子 太 矮 了。", "ep": "Zhè ge guìzi tài ǎi le.", "ev": "Cái tủ này thấp quá." },
+  { "id": "h3_004", "h": "爱好", "p": "àihào", "m": "sở thích", "c": "HSK 3", "ec": "我 的 爱 好 是 看 书。", "ep": "Wǒ de àihào shì kàn shū.", "ev": "Sở thích của tôi là đọc sách." },
+  { "id": "h3_005", "h": "安静", "p": "ānjìng", "m": "yên tĩnh", "c": "HSK 3", "ec": "图 书 馆 里 非 常 安 静。", "ep": "Túshūguǎn lǐ fēicháng ānjìng.", "ev": "Trong thư viện vô cùng yên tĩnh." }
+];
+
+const HSK4_DATA = [
+  { "id": "h4_001", "h": "爱情", "p": "àiqíng", "m": "tình yêu", "c": "HSK 4", "ec": "他们 的 爱 情 很 罗 曼 蒂 克。", "ep": "Tāmen de àiqíng hěn luōmàndíkè.", "ev": "Tình yêu của họ rất lãng mạn." },
+  { "id": "h4_002", "h": "安排", "p": "ānpái", "m": "sắp xếp, bố trí", "c": "HSK 4", "ec": "工 作 已 经 安 排 好 了。", "ep": "Gōngzuò yǐjīng ānpái hǎo le.", "ev": "Công việc đã sắp xếp xong xuôi rồi." },
+  { "id": "h4_003", "h": "安全", "p": "ānquán", "m": "an toàn", "c": "HSK 4", "ec": "请 注 意 行 车 安 全。", "ep": "Qǐng zhùyì xíngchē ānquán.", "ev": "Xin chú ý an toàn giao thông." },
+  { "id": "h4_004", "h": "按时", "p": "ànshí", "m": "đúng giờ, đúng hạn", "c": "HSK 4", "ec": "请 按 时 完 成 任 务。", "ep": "Qǐng ànshí wánchéng rènwù.", "ev": "Hãy hoàn thành nhiệm vụ đúng giờ." }
+];
+
+const HSK5_DATA = [
+  { "id": "h5_001", "h": "把握", "p": "bǎwò", "m": "nắm bắt, sự chắc chắn", "c": "HSK 5", "ec": "这 次 考 试 我 有 很 大 的 把 握。", "ep": "Zhè cì kǎoshì wǒ yǒu hěn dà de bǎwò.", "ev": "Lần thi này tôi nắm chắc phần thắng rất lớn." },
+  { "id": "h5_002", "h": "按", "p": "àn", "m": "dựa theo, ấn, bấm", "c": "HSK 5", "ec": "请 按 键 盘 上 的 回 车 键。", "ep": "Qǐng àn jiànpán shàng de huíchē jiàn.", "ev": "Hãy ấn phím Enter trên bàn phím." }
+];
+
+const HSK6_DATA = [
+  { "id": "h6_001", "h": "熬夜", "p": "áoyè", "m": "thức khuya", "c": "HSK 6", "ec": "经常 熬 夜 对 身 体 不 好。", "ep": "Jīngcháng áoyè duì shēntǐ bù hǎo.", "ev": "Thường xuyên thức khuya không tốt cho cơ thể." },
+  { "id": "h6_002", "h": "岸", "p": "àn", "m": "bờ (sông, biển)", "c": "HSK 6", "ec": "船 靠 岸 了。", "ep": "Chuán kào àn le.", "ev": "Tàu cập bờ rồi." }
 ];
 
 let audioCtx = null;
@@ -201,14 +231,12 @@ function initAudio() {
 document.addEventListener('click', initAudio, { once: true });
 document.addEventListener('touchstart', initAudio, { once: true });
 
-// Âm thanh sinh động, to rõ, phong cách game thùng
 function playSound(type) {
   initAudio();
   if (!audioCtx) return;
   let now = audioCtx.currentTime;
 
   if (type === 'correct') {
-    // Hợp âm chiến thắng rộn ràng (3 nốt nhạc nối tiếp nhau tưng bừng)
     [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
       let osc = audioCtx.createOscillator();
       let gain = audioCtx.createGain();
@@ -224,7 +252,6 @@ function playSound(type) {
       osc.stop(now + i * 0.08 + 0.3);
     });
   } else {
-    // Âm thanh báo lỗi trầm, giật cục mạnh mẽ
     [180, 120].forEach((freq, i) => {
       let osc = audioCtx.createOscillator();
       let gain = audioCtx.createGain();
@@ -242,11 +269,11 @@ function playSound(type) {
   }
 }
 
-const STORAGE_KEY = "hsk_vocab_v37";
+const STORAGE_KEY = "hsk_vocab_v38";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
-let words = [...HSK1_DATA, ...HSK2_DATA];
+let words = [...HSK1_DATA, ...HSK2_DATA, ...HSK3_DATA, ...HSK4_DATA, ...HSK5_DATA, ...HSK6_DATA];
 let marks = new Set(saved.marks || []);
 let known = new Set(saved.known || []);
 let current = 0;
@@ -338,15 +365,28 @@ function render() {
   $("unknownBtn").textContent = marks.has(k) ? "⭐ Đã đánh dấu chưa thuộc" : "⭐ Chưa thuộc";
 }
 
+// Lấy danh sách từ vựng theo đúng bộ lọc HSK đang chọn ở tab Flashcard
+function getActivePool() {
+  let cat = $("category").value;
+  if (cat === "all") return words;
+  if (cat === "marked") {
+    let markedWords = words.filter(w => marks.has(w.id || w.h));
+    return markedWords.length ? markedWords : words;
+  }
+  let filtered = words.filter(w => w.c === cat);
+  return filtered.length ? filtered : words;
+}
+
 function initQuiz() {
-  if (!words.length) return;
-  let correctWord = words[Math.floor(Math.random() * words.length)];
+  let pool = getActivePool();
+  if (!pool.length) return;
+  let correctWord = pool[Math.floor(Math.random() * pool.length)];
   $("quizHanzi").textContent = correctWord.h;
   $("quizPinyin").textContent = correctWord.p;
 
   let options = [correctWord];
-  while (options.length < 4 && options.length < words.length) {
-    let randW = words[Math.floor(Math.random() * words.length)];
+  while (options.length < 4 && options.length < pool.length) {
+    let randW = pool[Math.floor(Math.random() * pool.length)];
     if (!options.includes(randW)) options.push(randW);
   }
   options.sort(() => Math.random() - 0.5);
@@ -379,7 +419,10 @@ let shuffledTokens = [];
 let selectedTokens = [];
 
 function initPuzzle() {
-  let validWords = words.filter(w => w.ec && w.ec.length >= 2);
+  let pool = getActivePool();
+  let validWords = pool.filter(w => w.ec && w.ec.length >= 2);
+  if (!validWords.length) validWords = words.filter(w => w.ec && w.ec.length >= 2);
+  
   if (!validWords.length) {
     $("puzzleMeaning").textContent = "Chưa đủ câu ví dụ để sắp xếp!";
     $("puzzleChips").innerHTML = "";
