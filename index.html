@@ -86,7 +86,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Live Stroke Order & Listening Test Suite</div></div>
+    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Live Stroke Order & Massive Listening Suite</div></div>
   </div>
   <button class="btn" id="resetBtn" title="Làm mới">↻ Làm mới</button>
 </header>
@@ -168,7 +168,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
   </div>
 </div>
 
-<!-- Tab Luyện Đề Nghe Hội Thoại Sống Động -->
+<!-- Tab Kho Đề Nghe Đồ Sộ -->
 <div id="listeningView" style="display:none;">
   <section class="card-box" style="min-height:380px;">
     <div class="tag" id="testTag">LUYỆN ĐỀ NGHE HIỂU (BÀI 1)</div>
@@ -261,39 +261,39 @@ let words = [
   ...(typeof HSK6_DATA !== 'undefined' ? HSK6_DATA : [])
 ];
 
-// Kho đề thi nghe hội thoại phong phú (Nhiều bài đa dạng)
+// Kho đề thi nghe hội thoại đồ sộ (Nhiều bài đa dạng)
 let listeningTests = [
   {
     "title": "Bài 1: Tại văn phòng công ty",
-    "script": "男：你怎么七点才 过来？ 女：路上车太多了，堵车得很厉害。",
+    "script": "男：你怎么七点才过来？ 女：路上车太多了，堵车得很厉害。",
     "question": "Nữ chính vì sao lại đến muộn?",
     "options": ["A. Dậy muộn", "B. Tắc đường rất nặng", "C. Quên lịch họp", "D. Đi nhầm đường"],
     "correct": 1
   },
   {
     "title": "Bài 2: Mua sắm quần áo",
-    "script": "男：这件衣服 多少钱？ 女：原价三百，现在打折只要一百八.",
+    "script": "男：这件衣服多少钱？ 女：原价三百，现在打折只要一百八。",
     "question": "Bộ quần áo sau khi giảm giá có giá bao nhiêu?",
     "options": ["A. 300 tệ", "B. 120 tệ", "C. 180 tệ", "D. 380 tệ"],
     "correct": 2
   },
   {
     "title": "Bài 3: Dự báo thời tiết",
-    "script": "男：明 夭 天气怎么样？ 女： 听说 有雨，出门 记得 带伞。",
+    "script": "男：明天天气怎么样？ 女：听说有雨，出门记得带伞。",
     "question": "Ngày mai thời tiết thế nào và cần chuẩn bị gì?",
     "options": ["A. Trời nắng, mang kính mát", "B. Trời mưa, mang theo ô", "C. Trời lạnh, mặc áo ấm", "D. Trời gió to, ở nhà"],
     "correct": 1
   },
   {
     "title": "Bài 4: Đặt phòng khách sạn",
-    "script": "男：请 问还有 标准间 吗？ 女：对不起，今天的房间已经全住满了。",
+    "script": "男：请问还有标准间吗？ 女：对不起，今天的房间已经全住满了。",
     "question": "Tình hình phòng ở khách sạn hiện tại ra sao?",
     "options": ["A. Còn phòng trống đơn", "B. Còn phòng VIP", "C. Đã kín phòng hoàn toàn", "D. Đang sửa chữa"],
     "correct": 2
   },
   {
     "title": "Bài 5: Sân bay / Chuyến bay",
-    "script": "男：飞往 北京 的 航班 什么时候 起飞？ 女：由于天气原因，飞机延误了一个小时。",
+    "script": "男：飞往北京的航班什么时候起飞？ 女：由于天气原因，飞机延误了一个小时。",
     "question": "Chuyến bay đi Bắc Kinh bị thay đổi thế nào?",
     "options": ["A. Bị hoãn 1 tiếng", "B. Cất cánh đúng giờ", "C. Bị hủy chuyến", "D. Đổi sang ngày mai"],
     "correct": 0
@@ -307,17 +307,101 @@ let listeningTests = [
   },
   {
     "title": "Bài 7: Kế hoạch cuối tuần",
-    "script": "男：周末我们要不要去爬山？ 女：好主意， and 我 顺便准备一些水果和饮料。",
+    "script": "男：周末我们要不要去爬山？ 女：好主意，我顺便准备一些水果和饮料。",
     "question": "Cuối tuần hai người dự định làm gì?",
     "options": ["A. Ở nhà xem phim", "B. Đi leo núi", "C. Đi mua sắm siêu thị", "D. Đi bơi lội"],
     "correct": 1
   },
   {
     "title": "Bài 8: Khám bệnh",
-    "script": "男：医生，我头晕、咳嗽，是不是感冒了？ 女：是的，有点发烧，先 拿药回去休息两天。",
+    "script": "男：医生，我头晕、咳嗽，是不是感冒了？ 女：是的，有点发烧，先拿药回去休息两天。",
     "question": "Bệnh nhân gặp triệu chứng gì và bác sĩ khuyên gì?",
     "options": ["A. Đau bụng, mổ gấp", "B. Chóng mặt, ho, sốt nhẹ về nghỉ ngơi", "C. Đau chân, bó bột", "D. Dị ứng ngoài da"],
     "correct": 1
+  },
+  {
+    "title": "Bài 9: Thuê nhà / Tìm nhà",
+    "script": "男：这套公寓一个月房租多少钱？ 女：房租两千五，水 Rmb 另算，押一付三。",
+    "question": "Điều kiện thanh toán tiền thuê nhà là gì?",
+    "options": ["A. Đặt cọc một, trả ba", "B. Trả tiền một cục cả năm", "C. Miễn phí tiền cọc", "D. Thanh toán theo tuần"],
+    "correct": 0
+  },
+  {
+    "title": "Bài 10: Phỏng vấn xin việc",
+    "script": "男：你 以前 做 过 类似 的 工作 吗？ 女：是的，我有三年 Sales 的 经验。",
+    "question": "Nữ ứng viên có kinh nghiệm làm việc trong lĩnh vực gì?",
+    "options": ["A. Kế toán tài chính", "B. Bán hàng / Kinh doanh", "C. Lập trình viên", "D. Giáo viên ngoại ngữ"],
+    "correct": 1
+  },
+  {
+    "title": "Bài 11: Nấu ăn trong bếp",
+    "script": "男：汤 好像 差 点 盐，你尝 一下。 女：恩，确实 有点 淡，再 加 一勺 吧。",
+    "question": "Món canh đang gặp vấn đề gì theo hai người?",
+    "options": ["A. Bị mặn quá", "B. Bị nhạt, cần thêm muối", "C. Đã chín nhừ", "D. Nguội ngắt"],
+    "correct": 1
+  },
+  {
+    "title": "Bài 12: Giao hàng / Bưu điện",
+    "script": "男：您好，您的快递到了，请 拿 身份证 签收。 女：好的，谢谢你，放 在 门口 吧。",
+    "question": "Nhân viên giao hàng yêu cầu người nhận xuất trình giấy tờ gì?",
+    "options": ["A. Hộ chiếu", "B. Thẻ ngân hàng", "C. Chứng minh thư / Căn cước", "D. Bằng lái xe"],
+    "correct": 2
+  },
+  {
+    "title": "Bài 13: Thư viện trường học",
+    "script": "男：这本书 可以 借 几 天？ 女： normally 最多 借 一个 月，到期 记得 来 续借。",
+    "question": "Sách mượn ở thư viện tối đa trong thời gian bao lâu?",
+    "options": ["A. 1 tuần", "B. 2 tuần", "C. 1 tháng", "D. 3 tháng"],
+    "correct": 2
+  },
+  {
+    "title": "Bài 14: Tập thể dục buổi sáng",
+    "script": "男：你 每天 几点 起床 跑步？ 女：我 习惯 六点 左右 醒来，空气 特别 清新。",
+    "question": "Nữ chính có thói quen tập thể dục vào lúc nào?",
+    "options": ["A. 5 giờ sáng", "B. Khoảng 6 giờ sáng", "C. 8 giờ tối", "D. Buổi trưa"],
+    "correct": 1
+  },
+  {
+    "title": "Bài 15: Sử dụng ngân hàng",
+    "script": "男：我想 取 一点 现金。 女：ATM 机 在 门口，里面 也可以 办 信用卡。",
+    "question": "Nữ nhân viên hướng dẫn khách hàng làm gì?",
+    "options": ["A. Đến quầy đổi ngoại tệ", "B. Ra cây ATM ở cửa để rút tiền", "C. Ngồi đợi gọi số", "D. Điền form chuyển khoản"],
+    "correct": 1
+  },
+  {
+    "title": "Bài 16: Đặt món tại nhà hàng",
+    "script": "男：服务员，买单！我们 还要 打包 这 个 菜。 女：好的，一共 一百五 十 块。",
+    "question": "Tổng số tiền bữa ăn tại nhà hàng là bao nhiêu?",
+    "options": ["A. 100 tệ", "B. 150 tệ", "C. 200 tệ", "D. 250 tệ"],
+    "correct": 1
+  },
+  {
+    "title": "Bài 17: Mượn điện thoại",
+    "script": "男：我的手机没电了，能借用一下你的吗？ 女：当然可以，密码是你生日吗？给你。",
+    "question": "Tại sao nam chính phải mượn điện thoại?",
+    "options": ["A. Điện thoại bị hỏng màn hình", "B. Điện thoại hết pin", "C. Quên điện thoại ở nhà", "D. Muốn đổi điện thoại mới"],
+    "correct": 1
+  },
+  {
+    "title": "Bài 18: Thú cưng trong nhà",
+    "script": "男：你 养 的 这只 猫 真 可爱。 女：它 特别 喜欢 吃 鱼 和 睡懒觉。",
+    "question": "Con mèo trong câu có đặc điểm sở thích gì?",
+    "options": ["A. Thích bắt chuột ban đêm", "B. Thích ăn cá và ngủ nướng", "C. Thích chạy ra ngoài đường", "D. Sợ nước"],
+    "correct": 1
+  },
+  {
+    "title": "Bài 19: Chọn quà sinh nhật",
+    "script": "男：下周 朋支 过生日，送 什么 好 呢？ 女：不如 送 他 一支 钢笔 或者 书包 吧。",
+    "question": "Nữ chính gợi ý món quà gì cho bạn?",
+    "options": ["A. Đồng hồ hoặc áo", "B. Bút máy hoặc cặp sách", "C. Giày thể thao", "D. Điện thoại"],
+    "correct": 1
+  },
+  {
+    "title": "Bài 20: Địa điểm du lịch",
+    "script": "男：你 暑假 打算 去 哪儿 旅游？ 女：我想 去 西安 看 兵马俑 和 尝尝 美食。",
+    "question": "Nữ chính dự định đi du lịch ở thành phố nào?",
+    "options": ["A. Bắc Kinh", "B. Thượng Hải", "C. Tây An", "D. Thành Đô"],
+    "correct": 2
   }
 ];
 
@@ -359,7 +443,7 @@ function playSound(type) {
   } catch(e) {}
 }
 
-const STORAGE_KEY = "hsk_vocab_v46";
+const STORAGE_KEY = "hsk_vocab_v47";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -863,6 +947,7 @@ if($("knownBtn")) {
 }
 
 if($("unknownBtn")) {
+  $("unknownBtn".onclick) = () => {}; // fallback
   $("unknownBtn").onclick = () => {
     let w = view[current];
     if (!w) return;
