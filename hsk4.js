@@ -381,7 +381,7 @@ const HSK4_DATA = [
   { "id": "h4_0380", "h": "珍惜", "p": "zhēnxī", "m": "trân trọng", "c": "HSK 4", "ec": "我们要珍惜 眼前 的 时间", "ep": "Wǒmen yào zhēnxī yǎnqián de shíjiān", "ev": "Chúng ta phải trân trọng thời gian trước mắt.", "us": "Động từ." },
   { "id": "h4_0381", "h": "侦探", "p": "zhēntàn", "m": "thám tử", "c": "HSK 4", "ec": "他喜欢看侦探小说", "ep": "Tā xǐhuan kàn zhēntàn xiǎoshuō", "ev": "Cậu ấy thích đọc tiểu thuyết thám tử.", "us": "Danh từ." },
   { "id": "h4_0382", "h": "振动", "p": "zhèndòng", "m": "rung động", "c": "HSK 4", "ec": "手机 调整 到 振动 模式", "ep": "Shǒujī tiáozhěng dào zhèndòng móshì", "ev": "Điện thoại điều chỉnh sang chế độ rung.", "us": "Danh từ/Động từ." },
-  { "id": "h4_0383", "h": "争论", "p": "zhēnglùn", "m": c, "tranh luận", "c": "HSK 4", "ec": "双方为这个问题展开争论", "ep": "Shuāngfāng wèi zhège wèntí zhǎnkāi zhēnglùn", "ev": "Hai bên triển khai tranh luận vì vấn đề này.", "us": "Động từ/Danh từ." },
+  { "id": "h4_0383", "h": "争论", "p": "zhēnglùn", "m": "tranh luận", "c": "HSK 4", "ec": "双方为一个问题展开争论", "ep": "Shuāngfāng wèi zhège wèntí zhǎn kāi zhēnglùn", "ev": "Hai bên triển khai tranh luận vì vấn đề này.", "us": "Động từ/Danh từ." },
   { "id": "h4_0384", "h": "争取", "p": "zhēngqǔ", "m": "tranh thủ", "c": "HSK 4", "ec": "争取今年通过考试", "ep": "Zhēngqǔ jīnnián tōngguò kǎoshì", "ev": "Tranh thủ năm nay thi đậu.", "us": "Động từ." },
   { "id": "h4_0385", "h": "整体", "p": "zhěngtǐ", "m": "tổng thể", "c": "HSK 4", "ec": "从整体来看效果不错", "ep": "Cóng zhěngtǐ lái kàn xiàoguǒ bùcuò", "ev": "Nhìn từ tổng thể thì hiệu quả không tồi.", "us": "Danh từ." },
   { "id": "h4_0386", "h": "政治", "p": "zhèngzhì", "m": "chính trị", "c": "HSK 4", "ec": "关心国家政治", "ep": "Guānxīn guójiā zhèngzhì", "ev": "Quan tâm chính trị đất nước.", "us": "Danh từ." },
