@@ -86,13 +86,14 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Live Stroke Order & Grammar Rules</div></div>
+    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Live Stroke Order & Listening Practice</div></div>
   </div>
   <button class="btn" id="resetBtn" title="Làm mới">↻ Làm mới</button>
 </header>
 
 <div class="mode-tabs">
   <button class="mode-tab active" data-mode="flashcard">📖 Flashcard</button>
+  <button class="mode-tab" data-mode="listening">👂 Luyện nghe</button>
   <button class="mode-tab" data-mode="quiz">❓ Trắc nghiệm</button>
   <button class="mode-tab" data-mode="puzzle">🧩 Ghép câu</button>
   <button class="mode-tab" data-mode="fix">🛠️ Sửa câu sai</button>
@@ -165,6 +166,24 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
     <button class="btn" id="prevBtn">◀ Từ trước</button>
     <button class="btn primary" id="nextBtn">Từ tiếp ▶</button>
   </div>
+</div>
+
+<div id="listeningView" style="display:none;">
+  <section class="card-box" style="min-height:350px;">
+    <div class="tag">LUYỆN NGHE TỰ ĐỘNG</div>
+    <div style="margin:20px 0;">
+      <button class="btn primary" id="playAudioBtn" style="font-size:18px;padding:14px 28px;border-radius:30px;box-shadow:0 4px 12px #c9473733;">
+        🔊 Bấm để nghe phát âm
+      </button>
+    </div>
+    <div class="sub" style="margin-bottom:12px;font-size:15px;color:var(--muted);">
+      Lắng nghe phát âm và chọn nghĩa tiếng Việt chính xác:
+    </div>
+    <div class="quiz-options" id="listenOptions"></div>
+    <button class="btn primary" id="nextListenBtn" style="margin-top:16px;display:none;padding:12px 20px;font-size:15px;">
+      Câu tiếp theo ▶
+    </button>
+  </section>
 </div>
 
 <div id="quizView" style="display:none;">
@@ -311,6 +330,7 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
     currentMode = tab.dataset.mode;
     
     $("flashcardView").style.display = currentMode === 'flashcard' ? 'block' : 'none';
+    $("listeningView").style.display = currentMode === 'listening' ? 'block' : 'none';
     $("quizView").style.display = currentMode === 'quiz' ? 'block' : 'none';
     $("puzzleView").style.display = currentMode === 'puzzle' ? 'block' : 'none';
     $("fixView").style.display = currentMode === 'fix' ? 'block' : 'none';
@@ -320,6 +340,7 @@ document.querySelectorAll('.mode-tab').forEach(tab => {
     $("statsBar").style.display = currentMode === 'flashcard' ? 'grid' : 'none';
 
     if (currentMode === 'flashcard') render();
+    if (currentMode === 'listening') initListening();
     if (currentMode === 'quiz') initQuiz();
     if (currentMode === 'puzzle') initPuzzle();
     if (currentMode === 'fix') initFixGrammar();
@@ -461,6 +482,58 @@ function getActivePool() {
   let filtered = words.filter(w => w && w.c === cat);
   return filtered.length ? filtered : words;
 }
+
+// Logic Chế độ Luyện Nghe
+function initListening() {
+  let pool = getActivePool();
+  if (!pool.length) return;
+  
+  let correctWord = pool[Math.floor(Math.random() * pool.length)];
+  if (!correctWord) return;
+
+  // Tự động phát âm khi vào câu mới
+  playWordSpeech(correctWord.h);
+
+  if ($("playAudioBtn")) $("playAudioBtn").onclick = () => playWordSpeech(correctWord.h);
+
+  let options = [correctWord];
+  while (options.length < 4 && options.length < pool.length) {
+    let randW = pool[Math.floor(Math.random() * pool.length)];
+    if (randW && !options.includes(randW)) options.push(randW);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  let html = "";
+  options.forEach(opt => {
+    let isCorrect = (opt.m === correctWord.m);
+    html += `<div class="quiz-btn" onclick="checkListen(this, ${isCorrect})">${opt.m}</div>`;
+  });
+  $("listenOptions").innerHTML = html;
+  $("nextListenBtn").style.display = "none";
+}
+
+function playWordSpeech(text) {
+  if (!("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  let u = new SpeechSynthesisUtterance(text);
+  u.lang = "zh-CN";
+  u.rate = 0.85; // Tốc độ đọc chuẩn cho luyện nghe
+  speechSynthesis.speak(u);
+}
+
+window.checkListen = function(el, isCorrect) {
+  document.querySelectorAll('#listeningView .quiz-btn').forEach(b => b.style.pointerEvents = 'none');
+  if (isCorrect) { 
+    el.classList.add('correct'); 
+    playSound('correct'); 
+  } else { 
+    el.classList.add('wrong'); 
+    playSound('wrong'); 
+  }
+  $("nextListenBtn").style.display = "block";
+};
+
+if ($("nextListenBtn")) $("nextListenBtn").onclick = initListening;
 
 function initQuiz() {
   let pool = getActivePool();
