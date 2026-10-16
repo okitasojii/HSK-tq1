@@ -1,4 +1,883 @@
-// Thuật toán Sửa câu sai siêu cấp hack não: Tạo đáp án nhiễu hao hao, lừa thị giác cực mạnh
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#f4f0e7">
+<title>HSK Master Pro ✨</title>
+
+<!-- Nhúng đầy đủ các file dữ liệu HSK 1 đến 6 -->
+<script src="hsk1.js"></script>
+<script src="hsk2.js"></script>
+<script src="hsk3.js"></script>
+<script src="hsk4.js"></script>
+<script src="hsk5.js"></script>
+<script src="hsk6.js"></script>
+
+<style>
+:root{--bg:#f4f0e7;--card:#fffdf7;--ink:#252525;--muted:#77746d;--red:#c94737;--line:#e3dccd;--blue:#427eae;--green:#2e7d32;--gold:#b8860b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{max-width:860px;margin:auto;min-height:100vh;padding:16px 12px 40px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--red);color:white;font-size:21px;font-weight:800}
+h1{font-size:19px;margin:0}.sub{font-size:11px;color:var(--muted);margin-top:2px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 14px;color:var(--ink)}
+.btn.primary{background:var(--red);border-color:var(--red);color:white}
+
+.mode-tabs{display:flex;gap:4px;margin-bottom:12px;background:#eadecd;padding:4px;border-radius:14px;overflow-x:auto;scrollbar-width:none}
+.mode-tabs::-webkit-scrollbar{display:none}
+.mode-tab{flex:0 0 auto;border:none;background:transparent;padding:10px 14px;border-radius:10px;font-weight:600;color:var(--muted);text-align:center;font-size:13px}
+.mode-tab.active{background:var(--card);color:var(--red);box-shadow:0 2px 8px #0000000a}
+
+.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.toolbar label{font-size:11px;color:var(--muted);display:block;margin:0 0 4px 2px}
+select,input{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);outline-color:var(--blue);font-size:14px}
+.progress{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px;margin:12px 2px 8px}
+.track{height:6px;background:#e3dccd;border-radius:10px;overflow:hidden;margin-bottom:14px}.fill{height:100%;width:0;background:var(--red);transition:width .2s}
+
+.card-box{background:var(--card);border:1px solid #e2dac8;border-radius:20px;padding:22px 16px 18px;text-align:center;box-shadow:0 5px 18px #55442b0c;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f1ece1;padding:4px 8px;border-radius:20px;margin-bottom:14px}
+
+.card-content-layout{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;width:100%;margin-bottom:12px}
+.word-info-side{text-align:center;flex:1;min-width:200px}
+.stroke-side{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 2px 8px #00000005;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+.hanzi{font-size:clamp(44px,10vw,60px);font-weight:650;line-height:1.15;margin:0 0 4px}
+.pinyin{font-size:20px;color:var(--red);margin:0 0 4px}.meaning{font-size:16px;margin:0}
+
+.example{border-top:1px solid var(--line);padding-top:12px;width:100%;max-width:560px}
+.example-cn{font-size:clamp(16px,3.5vw,21px);line-height:1.45;margin-bottom:4px}.example-py{color:var(--red);font-size:12px;margin-bottom:4px}.example-vi{font-size:12px;color:#5c5851}
+
+.usage-box{background:#fff8e7;border:1px solid #f3e5ab;border-radius:12px;padding:10px 12px;margin-top:10px;width:100%;max-width:560px;text-align:left;font-size:13px;color:#6b4e00;line-height:1.45}
+.usage-box strong{color:var(--gold);display:inline-block;margin-bottom:2px}
+
+.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.smallbtn{border:1px solid #d8e0e4;color:var(--blue);background:transparent;border-radius:24px;padding:8px 14px;font-size:13px}
+.smallbtn.known-toggle{color:var(--green);border-color:#c8e6c9}
+.smallbtn.known-toggle.marked{background:#e8f5e9;color:var(--green);border-color:#c8e6c9;font-weight:bold}
+.smallbtn.unknown{color:#6c6559;border-color:var(--line)}
+.smallbtn.unknown.marked{background:#fff0d8;color:#8b5c10;border-color:#e9c98e}
+
+.note-box{width:100%;max-width:560px;margin-top:10px;border-top:1px dashed var(--line);padding-top:10px;text-align:left}
+.note-box label{font-size:11px;color:var(--muted);display:block;margin-bottom:3px}
+.note-input{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:13px;color:var(--ink);outline-color:var(--blue)}
+
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.nav .btn{font-size:16px;padding:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
+.stat{background:#eee8dc;border-radius:12px;padding:10px 6px;text-align:center}.stat strong{display:block;font-size:18px}.stat span{font-size:10px;color:var(--muted)}
+
+.quiz-options{display:grid;grid-template-columns:1fr;gap:10px;width:100%;max-width:540px;margin-top:12px}
+.quiz-btn{background:var(--card);border:1px solid var(--line);padding:14px;border-radius:14px;font-size:16px;text-align:left;cursor:pointer;transition:.2s;font-weight:500}
+.quiz-btn:hover{background:#f1ece1;border-color:var(--blue)}
+.quiz-btn.correct{background:#e8f5e9!important;border-color:var(--green)!important;color:var(--green);font-weight:bold}
+.quiz-btn.wrong{background:#ffebee!important;border-color:var(--red)!important;color:var(--red);font-weight:bold}
+
+.puzzle-words{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
+.p-chip{background:#e5dfd3;border:1px solid var(--line);padding:10px 14px;border-radius:12px;cursor:pointer;font-size:20px;font-weight:600}
+.p-chip.selected{background:#ccc;color:#888;border-color:#bbb;pointer-events:none}
+
+footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">
+    <div class="logo">中</div>
+    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Live Stroke Order & Smart Fix Grammar Pro</div></div>
+  </div>
+  <button class="btn" id="resetBtn" title="Làm mới">↻ Làm mới</button>
+</header>
+
+<div class="mode-tabs">
+  <button class="mode-tab active" data-mode="flashcard">📖 Flashcard</button>
+  <button class="mode-tab" data-mode="listening">🎧 纯中文听力 (25 bài)</button>
+  <button class="mode-tab" data-mode="quiz">❓ Trắc nghiệm</button>
+  <button class="mode-tab" data-mode="puzzle">🧩 Ghép câu</button>
+  <button class="mode-tab" data-mode="fix">🛠️ Sửa câu sai</button>
+  <button class="mode-tab" data-mode="synonym">🔗 Đồng nghĩa</button>
+</div>
+
+<div class="toolbar" id="filterToolbar">
+  <div>
+    <label for="category">Cấp độ HSK</label>
+    <select id="category">
+      <option value="all">Tất cả (HSK 1 - 6)</option>
+      <option value="HSK 1">HSK 1</option>
+      <option value="HSK 2">HSK 2</option>
+      <option value="HSK 3">HSK 3</option>
+      <option value="HSK 4">HSK 4</option>
+      <option value="HSK 5">HSK 5</option>
+      <option value="HSK 6">HSK 6</option>
+      <option value="marked">Từ chưa thuộc ⭐</option>
+    </select>
+  </div>
+  <div>
+    <label for="search">Tìm từ / nghĩa / ngữ pháp</label>
+    <input id="search" placeholder="Nhập từ cần tìm...">
+  </div>
+</div>
+
+<div id="flashcardView">
+  <div class="progress"><span id="counter">Từ 0 / 0</span><span id="percent">0% đã thuộc</span></div>
+  <div class="track"><div class="fill" id="fill"></div></div>
+
+  <section class="card-box">
+    <div class="tag" id="tag">HSK · TỪ VỰNG</div>
+    
+    <div class="card-content-layout">
+      <div class="word-info-side">
+        <div class="hanzi" id="hanzi">...</div>
+        <div class="pinyin" id="pinyin">...</div>
+        <div class="meaning" id="meaning">...</div>
+      </div>
+      <div class="stroke-side">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;">Thứ tự nét</div>
+        <div id="inlineStrokeBox" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;min-height:90px;align-items:center;"></div>
+      </div>
+    </div>
+
+    <div class="example" id="example">
+      <div class="example-cn" id="exampleCn">...</div>
+      <div class="example-py" id="examplePy">...</div>
+      <div class="example-vi" id="exampleVi">...</div>
+    </div>
+
+    <div class="usage-box" id="usageBox">
+      <strong>💡 Cách dùng & Ngữ cảnh:</strong>
+      <div id="usageText">...</div>
+    </div>
+    
+    <div class="note-box">
+      <label for="vocabNote">📝 Ghi chú cá nhân (Mẹo nhớ):</label>
+      <input type="text" id="vocabNote" class="note-input" placeholder="Nhập ghi chú hoặc cách nhớ từ này...">
+    </div>
+
+    <div class="actions">
+      <button class="smallbtn" id="speakBtn">🔊 Nghe phát âm</button>
+      <button class="smallbtn known-toggle" id="knownBtn">✔️ Đã thuộc</button>
+      <button class="smallbtn unknown" id="unknownBtn">⭐ Chưa thuộc</button>
+    </div>
+  </section>
+
+  <div class="nav">
+    <button class="btn" id="prevBtn">◀ Từ trước</button>
+    <button class="btn primary" id="nextBtn">Từ tiếp ▶</button>
+  </div>
+</div>
+
+<!-- Tab Luyện Nghe -->
+<div id="listeningView" style="display:none;">
+  <section class="card-box" style="min-height:380px;">
+    <div class="tag" id="testTag">听力理解训练 (第 1 / 25 题)</div>
+    <div style="margin:16px 0;">
+      <button class="btn primary" id="playAudioTestBtn" style="font-size:17px;padding:12px 24px;border-radius:30px;box-shadow:0 4px 12px #c9473733;">
+        🔊 播放对话音频
+      </button>
+    </div>
+    <div class="sub" id="scriptHint" style="margin-bottom:14px;font-size:13px;color:var(--muted);font-style:italic;display:none;">
+      (听力原文: ...)
+    </div>
+    <div style="font-size:18px;font-weight:600;margin-bottom:14px;color:var(--ink);line-height:1.4;" id="testQuestion">
+      加载中...
+    </div>
+    <div class="quiz-options" id="testOptions"></div>
+    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center;">
+      <button class="btn" id="toggleScriptBtn" style="font-size:13px;">👁️ 查看/隐藏原文</button>
+      <button class="btn primary" id="nextTestBtn" style="display:none;padding:10px 20px;font-size:15px;">下一题 ▶</button>
+    </div>
+  </section>
+</div>
+
+<div id="quizView" style="display:none;">
+  <section class="card-box" style="min-height:350px;">
+    <div class="tag">TRẮC NGHIỆM ĐOÁN TỪ</div>
+    <div class="hanzi" id="quizHanzi" style="font-size:46px;">?</div>
+    <div class="pinyin" id="quizPinyin" style="font-size:16px;">Nghĩa của từ này là gì?</div>
+    <div class="quiz-options" id="quizOptions"></div>
+    <button class="btn primary" id="nextQuizBtn" style="margin-top:16px;display:none;padding:12px 20px;font-size:15px;">Câu tiếp theo ▶</button>
+  </section>
+</div>
+
+<div id="puzzleView" style="display:none;">
+  <section class="card-box" style="min-height:350px;">
+    <div class="tag">SẮP XẾP CÂU / GHÉP TỪ</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Bấm chọn các chữ bên dưới để xếp lại câu ví dụ đúng:</div>
+    <div class="meaning" id="puzzleMeaning" style="font-weight:bold;color:var(--red);font-size:18px;">...</div>
+    <div class="puzzle-words" id="puzzleChips"></div>
+    <div style="margin:14px 0;font-size:22px;min-height:40px;border-bottom:2px dashed var(--line);padding-bottom:6px;display:flex;justify-content:center;gap:6px;align-items:center;" id="puzzleAns"></div>
+    <div id="puzzleResultMsg" style="font-weight:bold;margin:4px 0;min-height:22px;font-size:16px;"></div>
+    <div class="actions">
+      <button class="btn" id="resetPuzzleBtn" style="padding:10px 16px;font-size:15px;">Làm lại</button>
+      <button class="btn primary" id="checkPuzzleBtn" style="padding:10px 16px;font-size:15px;">Kiểm tra</button>
+      <button class="btn primary" id="nextPuzzleBtn" style="display:none;padding:10px 16px;font-size:15px;">Câu tiếp ▶</button>
+    </div>
+  </section>
+</div>
+
+<div id="fixView" style="display:none;">
+  <section class="card-box" style="min-height:350px;">
+    <div class="tag">TÌM VÀ SỬA CÂU SAI NGỮ PHÁP</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Chọn câu viết ĐÚNG cấu trúc ngữ pháp nhất trong các lựa chọn sau:</div>
+    <div class="hanzi" id="fixWrongSentence" style="font-size:22px;color:var(--red);margin-bottom:10px;line-height:1.35;">...</div>
+    <div class="meaning" id="fixHint" style="font-size:15px;color:var(--muted);margin-bottom:12px;font-style:italic;">...</div>
+    <div class="quiz-options" id="fixOptions"></div>
+    <button class="btn primary" id="nextFixBtn" style="margin-top:16px;display:none;padding:12px 20px;font-size:15px;">Câu tiếp theo ▶</button>
+  </section>
+</div>
+
+<div id="synonymView" style="display:none;">
+  <section class="card-box" style="min-height:350px;">
+    <div class="tag">TỪ ĐỒNG NGHĨA & ÔN TẬP TỪ VỰNG</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Chọn từ có nghĩa phù hợp với từ gốc:</div>
+    <div class="hanzi" id="synQuestion" style="font-size:24px;margin-bottom:10px;line-height:1.35;">...</div>
+    <div class="meaning" id="synMeaning" style="font-size:15px;color:var(--muted);margin-bottom:12px;">...</div>
+    <div class="quiz-options" id="synOptions"></div>
+    <button class="btn primary" id="nextSynBtn" style="margin-top:16px;display:none;padding:12px 20px;font-size:15px;">Câu tiếp theo ▶</button>
+  </section>
+</div>
+
+<div class="stats" id="statsBar">
+  <div class="stat"><strong id="totalStat">0</strong><span>Tổng số từ</span></div>
+  <div class="stat"><strong id="knownStat">0</strong><span>Đã thuộc</span></div>
+  <div class="stat"><strong id="unknownStat">0</strong><span>Chưa thuộc</span></div>
+</div>
+
+<footer>Tiến độ và ghi chú được lưu tự động trên thiết bị này.</footer>
+</div>
+
+<!-- Thư viện vẽ nét chữ Hanzi Writer từ CDN -->
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.0/dist/hanzi-writer.min.js"></script>
+
+<script>
+let words = [
+  ...(typeof HSK1_DATA !== 'undefined' ? HSK1_DATA : []),
+  ...(typeof HSK2_DATA !== 'undefined' ? HSK2_DATA : []),
+  ...(typeof HSK3_DATA !== 'undefined' ? HSK3_DATA : []),
+  ...(typeof HSK4_DATA !== 'undefined' ? HSK4_DATA : []),
+  ...(typeof HSK5_DATA !== 'undefined' ? HSK5_DATA : []),
+  ...(typeof HSK6_DATA !== 'undefined' ? HSK6_DATA : [])
+];
+
+let listeningTests = [
+  {
+    "title": "办公室日常",
+    "script": "男：你怎么七点才过来？ 女：路上车太多了，堵车得很厉害。",
+    "question": "问：女的为什么来得很晚？",
+    "options": ["A. 因为她起床太晚了", "B. 因为路上堵车很厉害", "C. 因为她忘记开会时间", "D. 因为她走错了路"],
+    "correct": 1
+  },
+  {
+    "title": "商场购物",
+    "script": "男：这件衣服多少钱？ 女：原价三百，现在打折只要一百八。",
+    "question": "问：打折后这件衣服多少钱？",
+    "options": ["A. 三百元", "B. 一百二十元", "C. 一百八十元", "D. 三百八十元"],
+    "correct": 2
+  },
+  {
+    "title": "天气预报",
+    "script": "男：明天天气怎么样？ 女：听说有雨，出门记得带伞。",
+    "question": "问：明天天气怎么样？出门要带什么？",
+    "options": ["A. 晴天，带太阳镜", "B. 下雨，带雨伞", "C. 很冷，穿厚衣服", "D. 刮大风，待在家"],
+    "correct": 1
+  },
+  {
+    "title": "酒店订房",
+    "script": "男：请问还有标准间吗？ 女：对不起，今天的房间已经全住满了。",
+    "question": "问：现在酒店情况怎么样？",
+    "options": ["A. 还有单人房间", "B. 还有贵宾房", "C. 房间已经全住满了", "D. 正在装修休息"],
+    "correct": 2
+  },
+  {
+    "title": "机场航班",
+    "script": "男：飞往北京的航班什么时候起飞？ 女：由于天气原因，飞机延误了一个小时。",
+    "question": "问：飞往北京的航班怎么了？",
+    "options": ["A. 延误了一个小时", "B. 准时起飞了", "C. 已经取消了航班", "D. 改到明天出发"],
+    "correct": 0
+  },
+  {
+    "title": "饮食习惯",
+    "script": "男：你平时喜欢吃什么菜？ 女：我比较喜欢吃辣的，尤其是四川菜。",
+    "question": "问：女的最喜欢吃什么？",
+    "options": ["A. 广东甜品菜", "B. 四川辣菜", "C. 清淡的蔬菜", "D. 西方快餐"],
+    "correct": 1
+  },
+  {
+    "title": "周末计划",
+    "script": "男：周末我们要不要去爬山？ 女：好主意，我顺便准备一些水果和饮料。",
+    "question": "问：周末他们打算做什么？",
+    "options": ["A. 在家看电影", "B. 去爬山", "C. 去超市购物", "D. 去游泳"],
+    "correct": 1
+  },
+  {
+    "title": "去看医生",
+    "script": "男：医生，我头晕、咳嗽，是不是感冒了？ 女：是的，有点发烧，先拿药回去休息两天。",
+    "question": "问：病人怎么了？医生建议什么？",
+    "options": ["A. 肚子疼，需要做手术", "B. 感冒发烧，拿药回去休息", "C. 脚受伤了，需要包扎", "D. 皮肤过敏"],
+    "correct": 1
+  },
+  {
+    "title": "租房生活",
+    "script": "男：这套公寓一个月房租多少钱？ 女：房租两千五，水电费另算，押一付三。",
+    "question": "问：房租的付款方式是什么？",
+    "options": ["A. 押一付三", "B. 一年付一次", "C. 免押金入住", "D. 按周支付现金"],
+    "correct": 0
+  },
+  {
+    "title": "面试工作",
+    "script": "男：你以前做过类似的工作吗？ 女：是的，我有三年销售的工作经验。",
+    "question": "问：女的以前做什么工作？",
+    "options": ["A. 财务会计", "B. 销售业务", "C. 软件开发", "D. 外语老师"],
+    "correct": 1
+  },
+  {
+    "title": "厨房做饭",
+    "script": "男：汤好像差点盐，你尝一下。 女：嗯，确实有点淡，再加一勺吧。",
+    "question": "问：这道汤有什么问题？",
+    "options": ["A. 太咸了", "B. 有点淡，需要加盐", "C. 已经煮好了", "D. 汤变冷了"],
+    "correct": 1
+  },
+  {
+    "title": "快递签收",
+    "script": "男：您好，您的快递到了，请拿身份证签收。 女：好的，谢谢你，放在门口吧。",
+    "question": "问：快递员让出示什么证件？",
+    "options": ["A. 护照", "B. 银行卡", "C. 身份证", "D. 驾驶证"],
+    "correct": 2
+  },
+  {
+    "title": "图书馆借书",
+    "script": "男：这本书可以借几天？ 女：一般最多借一个月，到期记得来续借。",
+    "question": "问：这本书最多可以借多久？",
+    "options": ["A. 一周", "B. 两周", "C. 一个月", "D. 三个月"],
+    "correct": 2
+  },
+  {
+    "title": "晨练跑步",
+    "script": "男：你每天几点起床跑步？ 女：我习惯六点左右醒来，空气特别清新。",
+    "question": "问：女的习惯几点起床？",
+    "options": ["A. 五点钟", "B. 六点左右", "C. 晚上八点", "D. 中午"],
+    "correct": 1
+  },
+  {
+    "title": "银行业务",
+    "script": "男：我想取一点现金。 女：ATM机在门口，里面也可以办信用卡。",
+    "question": "问：女的工作人员建议去哪里取钱？",
+    "options": ["A. 去柜台换外币", "B. 去门口的ATM机", "C. 在里面拿号排队", "D. 填写转账单"],
+    "correct": 1
+  },
+  {
+    "title": "饭店买单",
+    "script": "男：服务员，买单！我们还要打包这个菜。 女：好的，一共一百五十块。",
+    "question": "问：饭费一共多少钱？",
+    "options": ["A. 一百元", "B. 一百五十元", "C. 二百元", "D. 二百五十元"],
+    "correct": 1
+  },
+  {
+    "title": "借用手机",
+    "script": "男：我的手机没电了，能借用一下你的吗？ 女：当然可以，密码是你生日吗？给你。",
+    "question": "问：男的为什么要借手机？",
+    "options": ["A. 手机屏幕坏了", "B. 手机没电了", "C. 把手机忘在家了", "D. 想换新手机"],
+    "correct": 1
+  },
+  {
+    "title": "可爱宠物",
+    "script": "男：你养的这只猫真可爱。 女：它特别喜欢吃鱼和睡懒觉。",
+    "question": "问：这只猫有什么爱好？",
+    "options": ["A. 晚上抓老鼠", "B. 喜欢吃鱼和睡懒觉", "C. 喜欢出门跑步", "D. 怕水"],
+    "correct": 1
+  },
+  {
+    "title": "生日礼物",
+    "script": "男：下周朋友过生日，送什么好呢？ 女：不如送他一支钢笔或者书包吧。",
+    "question": "问：女的建议送什么礼物？",
+    "options": ["A. 手表或衣服", "B. 钢笔或书包", "C. 运动鞋", "D. 手机"],
+    "correct": 1
+  },
+  {
+    "title": "旅游胜地",
+    "script": "男：你暑假打算去哪儿旅游？ 女：我想去西安看兵马俑和尝尝美食。",
+    "question": "问：女的暑假想去哪里？",
+    "options": ["A. 北京", "B. 上海", "C. 西安", "D. 成都"],
+    "correct": 2
+  },
+  {
+    "title": "银行开户",
+    "script": "男：我想开一个新账户，需要带什么材料？ 女：请出示您的护照并填写这张表格。",
+    "question": "问：开新账户需要带什么？",
+    "options": ["A. 户口本", "B. 护照并填表", "C. 工作证", "D. 驾驶证"],
+    "correct": 1
+  },
+  {
+    "title": "运动健身",
+    "script": "男：你觉得经常游泳对身体有好处吗？ 女：当然，不仅能锻炼肌肉，还能放松心情。",
+    "question": "问：经常游泳有什么好处？",
+    "options": ["A. 让人变得更瘦", "B. 锻炼肌肉并放松心情", "C. 提高视力", "D. 增加睡眠时间"],
+    "correct": 1
+  },
+  {
+    "title": "车站买票",
+    "script": "男：去上海的高铁还有票吗？ 女：上午的已经卖完了，下午两点还有。",
+    "question": "问：去上海的高铁现在还有什么票？",
+    "options": ["A. 上午的全没了", "B. 下午两点的还有票", "C. 已经全部售罄", "D. 只能买站票"],
+    "correct": 1
+  },
+  {
+    "title": "预约时间",
+    "script": "男：经理，我们组的会议定在几点？ 女：改到明天下午三点在会议室开。",
+    "question": "问：会议时间改到什么时候了？",
+    "options": ["A. 明天上午九点", "B. 明天下午三点", "C. 后天早上", "D. 今天下班前"],
+    "correct": 1
+  },
+  {
+    "title": "环保出行",
+    "script": "男：现在大家都喜欢骑共享单车。 女：既方便又环保，值得推荐。",
+    "question": "问：共享单车有什么优点？",
+    "options": ["A. 速度非常快", "B. 方便且环保", "C. 完全免费", "D. 不用找位置停"],
+    "correct": 1
+  }
+];
+
+let currentTestIdx = 0;
+
+function speakText(text) {
+  if (!("speechSynthesis" in window)) {
+    alert("Trình duyệt không hỗ trợ phát âm.");
+    return;
+  }
+  speechSynthesis.cancel();
+  let u = new SpeechSynthesisUtterance(text);
+  u.lang = "zh-CN";
+  u.rate = 0.85;
+  
+  let voices = speechSynthesis.getVoices();
+  let zhVoice = voices.find(v => v.lang.includes("zh") || v.lang.includes("CN"));
+  if (zhVoice) u.voice = zhVoice;
+
+  speechSynthesis.speak(u);
+}
+
+document.addEventListener('touchstart', function() {
+  if ("speechSynthesis" in window && speechSynthesis.speaking === false) {
+    let silentUtterance = new SpeechSynthesisUtterance("");
+    speechSynthesis.speak(silentUtterance);
+  }
+}, { once: true });
+
+function playSound(type) {
+  try {
+    let ctx = new (window.AudioContext || window.webkitAudioContext)();
+    let osc = ctx.createOscillator();
+    let gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    if (type === 'correct') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    } else {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(140, ctx.currentTime);
+      osc.frequency.setValueAtTime(90, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.25);
+    }
+  } catch(e) {}
+}
+
+const STORAGE_KEY = "hsk_vocab_v52";
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
+
+let marks = new Set(saved.marks || []);
+let known = new Set(saved.known || []);
+let notes = saved.notes || {};
+let current = 0;
+let view = [];
+let currentMode = 'flashcard';
+
+const $ = id => document.getElementById(id);
+
+function persist() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ marks: [...marks], known: [...known], notes }));
+  } catch(e) {}
+}
+
+function getFilteredWords() {
+  let cat = $("category")?.value || "all";
+  let q = $("search")?.value?.trim()?.toLowerCase() || "";
+  return words.filter(w => {
+    if (!w) return false;
+    let k = w.id || w.h;
+    let matchCat = (cat === "all") || (cat === "marked" && marks.has(k)) || (w.c === cat);
+    let matchSearch = !q || [w.h, w.p, w.m, w.ec, w.ev, w.us, w.c].filter(Boolean).join(" ").toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  });
+}
+
+document.querySelectorAll('.mode-tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentMode = tab.dataset.mode;
+    
+    $("flashcardView").style.display = currentMode === 'flashcard' ? 'block' : 'none';
+    $("listeningView").style.display = currentMode === 'listening' ? 'block' : 'none';
+    $("quizView").style.display = currentMode === 'quiz' ? 'block' : 'none';
+    $("puzzleView").style.display = currentMode === 'puzzle' ? 'block' : 'none';
+    $("fixView").style.display = currentMode === 'fix' ? 'block' : 'none';
+    $("synonymView").style.display = currentMode === 'synonym' ? 'block' : 'none';
+
+    $("filterToolbar").style.display = currentMode === 'flashcard' ? 'grid' : 'none';
+    $("statsBar").style.display = currentMode === 'flashcard' ? 'grid' : 'none';
+
+    if (currentMode === 'flashcard') render();
+    if (currentMode === 'listening') initListeningTest();
+    if (currentMode === 'quiz') initQuiz();
+    if (currentMode === 'puzzle') initPuzzle();
+    if (currentMode === 'fix') initFixGrammar();
+    if (currentMode === 'synonym') initSynonym();
+  };
+});
+
+function render() {
+  view = getFilteredWords();
+  if (!view.length) {
+    $("tag").textContent = "TRỐNG";
+    $("hanzi").textContent = "Không có từ";
+    $("pinyin").textContent = "";
+    $("meaning").textContent = "Không tìm thấy từ phù hợp.";
+    $("inlineStrokeBox").innerHTML = "";
+    $("exampleCn").textContent = "";
+    $("examplePy").textContent = "";
+    $("exampleVi").textContent = "";
+    $("usageBox").style.display = "none";
+    $("counter").textContent = "0 / 0";
+    $("fill").style.width = "0%";
+    if($("unknownBtn")) $("unknownBtn").disabled = true;
+    if($("knownBtn")) $("knownBtn").disabled = true;
+    $("vocabNote").value = "";
+    return;
+  }
+
+  if($("unknownBtn")) $("unknownBtn").disabled = false;
+  if($("knownBtn")) $("knownBtn").disabled = false;
+  if (current >= view.length) current = 0;
+  if (current < 0) current = view.length - 1;
+
+  let w = view[current];
+  if (!w) return;
+  let k = w.id || w.h;
+
+  $("tag").textContent = (w.c || "HSK") + " · TỪ VỰNG";
+  $("hanzi").textContent = w.h || "";
+  $("pinyin").textContent = w.p || "";
+  $("meaning").textContent = w.m || "";
+  $("exampleCn").textContent = w.ec || "";
+  $("examplePy").textContent = w.ep || "";
+  $("exampleVi").textContent = w.ev || "";
+
+  if (w.us || w.usage) {
+    $("usageText").textContent = w.us || w.usage;
+    $("usageBox").style.display = "block";
+  } else {
+    $("usageBox").style.display = "none";
+  }
+
+  $("vocabNote").value = notes[k] || "";
+
+  $("counter").textContent = `Từ ${current + 1} / ${view.length}`;
+  let percent = words.length ? Math.round(known.size / words.length * 100) : 0;
+  $("percent").textContent = `${percent}% đã thuộc`;
+  $("fill").style.width = ((current + 1) / view.length * 100) + "%";
+
+  $("totalStat").textContent = view.length;
+  $("knownStat").textContent = known.size;
+  $("unknownStat").textContent = marks.size;
+
+  if($("knownBtn")) {
+    $("knownBtn").classList.toggle("marked", known.has(k));
+    $("knownBtn").textContent = known.has(k) ? "✅ Đã thuộc" : "✔️ Đánh dấu đã thuộc";
+  }
+
+  if($("unknownBtn")) {
+    $("unknownBtn").classList.toggle("marked", marks.has(k));
+    $("unknownBtn").textContent = marks.has(k) ? "⭐ Đã đánh dấu chưa thuộc" : "⭐ Chưa thuộc";
+  }
+
+  renderInlineStrokes(w.h || "");
+}
+
+function renderInlineStrokes(hanziStr) {
+  let box = $("inlineStrokeBox");
+  if (!box) return;
+  box.innerHTML = "";
+  let chars = (hanziStr || "").split('').filter(c => /[\u4e00-\u9fa5]/.test(c));
+  
+  if (!chars.length) {
+    box.innerHTML = "<span style='font-size:12px;color:var(--muted);padding:10px;'>Không có chữ Hán</span>";
+    return;
+  }
+
+  chars.forEach((char, idx) => {
+    let targetId = 'inline-char-' + current + '-' + idx;
+    let wrap = document.createElement('div');
+    wrap.style.textAlign = "center";
+    wrap.innerHTML = `<div id="${targetId}" style="width:75px;height:75px;background:#fff;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;" title="Bấm để xem lại nét"></div>`;
+    box.appendChild(wrap);
+
+    setTimeout(() => {
+      let targetEl = document.getElementById(targetId);
+      if (!targetEl) return;
+      if (typeof HanziWriter !== 'undefined') {
+        try {
+          let writer = HanziWriter.create(targetId, char, {
+            width: 75,
+            height: 75,
+            padding: 4,
+            showCharacter: true,
+            showOutline: true,
+            strokeAnimationSpeed: 1.2,
+            delayBetweenStrokes: 200,
+            strokeColor: '#252525',
+            radicalColor: '#c94737'
+          });
+          writer.animateCharacter();
+          targetEl.onclick = () => writer.animateCharacter();
+        } catch(e) {
+          targetEl.innerHTML = `<span style="font-size:32px;color:var(--red);">${char}</span>`;
+        }
+      } else {
+        targetEl.innerHTML = `<span style="font-size:32px;color:var(--red);">${char}</span>`;
+      }
+    }, 50);
+  });
+}
+
+if($("vocabNote")) {
+  $("vocabNote").oninput = (e) => {
+    let w = view[current];
+    if (!w) return;
+    let k = w.id || w.h;
+    notes[k] = e.target.value;
+    persist();
+  };
+}
+
+function getActivePool() {
+  let cat = $("category")?.value || "all";
+  if (cat === "all") return words;
+  if (cat === "marked") {
+    let markedWords = words.filter(w => marks.has(w.id || w.h));
+    return markedWords.length ? markedWords : words;
+  }
+  let filtered = words.filter(w => w && w.c === cat);
+  return filtered.length ? filtered : words;
+}
+
+// Logic Kho Đề Thi Nghe
+function initListeningTest() {
+  if (!listeningTests.length) return;
+  if (currentTestIdx >= listeningTests.length) currentTestIdx = 0;
+  
+  let test = listeningTests[currentTestIdx];
+  $("testTag").textContent = `听力理解训练 (第 ${currentTestIdx + 1} / ${listeningTests.length} 题) - ${test.title}`;
+  $("testQuestion").textContent = test.question;
+  $("scriptHint").textContent = "(听力原文: " + test.script + ")";
+  $("scriptHint").style.display = "none";
+  $("toggleScriptBtn").textContent = "👁️ 查看原文";
+
+  let html = "";
+  test.options.forEach((opt, idx) => {
+    let isCorrect = (idx === test.correct);
+    html += `<div class="quiz-btn" onclick="checkListeningTest(this, ${isCorrect})">${opt}</div>`;
+  });
+  $("testOptions").innerHTML = html;
+  $("nextTestBtn").style.display = "none";
+
+  speakText(test.script);
+}
+
+if ($("playAudioTestBtn")) {
+  $("playAudioTestBtn").onclick = () => {
+    let test = listeningTests[currentTestIdx];
+    if (test) speakText(test.script);
+  };
+}
+
+if ($("toggleScriptBtn")) {
+  $("toggleScriptBtn").onclick = () => {
+    let hint = $("scriptHint");
+    if (hint.style.display === "none") {
+      hint.style.display = "block";
+      $("toggleScriptBtn").textContent = "🙈 隐藏原文";
+    } else {
+      hint.style.display = "none";
+      $("toggleScriptBtn").textContent = "👁️ 查看原文";
+    }
+  };
+}
+
+window.checkListeningTest = function(el, isCorrect) {
+  document.querySelectorAll('#listeningView .quiz-btn').forEach(b => b.style.pointerEvents = 'none');
+  if (isCorrect) {
+    el.classList.add('correct');
+    playSound('correct');
+  } else {
+    el.classList.add('wrong');
+    playSound('wrong');
+  }
+  $("nextTestBtn").style.display = "inline-block";
+};
+
+if ($("nextTestBtn")) {
+  $("nextTestBtn").onclick = () => {
+    currentTestIdx++;
+    if (currentTestIdx >= listeningTests.length) currentTestIdx = 0;
+    initListeningTest();
+  };
+}
+
+function initQuiz() {
+  let pool = getActivePool();
+  if (!pool.length) return;
+  let correctWord = pool[Math.floor(Math.random() * pool.length)];
+  if(!correctWord) return;
+  $("quizHanzi").textContent = correctWord.h || "";
+  $("quizPinyin").textContent = correctWord.p || "";
+
+  let options = [correctWord];
+  while (options.length < 4 && options.length < pool.length) {
+    let randW = pool[Math.floor(Math.random() * pool.length)];
+    if (randW && !options.includes(randW)) options.push(randW);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  let html = "";
+  options.forEach(opt => {
+    let isCorrect = (opt.m === correctWord.m);
+    html += `<div class="quiz-btn" onclick="checkQuiz(this, ${isCorrect})">${opt.m}</div>`;
+  });
+  $("quizOptions").innerHTML = html;
+  $("nextQuizBtn").style.display = "none";
+}
+
+window.checkQuiz = function(el, isCorrect) {
+  let btns = document.querySelectorAll('#quizView .quiz-btn');
+  btns.forEach(b => b.style.pointerEvents = 'none');
+  if (isCorrect) { 
+    el.classList.add('correct'); 
+    playSound('correct');
+  } else { 
+    el.classList.add('wrong'); 
+    playSound('wrong');
+  }
+  $("nextQuizBtn").style.display = "block";
+};
+if($("nextQuizBtn")) $("nextQuizBtn").onclick = initQuiz;
+
+let currentPuzzleTarget = "";
+let shuffledTokens = [];
+let selectedTokens = [];
+
+function initPuzzle() {
+  let pool = getActivePool();
+  let validWords = pool.filter(w => w && w.ec && w.ec.length >= 2);
+  if (!validWords.length) validWords = words.filter(w => w && w.ec && w.ec.length >= 2);
+  if (!validWords.length) {
+    $("puzzleMeaning").textContent = "Chưa đủ câu ví dụ để sắp xếp!";
+    $("puzzleChips").innerHTML = "";
+    return;
+  }
+  let w = validWords[Math.floor(Math.random() * validWords.length)];
+  let cleanSentence = (w.ec || "").replace(/[。，！？]/g, "").trim();
+  if (!cleanSentence) cleanSentence = w.h || "";
+
+  currentPuzzleTarget = cleanSentence;
+  $("puzzleMeaning").textContent = "Nghĩa: " + (w.ev || w.m || "");
+  $("puzzleResultMsg").innerHTML = "";
+  $("checkPuzzleBtn").style.display = "inline-block";
+  $("nextPuzzleBtn").style.display = "none";
+
+  let baseTokens = cleanSentence.split('').map((char, idx) => ({ uid: 'tok-' + idx + '-' + Math.random().toString(36).substring(2, 7), char }));
+  shuffledTokens = [...baseTokens].sort(() => Math.random() - 0.5);
+  selectedTokens = [];
+  renderPuzzleBoard();
+}
+
+function renderPuzzleBoard() {
+  let chipsHtml = "";
+  shuffledTokens.forEach(t => {
+    let isSelected = selectedTokens.some(s => s.uid === t.uid);
+    let cls = isSelected ? "p-chip selected" : "p-chip";
+    chipsHtml += `<span class="${cls}" onclick="clickToken('${t.uid}', '${t.char}')">${t.char}</span>`;
+  });
+  $("puzzleChips").innerHTML = chipsHtml;
+
+  let ansHtml = "";
+  if (selectedTokens.length === 0) {
+    ansHtml = `<span style="color:var(--muted);font-size:15px;">Bấm chọn các chữ bên trên...</span>`;
+  } else {
+    selectedTokens.forEach((s, sIdx) => {
+      ansHtml += `<span class="p-chip" style="background:var(--blue);color:white;cursor:pointer;" onclick="removeToken(${sIdx})">${s.char}</span>`;
+    });
+  }
+  $("puzzleAns").innerHTML = ansHtml;
+}
+
+window.clickToken = function(uid, char) {
+  if (selectedTokens.some(s => s.uid === uid)) return;
+  selectedTokens.push({ uid, char });
+  renderPuzzleBoard();
+};
+
+window.removeToken = function(index) {
+  selectedTokens.splice(index, 1);
+  $("puzzleResultMsg").innerHTML = "";
+  renderPuzzleBoard();
+};
+
+if($("resetPuzzleBtn")) {
+  $("resetPuzzleBtn").onclick = () => {
+    selectedTokens = [];
+    $("puzzleResultMsg").innerHTML = "";
+    $("nextPuzzleBtn").style.display = "none";
+    $("checkPuzzleBtn").style.display = "inline-block";
+    shuffledTokens.sort(() => Math.random() - 0.5);
+    renderPuzzleBoard();
+  };
+}
+
+if($("checkPuzzleBtn")) {
+  $("checkPuzzleBtn").onclick = () => {
+    if (selectedTokens.length === 0) { alert("Bạn chưa chọn chữ nào cả!"); return; }
+    let userAns = selectedTokens.map(s => s.char).join('');
+    let msgEl = $("puzzleResultMsg");
+    if (userAns === currentPuzzleTarget) {
+      msgEl.style.color = "var(--green)";
+      msgEl.innerHTML = "🎉 Chính xác tuyệt vời!";
+      playSound('correct');
+      $("checkPuzzleBtn").style.display = "none";
+      $("nextPuzzleBtn").style.display = "inline-block";
+    } else {
+      msgEl.style.color = "var(--red)";
+      msgEl.innerHTML = "❌ Chưa đúng rồi, thử lại nhé!";
+      playSound('wrong');
+    }
+  };
+}
+if($("nextPuzzleBtn")) $("nextPuzzleBtn").onclick = initPuzzle;
+
+// Thuật toán Sửa câu sai Pro: Tạo đáp án nhiễu hao hao, lừa thị giác cực mạnh
 function initFixGrammar() {
   let pool = getActivePool();
   let validWords = pool.filter(w => w && w.ec && w.ec.length >= 6);
@@ -13,7 +892,6 @@ function initFixGrammar() {
   let w = validWords[Math.floor(Math.random() * validWords.length)];
   let correctSentence = (w.ec || "").replace(/[。，！？]/g, "").trim();
 
-  // Tạo câu hỏi sai trật tự bằng cách tách cụm/từ rồi xáo trộn
   let tokens = [];
   if (correctSentence.length >= 8) {
     let mid = Math.floor(correctSentence.length / 2);
@@ -25,7 +903,6 @@ function initFixGrammar() {
     }
   }
   
-  // Xáo trộn vị trí các cụm từ để làm câu hỏi
   let shuffledTokens = [...tokens].sort(() => Math.random() - 0.5);
   let wrongSentence = shuffledTokens.join('');
   if (wrongSentence === correctSentence && tokens.length > 1) {
@@ -38,7 +915,6 @@ function initFixGrammar() {
 
   let options = [correctSentence];
 
-  // Nhiễu 1: Đảo trật tự 2 từ/cụm ở gần cuối câu (bẫy sai ngữ pháp cực tinh vi)
   if (correctSentence.length >= 6) {
     let chars = correctSentence.split('');
     let idx = Math.floor(chars.length * 0.7);
@@ -47,7 +923,6 @@ function initFixGrammar() {
     if (s1 !== correctSentence) options.push(s1);
   }
 
-  // Nhiễu 2: Đảo trật tự ở phần đầu câu
   if (correctSentence.length >= 6) {
     let chars = correctSentence.split('');
     let temp = chars[1]; chars[1] = chars[2]; chars[2] = temp;
@@ -55,7 +930,6 @@ function initFixGrammar() {
     if (!options.includes(s2)) options.push(s2);
   }
 
-  // Nhiễu 3: Thay đổi nhẹ hậu tố hoặc từ nối trong câu để tạo câu "nhìn y hệt nhưng sai"
   if (correctSentence.includes("的")) {
     let s3 = correctSentence.replace("的", "地");
     if (!options.includes(s3)) options.push(s3);
@@ -66,7 +940,6 @@ function initFixGrammar() {
     if (!options.includes(s3)) options.push(s3);
   }
 
-  // Lấy thêm các câu có độ dài tương đương làm phương án phụ nếu chưa đủ 4 đáp án
   let similarPool = validWords.filter(item => {
     let s = (item.ec || "").replace(/[。，！？]/g, "").trim();
     return Math.abs(s.length - correctSentence.length) <= 2 && s !== correctSentence;
@@ -86,7 +959,6 @@ function initFixGrammar() {
     if (sent && !options.includes(sent)) options.push(sent);
   }
 
-  // Cắt lọc giữ lại đúng 4 đáp án và xáo trộn vị trí hiển thị
   options = options.slice(0, 4);
   options.sort(() => Math.random() - 0.5);
 
@@ -98,3 +970,105 @@ function initFixGrammar() {
   $("fixOptions").innerHTML = html;
   $("nextFixBtn").style.display = "none";
 }
+
+window.checkFix = function(el, isCorrect) {
+  let btns = document.querySelectorAll('#fixView .quiz-btn');
+  btns.forEach(b => b.style.pointerEvents = 'none');
+  if (isCorrect) { 
+    el.classList.add('correct'); 
+    playSound('correct');
+  } else { 
+    el.classList.add('wrong'); 
+    playSound('wrong');
+  }
+  $("nextFixBtn").style.display = "block";
+};
+if($("nextFixBtn")) $("nextFixBtn").onclick = initFixGrammar;
+
+function initSynonym() {
+  let pool = getActivePool();
+  if (!pool.length) return;
+  let correctWord = pool[Math.floor(Math.random() * pool.length)];
+  if(!correctWord) return;
+  $("synQuestion").textContent = "Từ nào có nghĩa là: " + (correctWord.m || "") + " ?";
+  $("synMeaning").textContent = "Cấp độ: " + (correctWord.c || "HSK");
+
+  let options = [correctWord];
+  while (options.length < 4 && options.length < pool.length) {
+    let randW = pool[Math.floor(Math.random() * pool.length)];
+    if (randW && !options.includes(randW)) options.push(randW);
+  }
+  options.sort(() => Math.random() - 0.5);
+
+  let html = "";
+  options.forEach(opt => {
+    let isCorrect = (opt.h === correctWord.h);
+    html += `<div class="quiz-btn" onclick="checkSyn(this, ${isCorrect})">${opt.h} (${opt.p})</div>`;
+  });
+  $("synOptions").innerHTML = html;
+  $("nextSynBtn").style.display = "none";
+}
+
+window.checkSyn = function(el, isCorrect) {
+  let btns = document.querySelectorAll('#synonymView .quiz-btn');
+  btns.forEach(b => b.style.pointerEvents = 'none');
+  if (isCorrect) { 
+    el.classList.add('correct'); 
+    playSound('correct');
+  } else { 
+    el.classList.add('wrong'); 
+    playSound('wrong');
+  }
+  $("nextSynBtn").style.display = "block";
+};
+if($("nextSynBtn")) $("nextSynBtn").onclick = initSynonym;
+
+if($("prevBtn")) $("prevBtn").onclick = () => { current--; render(); };
+if($("nextBtn")) $("nextBtn").onclick = () => { current++; render(); };
+
+if($("knownBtn")) {
+  $("knownBtn").onclick = () => {
+    let w = view[current];
+    if (!w) return;
+    let k = w.id || w.h;
+    if (known.has(k)) known.delete(k);
+    else {
+      known.add(k);
+      marks.delete(k);
+    }
+    persist();
+    render();
+  };
+}
+
+if($("unknownBtn")) {
+  $("unknownBtn").onclick = () => {
+    let w = view[current];
+    if (!w) return;
+    let k = w.id || w.h;
+    if (marks.has(k)) marks.delete(k);
+    else {
+      marks.add(k);
+      known.delete(k);
+    }
+    persist();
+    render();
+  };
+}
+
+if($("category")) $("category").onchange = () => { current = 0; render(); };
+if($("search")) $("search").oninput = () => { current = 0; render(); };
+if($("resetBtn")) $("resetBtn").onclick = () => { if($("category")) $("category").value = "all"; if($("search")) $("search").value = ""; current = 0; render(); };
+
+if($("speakBtn")) {
+  $("speakBtn").onclick = () => {
+    let w = view[current];
+    if (!w) return;
+    speakText(w.h || "");
+  };
+}
+
+render();
+</script>
+</body>
+</html>
