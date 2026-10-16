@@ -86,7 +86,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Live Stroke Order & Massive Pure Chinese Listening</div></div>
+    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Live Stroke Order & Mobile Audio Fix</div></div>
   </div>
   <button class="btn" id="resetBtn" title="Làm mới">↻ Làm mới</button>
 </header>
@@ -168,7 +168,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
   </div>
 </div>
 
-<!-- Tab Luyện Nghe 100% Tiếng Trung (Playlist 25 bài khủng) -->
+<!-- Tab Luyện Nghe -->
 <div id="listeningView" style="display:none;">
   <section class="card-box" style="min-height:380px;">
     <div class="tag" id="testTag">听力理解训练 (第 1 / 25 题)</div>
@@ -220,8 +220,8 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <div id="fixView" style="display:none;">
   <section class="card-box" style="min-height:350px;">
     <div class="tag">TÌM VÀ SỬA CÂU SAI NGỮ PHÁP</div>
-    <div class="sub" style="margin-bottom:6px;font-size:14px;">Câu tiếng Trung dưới đây bị đảo lộn trật tự, hãy chọn đáp án đúng:</div>
-    <div class="hanzi" id="fixWrongSentence" style="font-size:24px;color:var(--red);margin-bottom:10px;line-height:1.35;">...</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Chọn câu viết ĐÚNG ngữ pháp nhất trong các lựa chọn sau:</div>
+    <div class="hanzi" id="fixWrongSentence" style="font-size:22px;color:var(--red);margin-bottom:10px;line-height:1.35;">...</div>
     <div class="meaning" id="fixHint" style="font-size:15px;color:var(--muted);margin-bottom:12px;font-style:italic;">...</div>
     <div class="quiz-options" id="fixOptions"></div>
     <button class="btn primary" id="nextFixBtn" style="margin-top:16px;display:none;padding:12px 20px;font-size:15px;">Câu tiếp theo ▶</button>
@@ -261,7 +261,6 @@ let words = [
   ...(typeof HSK6_DATA !== 'undefined' ? HSK6_DATA : [])
 ];
 
-// Kho đề thi nghe 100% tiếng Trung siêu khủng (25 bài liên tục)
 let listeningTests = [
   {
     "title": "办公室日常",
@@ -412,28 +411,28 @@ let listeningTests = [
   },
   {
     "title": "运动健身",
-    "script": "男：你觉得 经常 游泳 对 身体 有 好处 吗？ 女：当然，不仅能锻炼肌肉，还能放松心情。",
+    "script": "男：你觉得经常游泳对身体有好处吗？ 女：当然，不仅能锻炼肌肉，还能放松心情。",
     "question": "问：经常游泳有什么好处？",
     "options": ["A. 让人变得更瘦", "B. 锻炼肌肉并放松心情", "C. 提高视力", "D. 增加睡眠时间"],
     "correct": 1
   },
   {
     "title": "车站买票",
-    "script": "男：去上海的高铁还有票吗？ 女：上午的已经卖完了，下午两点还有.",
-    "question": "问：去上海的高铁现在还有什么 Jí 别的票？",
-    "options": ["A. 上午的全没了", "B. 下午两点的还有票", "C. 已经全部售罄", "D. 只能買站票"],
+    "script": "男：去上海的高铁还有票吗？ 女：上午的已经卖完了，下午两点还有。",
+    "question": "问：去上海的高铁现在还有什么票？",
+    "options": ["A. 上午的全没了", "B. 下午两点的还有票", "C. 已经全部售罄", "D. 只能买站票"],
     "correct": 1
   },
   {
-    "title": "预约 Time",
-    "script": "男：经理，我们 A 组的会议定在几点？ 女：改到明天下午三点在会议室开。",
-    "question": "问: 会议时间改到什么时候了？",
+    "title": "预约时间",
+    "script": "男：经理，我们组的会议定在几点？ 女：改到明天下午三点在会议室开。",
+    "question": "问：会议时间改到什么时候了？",
     "options": ["A. 明天上午九点", "B. 明天下午三点", "C. 后天早上", "D. 今天下班前"],
     "correct": 1
   },
   {
     "title": "环保出行",
-    "script": "男：现在大家都喜欢骑共享单车。 女：既 方便 又 环保， 值得 推荐。",
+    "script": "男：现在大家都喜欢骑共享单车。 女：既方便又环保，值得推荐。",
     "question": "问：共享单车有什么优点？",
     "options": ["A. 速度非常快", "B. 方便且环保", "C. 完全免费", "D. 不用找位置停"],
     "correct": 1
@@ -442,13 +441,32 @@ let listeningTests = [
 
 let currentTestIdx = 0;
 
-let audioCtx = null;
-function initAudio() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
+// Giải pháp fix phát âm triệt để trên điện thoại (Mobile iOS/Android)
+function speakText(text) {
+  if (!("speechSynthesis" in window)) {
+    alert("Trình duyệt không hỗ trợ phát âm.");
+    return;
+  }
+  speechSynthesis.cancel(); // Hủy các âm thanh đang chờ
+  let u = new SpeechSynthesisUtterance(text);
+  u.lang = "zh-CN";
+  u.rate = 0.85;
+  
+  // Tải lại giọng đọc nếu trình duyệt di động chưa chuẩn bị kịp
+  let voices = speechSynthesis.getVoices();
+  let zhVoice = voices.find(v => v.lang.includes("zh") || v.lang.includes("CN"));
+  if (zhVoice) u.voice = zhVoice;
+
+  speechSynthesis.speak(u);
 }
-document.addEventListener('click', initAudio, { once: true });
-document.addEventListener('touchstart', initAudio, { once: true });
+
+// "Mồi" quyền âm thanh khi người dùng tương tác lần đầu
+document.addEventListener('touchstart', function() {
+  if ("speechSynthesis" in window && speechSynthesis.speaking === false) {
+    let silentUtterance = new SpeechSynthesisUtterance("");
+    speechSynthesis.speak(silentUtterance);
+  }
+}, { once: true });
 
 function playSound(type) {
   try {
@@ -478,7 +496,7 @@ function playSound(type) {
   } catch(e) {}
 }
 
-const STORAGE_KEY = "hsk_vocab_v49";
+const STORAGE_KEY = "hsk_vocab_v50";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -669,7 +687,7 @@ function getActivePool() {
   return filtered.length ? filtered : words;
 }
 
-// Logic Kho Đề Thi Nghe Toàn Tiếng Trung (25 bài)
+// Logic Kho Đề Thi Nghe
 function initListeningTest() {
   if (!listeningTests.length) return;
   if (currentTestIdx >= listeningTests.length) currentTestIdx = 0;
@@ -689,22 +707,13 @@ function initListeningTest() {
   $("testOptions").innerHTML = html;
   $("nextTestBtn").style.display = "none";
 
-  playDialogSpeech(test.script);
-}
-
-function playDialogSpeech(text) {
-  if (!("speechSynthesis" in window)) return;
-  speechSynthesis.cancel();
-  let u = new SpeechSynthesisUtterance(text);
-  u.lang = "zh-CN";
-  u.rate = 0.82;
-  speechSynthesis.speak(u);
+  speakText(test.script);
 }
 
 if ($("playAudioTestBtn")) {
   $("playAudioTestBtn").onclick = () => {
     let test = listeningTests[currentTestIdx];
-    if (test) playDialogSpeech(test.script);
+    if (test) speakText(test.script);
   };
 }
 
@@ -871,10 +880,11 @@ if($("checkPuzzleBtn")) {
 }
 if($("nextPuzzleBtn")) $("nextPuzzleBtn").onclick = initPuzzle;
 
+// Nâng cấp phần Sửa câu sai: Tráo cụm từ thông minh tạo ra các câu nhiễu khó nhằn
 function initFixGrammar() {
   let pool = getActivePool();
-  let validWords = pool.filter(w => w && w.ec && w.ec.length >= 3);
-  if (!validWords.length) validWords = words.filter(w => w && w.ec && w.ec.length >= 3);
+  let validWords = pool.filter(w => w && w.ec && w.ec.length >= 4);
+  if (!validWords.length) validWords = words.filter(w => w && w.ec && w.ec.length >= 4);
   if (!validWords.length) {
     $("fixWrongSentence").textContent = "❌ Chưa có đủ dữ liệu từ vựng.";
     $("fixHint").textContent = "";
@@ -884,21 +894,45 @@ function initFixGrammar() {
 
   let w = validWords[Math.floor(Math.random() * validWords.length)];
   let correctSentence = (w.ec || "").replace(/[。，！？]/g, "").trim();
-  let chars = correctSentence.split('');
-  if (chars.length >= 3) {
-    let temp = chars[0]; chars[0] = chars[1]; chars[1] = temp;
-  }
-  let wrongSentence = chars.join('') + " (Sai trật tự)";
 
-  $("fixWrongSentence").textContent = "❌ " + wrongSentence;
-  $("fixHint").textContent = "Gợi ý nghĩa: " + (w.ev || w.m || "") + " | Sắp xếp lại cho đúng cấu trúc.";
+  $("fixWrongSentence").textContent = "📌 Hãy chọn câu đúng chuẩn cấu trúc tiếng Trung:";
+  $("fixHint").textContent = "Gợi ý nghĩa: " + (w.ev || w.m || "");
 
+  // Tạo các lựa chọn nhiễu xáo trộn từ thông minh
   let options = [correctSentence];
-  while (options.length < 3 && validWords.length >= 3) {
+  let chars = correctSentence.split('');
+
+  // Lựa chọn nhiễu 1: Đảo 2 ký tự đầu
+  if (chars.length >= 2) {
+    let arr1 = [...chars];
+    let t = arr1[0]; arr1[0] = arr1[1]; arr1[1] = t;
+    let s1 = arr1.join('');
+    if (s1 !== correctSentence) options.push(s1);
+  }
+
+  // Lựa chọn nhiễu 2: Đảo 2 ký tự cuối
+  if (chars.length >= 3) {
+    let arr2 = [...chars];
+    let len = arr2.length;
+    let t = arr2[len - 1]; arr2[len - 1] = arr2[len - 2]; arr2[len - 2] = t;
+    let s2 = arr2.join('');
+    if (!options.includes(s2)) options.push(s2);
+  }
+
+  // Lựa chọn nhiễu 3: Đảo nửa đầu và nửa sau câu
+  if (chars.length >= 4) {
+    let mid = Math.floor(chars.length / 2);
+    let s3 = chars.slice(mid).join('') + chars.slice(0, mid).join('');
+    if (!options.includes(s3)) options.push(s3);
+  }
+
+  // Nếu thiếu lựa chọn thì lấy ngẫu nhiên các câu khác
+  while (options.length < 4 && validWords.length >= 4) {
     let randW = validWords[Math.floor(Math.random() * validWords.length)];
     let sent = (randW?.ec || "").replace(/[。，！？]/g, "").trim();
     if (sent && !options.includes(sent)) options.push(sent);
   }
+
   options.sort(() => Math.random() - 0.5);
 
   let html = "";
@@ -1003,11 +1037,7 @@ if($("speakBtn")) {
   $("speakBtn").onclick = () => {
     let w = view[current];
     if (!w) return;
-    if (!("speechSynthesis" in window)) { alert("Trình duyệt không hỗ trợ phát âm."); return; }
-    speechSynthesis.cancel();
-    let u = new SpeechSynthesisUtterance(w.h || "");
-    u.lang = "zh-CN";
-    speechSynthesis.speak(u);
+    speakText(w.h || "");
   };
 }
 
