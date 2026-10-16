@@ -86,7 +86,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <header>
   <div class="brand">
     <div class="logo">中</div>
-    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Live Stroke Order & Mobile Audio Fix</div></div>
+    <div><h1>HSK Master Pro</h1><div class="sub">Flashcard & Live Stroke Order & Smart Fix Grammar</div></div>
   </div>
   <button class="btn" id="resetBtn" title="Làm mới">↻ Làm mới</button>
 </header>
@@ -220,7 +220,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;margin:16px 0 0}
 <div id="fixView" style="display:none;">
   <section class="card-box" style="min-height:350px;">
     <div class="tag">TÌM VÀ SỬA CÂU SAI NGỮ PHÁP</div>
-    <div class="sub" style="margin-bottom:6px;font-size:14px;">Chọn câu viết ĐÚNG ngữ pháp nhất trong các lựa chọn sau:</div>
+    <div class="sub" style="margin-bottom:6px;font-size:14px;">Chọn câu viết ĐÚNG cấu trúc ngữ pháp nhất trong các lựa chọn sau:</div>
     <div class="hanzi" id="fixWrongSentence" style="font-size:22px;color:var(--red);margin-bottom:10px;line-height:1.35;">...</div>
     <div class="meaning" id="fixHint" style="font-size:15px;color:var(--muted);margin-bottom:12px;font-style:italic;">...</div>
     <div class="quiz-options" id="fixOptions"></div>
@@ -441,18 +441,16 @@ let listeningTests = [
 
 let currentTestIdx = 0;
 
-// Giải pháp fix phát âm triệt để trên điện thoại (Mobile iOS/Android)
 function speakText(text) {
   if (!("speechSynthesis" in window)) {
     alert("Trình duyệt không hỗ trợ phát âm.");
     return;
   }
-  speechSynthesis.cancel(); // Hủy các âm thanh đang chờ
+  speechSynthesis.cancel();
   let u = new SpeechSynthesisUtterance(text);
   u.lang = "zh-CN";
   u.rate = 0.85;
   
-  // Tải lại giọng đọc nếu trình duyệt di động chưa chuẩn bị kịp
   let voices = speechSynthesis.getVoices();
   let zhVoice = voices.find(v => v.lang.includes("zh") || v.lang.includes("CN"));
   if (zhVoice) u.voice = zhVoice;
@@ -460,7 +458,6 @@ function speakText(text) {
   speechSynthesis.speak(u);
 }
 
-// "Mồi" quyền âm thanh khi người dùng tương tác lần đầu
 document.addEventListener('touchstart', function() {
   if ("speechSynthesis" in window && speechSynthesis.speaking === false) {
     let silentUtterance = new SpeechSynthesisUtterance("");
@@ -496,7 +493,7 @@ function playSound(type) {
   } catch(e) {}
 }
 
-const STORAGE_KEY = "hsk_vocab_v50";
+const STORAGE_KEY = "hsk_vocab_v51";
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch(e) {}
 
@@ -880,7 +877,7 @@ if($("checkPuzzleBtn")) {
 }
 if($("nextPuzzleBtn")) $("nextPuzzleBtn").onclick = initPuzzle;
 
-// Nâng cấp phần Sửa câu sai: Tráo cụm từ thông minh tạo ra các câu nhiễu khó nhằn
+// Thuật toán Sửa câu sai đã được tinh chỉnh thông minh chống lộ đề
 function initFixGrammar() {
   let pool = getActivePool();
   let validWords = pool.filter(w => w && w.ec && w.ec.length >= 4);
@@ -895,38 +892,49 @@ function initFixGrammar() {
   let w = validWords[Math.floor(Math.random() * validWords.length)];
   let correctSentence = (w.ec || "").replace(/[。，！？]/g, "").trim();
 
-  $("fixWrongSentence").textContent = "📌 Hãy chọn câu đúng chuẩn cấu trúc tiếng Trung:";
-  $("fixHint").textContent = "Gợi ý nghĩa: " + (w.ev || w.m || "");
+  let charArr = correctSentence.split('');
+  for (let i = charArr.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [charArr[i], charArr[j]] = [charArr[j], charArr[i]];
+  }
+  let wrongSentence = charArr.join('');
+  if (wrongSentence === correctSentence && charArr.length > 1) {
+    let temp = charArr[0]; charArr[0] = charArr[1]; charArr[1] = temp;
+    wrongSentence = charArr.join('');
+  }
 
-  // Tạo các lựa chọn nhiễu xáo trộn từ thông minh
+  $("fixWrongSentence").textContent = "❌ " + wrongSentence + " (Sai trật tự)";
+  $("fixHint").textContent = "Gợi ý nghĩa: " + (w.ev || w.m || "") + " | Hãy chọn câu viết đúng cấu trúc ngữ pháp.";
+
   let options = [correctSentence];
-  let chars = correctSentence.split('');
-
-  // Lựa chọn nhiễu 1: Đảo 2 ký tự đầu
-  if (chars.length >= 2) {
-    let arr1 = [...chars];
-    let t = arr1[0]; arr1[0] = arr1[1]; arr1[1] = t;
-    let s1 = arr1.join('');
+  
+  if (correctSentence.length >= 4) {
+    let mid = Math.floor(correctSentence.length / 2);
+    let s1 = correctSentence.slice(mid) + correctSentence.slice(0, mid);
     if (s1 !== correctSentence) options.push(s1);
   }
 
-  // Lựa chọn nhiễu 2: Đảo 2 ký tự cuối
-  if (chars.length >= 3) {
-    let arr2 = [...chars];
-    let len = arr2.length;
-    let t = arr2[len - 1]; arr2[len - 1] = arr2[len - 2]; arr2[len - 2] = t;
-    let s2 = arr2.join('');
+  if (correctSentence.length >= 6) {
+    let arr = correctSentence.split('');
+    let m1 = Math.floor(arr.length / 2);
+    let t = arr[m1]; arr[m1] = arr[m1-1]; arr[m1-1] = t;
+    let s2 = arr.join('');
     if (!options.includes(s2)) options.push(s2);
   }
 
-  // Lựa chọn nhiễu 3: Đảo nửa đầu và nửa sau câu
-  if (chars.length >= 4) {
-    let mid = Math.floor(chars.length / 2);
-    let s3 = chars.slice(mid).join('') + chars.slice(0, mid).join('');
-    if (!options.includes(s3)) options.push(s3);
+  let similarPool = validWords.filter(item => {
+    let s = (item.ec || "").replace(/[。，！？]/g, "").trim();
+    return Math.abs(s.length - correctSentence.length) <= 3 && s !== correctSentence;
+  });
+
+  while (options.length < 4 && similarPool.length > 0) {
+    let randItem = similarPool.splice(Math.floor(Math.random() * similarPool.length), 1)[0];
+    let sent = (randItem?.ec || "").replace(/[。，！？]/g, "").trim();
+    if (sent && !options.includes(sent)) {
+      options.push(sent);
+    }
   }
 
-  // Nếu thiếu lựa chọn thì lấy ngẫu nhiên các câu khác
   while (options.length < 4 && validWords.length >= 4) {
     let randW = validWords[Math.floor(Math.random() * validWords.length)];
     let sent = (randW?.ec || "").replace(/[。，！？]/g, "").trim();
